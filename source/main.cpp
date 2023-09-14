@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
     // Initialize random spin directions
 
 
-    std::ofstream outputFile1 ("/Users/mirimi/CLionProjects/XY_model/results.txt");
+/*    std::ofstream outputFile1 ("/Users/mirimi/CLionProjects/XY_model/results.txt");
     std::ofstream outputFile2 ("/Users/mirimi/CLionProjects/XY_model/results_m.txt");
     std::ofstream outputFile3 ("/Users/mirimi/CLionProjects/XY_model/spin_dir.txt");
     std::ofstream outputFile5 ("/Users/mirimi/CLionProjects/XY_model/helicity_modulus.txt");
@@ -71,10 +71,11 @@ int main(int argc, char *argv[]) {
         std::cerr << "Error opening the file 5." << std::endl;
         return 1;
     }
-
+*/
 
 
     if (restart == 1) {
+    /*
 
 
         std::ifstream inputFile ("/Users/mirimi/CLionProjects/XY_model/spin_dir_f.txt");
@@ -94,13 +95,13 @@ int main(int argc, char *argv[]) {
             //std::cout<<" "<< spins[i] <<std::endl;
             //std::cerr << "Non sta stampando niente" << std::endl;
         }
-
+    */
     } else {
         for (int i = 0; i < L; i++) {
             for (int j = 0; j < L; j++) {
 
                 spins[i + j * L] = randomDouble(0, 2 * M_PI);
-                outputFile3 << i << " " << spins[i + j * L] << std::endl;
+                //outputFile3 << i << " " << spins[i + j * L] << std::endl;
             }
         }
     }
@@ -141,9 +142,9 @@ int main(int argc, char *argv[]) {
 
         //std::cout<<mis.Ic<<std::endl;    CORRETTO fino a qua
 
-        outputFile1 << step << " " << mis.E << std::endl;
+/*        outputFile1 << step << " " << mis.E << std::endl;
         outputFile2 << step << " " << mis.M << std::endl;
-        outputFile5 << mis.Jd << " " << mis.Ic << std::endl;
+        outputFile5 << mis.Jd << " " << mis.Ic << std::endl;*/
 
         //CORRETTO fino a qua
 
@@ -161,7 +162,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    outputFile5.close();
+   // outputFile5.close();
 
     for (int i = 0; i < L; i++) {
         for (int j = 0; j < L; j++) {
@@ -196,10 +197,10 @@ int main(int argc, char *argv[]) {
 
     std::cout<<"J_p:  "<< Jp <<std::endl;
 
-    outputFile1.close();
+/*    outputFile1.close();
     outputFile2.close();
     outputFile3.close();
-    outputFile4.close();
+    outputFile4.close();*/
 
     return 0;
 }

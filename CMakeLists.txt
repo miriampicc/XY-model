@@ -32,9 +32,8 @@ endif()
 
 ### Add all source files
 add_executable(CMT
-        source/main.cpp 
-        # ...
-        )
+        source/main.cpp
+        source/measures.cpp)
 target_include_directories(CMT PRIVATE source)
 set_target_properties(CMT PROPERTIES LINK_WHAT_YOU_USE TRUE)
 
