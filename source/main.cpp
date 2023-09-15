@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
         std::ofstream File_Spin(Filename_spin_init);
         if(File_Spin.is_open()) {
             for (int i = 0; i < N; i++) {
-                File_Spin << i << " " << spins[i] << std::endl;
+                File_Spin << spins[i] << std::endl;
             }
         }
         File_Spin.close();
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < N; i++) {
                 spins[i] = rn::uniform_real_box(0, 2 * M_PI);
                 std::ofstream File_Spin(Filename_spin_init);
-                File_Spin << i << " " << spins[i ] << std::endl;
+                File_Spin << spins[i ] << std::endl;
             }
         }
 
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     std::ofstream File_Spin_fin(Filename_spin_fin);
     if(File_Spin_fin.is_open()) {
         for (int i = 0; i < N; i++) {
-            File_Spin_fin << i << " " << spins[i] << std::endl;
+            File_Spin_fin << spins[i] << std::endl;
         }
     }
     File_Spin_fin.close();
