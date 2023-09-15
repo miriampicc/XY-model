@@ -5,15 +5,14 @@ cmake_minimum_required(VERSION 3.24)
 project(CMT VERSION 1.1
         DESCRIPTION "A CMake project template"
         HOMEPAGE_URL "https://github.com/DavidAce/CMakeTemplate"
-        LANGUAGES CXX)
-
+        )
+#enable_language(CXX)
 
 ### Set options
 option(CMT_ENABLE_OPENMP "Enable OpenMP flags such as -fopenmp"   OFF)
 option(CMT_ENABLE_MPI    "Enables use of MPI (work in progress)"  OFF)
 option(CMT_ENABLE_TESTS  "Enables CTest testing"                  OFF)
 option(CMT_CMAKE_DEBUG   "Print info during CMake configuration"  OFF)
-
 
 
 ################################################################
@@ -25,7 +24,7 @@ option(CMT_CMAKE_DEBUG   "Print info during CMake configuration"  OFF)
 include(cmake/gitversion.cmake)
 
 
-if(CMT_DEBUG_CMAKE)
+if(CMT_CMAKE_DEBUG)
     ### Print operating system details
     include(cmake/PrintHostInfo.cmake)
 endif()
@@ -33,7 +32,8 @@ endif()
 ### Add all source files
 add_executable(CMT
         source/main.cpp
-        source/measures.cpp)
+        source/measures.cpp
+)
 target_include_directories(CMT PRIVATE source)
 set_target_properties(CMT PROPERTIES LINK_WHAT_YOU_USE TRUE)
 
@@ -41,7 +41,7 @@ set_target_properties(CMT PROPERTIES LINK_WHAT_YOU_USE TRUE)
 ### Create a helper targets that can be reused to build tests
 add_library(cmt-libs INTERFACE)
 add_library(cmt-flags INTERFACE)
-include(cmake/CompilerFlags.cmake)
+#include(cmake/CompilerFlags.cmake)
 
 
 
@@ -49,6 +49,7 @@ include(cmake/CompilerFlags.cmake)
 find_package(h5pp   1.11.0 REQUIRED)
 find_package(Eigen3 3.4.0  REQUIRED)
 target_link_libraries(cmt-libs INTERFACE h5pp::h5pp Eigen3::Eigen)
+
 
 if(CMT_ENABLE_OPENMP)
     find_package(OpenMP COMPONENTS CXX REQUIRED) # Uses DMRG's own find module

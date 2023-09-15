@@ -77,7 +77,14 @@
         "CMAKE_CXX_COMPILER": "/opt/homebrew/bin/g++-13"
       }
     },
-
+    {
+      "name": "apple-clang",
+      "hidden": true,
+      "cacheVariables": {
+        "OpenMP_ROOT" : "/opt/homebrew/opt/libomp",
+        "CMAKE_CXX_COMPILER_TARGET" : "armv8-apple-macos13.4.1"
+      }
+    },
     {
       "name": "release-conan",
       "displayName": "Release|conan package manager",
@@ -94,6 +101,16 @@
         "release",
         "conan",
         "gcc-13",
+        "default"
+      ]
+    },
+    {
+      "name": "release-conan-apple-clang",
+      "displayName": "Release|conan package manager",
+      "inherits": [
+        "release",
+        "conan",
+        "apple-clang",
         "default"
       ]
     },
@@ -115,6 +132,16 @@
         "gcc-13",
         "default"
       ]
+    },
+    {
+      "name": "debug-conan-apple-clang",
+      "displayName": "Debug|conan package manager",
+      "inherits": [
+        "debug",
+        "conan",
+        "apple-clang",
+        "default"
+      ]
     }
   ],
   "buildPresets": [
@@ -123,8 +150,24 @@
       "configurePreset": "release-conan"
     },
     {
+      "name": "release-conan-gcc-13",
+      "configurePreset": "release-conan-gcc-13"
+    },
+    {
+      "name": "release-conan-apple-clang",
+      "configurePreset": "release-conan-apple-clang"
+    },
+    {
       "name": "debug-conan",
       "configurePreset": "debug-conan"
+    },
+    {
+      "name": "debug-conan-gcc-13",
+      "configurePreset": "debug-conan-gcc-13"
+    },
+    {
+      "name": "debug-conan-apple-clang",
+      "configurePreset": "debug-conan-apple-clang"
     }
   ],
   "testPresets": [
@@ -142,9 +185,61 @@
       }
     },
     {
+      "name": "release-conan-gcc-13",
+      "displayName": "Release|conan package manager",
+      "configurePreset": "release-conan-gcc-13",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    },
+    {
+      "name": "release-conan-apple-clang",
+      "displayName": "Release|conan package manager",
+      "configurePreset": "release-conan-apple-clang",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    },
+    {
       "name": "debug-conan",
       "displayName": "Debug|conan package manager",
       "configurePreset": "debug-conan",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    },
+    {
+      "name": "debug-conan-gcc-13",
+      "displayName": "Debug|conan package manager",
+      "configurePreset": "debug-conan-gcc-13",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    },
+    {
+      "name": "debug-conan-apple-clang",
+      "displayName": "Debug|conan package manager",
+      "configurePreset": "debug-conan-apple-clang",
       "output": {
         "verbosity": "extra",
         "outputOnFailure": true
