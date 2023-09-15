@@ -1,5 +1,6 @@
 #include "main.h"
 #include "measures.h"
+#include "robust_filesystem.h"
 
 // Initialize random spin directions
 std::vector<double> spins;
@@ -7,32 +8,33 @@ std::vector<double> cc;
 size_t L, n_steps;
 double T;
 bool restart;
-int N, n_vort_start, n_vort_end;
+size_t N;
 
 // Function to generate random double between min and max
 double randomDouble(double min, double max) {
     return min + (max - min) * (double)rand() / RAND_MAX;
 }
 
-double wrapToPi(double angle) {
-
-    if (angle > M_PI) {
-        angle -= 2*M_PI;
-    }   else if (angle < -M_PI) {
-        angle += 2*M_PI;
-        }
-    return angle;
-}
 
 int main(int argc, char *argv[]) {
     //srand(time(NULL));
     srand(static_cast<unsigned int>(time(NULL)));
     //srand(2);
+    std::string directory_read;
+    std::string directory_write;
 
-    L = static_cast<size_t>(std::atoi(argv[1]));
-    n_steps = static_cast<size_t>(std::atoi(argv[2]));
-    T = std::atof(argv[3]);
-    restart = std::atof(argv[4]);
+    if(argc == 7) {
+        L = static_cast<size_t>(std::atoi(argv[1]));
+        n_steps = static_cast<size_t>(std::atoi(argv[2]));
+        T = std::atof(argv[3]);
+        restart = std::atof(argv[4]);
+        paths_dir::DIR_IN = directory_read = argv[5];
+        paths_dir::DIR_OUT = directory_write = argv[6];
+    }
+    else{
+        myhelp(argc, argv);
+    }
+
     N=L*L;
     spins.resize(N);
     cc.resize(n_steps);
@@ -40,92 +42,87 @@ int main(int argc, char *argv[]) {
     std::cout<< n_steps << std::endl;
     std::cout<< T << std::endl;
     std::cout<< restart << std::endl;
-
+    std::cout<< directory_read << std::endl;
+    std::cout<< directory_write << std::endl;
 
     // Initialize random spin directions
 
-
-    std::ofstream outputFile1 ("/Users/mirimi/CLionProjects/XY_model/results.txt");
-    std::ofstream outputFile2 ("/Users/mirimi/CLionProjects/XY_model/results_m.txt");
-    std::ofstream outputFile3 ("/Users/mirimi/CLionProjects/XY_model/spin_dir.txt");
-    std::ofstream outputFile5 ("/Users/mirimi/CLionProjects/XY_model/helicity_modulus.txt");
-
-
-    // Check if the files are opened successfully
-    if (!outputFile1.is_open()) {
-        std::cerr << "Error opening the file 1." << std::endl;
-        return 1;
-    }
-
-    if (!outputFile2.is_open()) {
-        std::cerr << "Error opening the file 2." << std::endl;
-        return 1;
-    }
-
-    if (!outputFile3.is_open()) {
-        std::cerr << "Error opening the file 3." << std::endl;
-        return 1;
-    }
-
-    if (!outputFile5.is_open()) {
-        std::cerr << "Error opening the file 5." << std::endl;
-        return 1;
-    }
-
-
+    std::string Filename_spin_init=(directory_write+"/Spin_dir_init.txt");
+    std::string Filename_spin_fin=(directory_write+"/Spin_dir_fin.txt");
 
     if (restart == 1) {
-
-
-        std::ifstream inputFile ("/Users/mirimi/CLionProjects/XY_model/spin_dir_f.txt");
+        std::ifstream inputFile (directory_read + "/Spin_dir_fin.txt");
         if (!inputFile.is_open()) {
-            std::cerr << "Error opening the file 4 for input." << std::endl;
+            std::cerr << "Error opening the file for Input." << std::endl;
             return 1;
         }
-
         int index = 0;
         while (inputFile >> spins[index]) {
             index++;
         }
         inputFile.close();
-
-        for (int i = 0; i < spins.size(); i++){
-
-            //std::cout<<" "<< spins[i] <<std::endl;
-            //std::cerr << "Non sta stampando niente" << std::endl;
-        }
-
-    } else {
-        for (int i = 0; i < L; i++) {
-            for (int j = 0; j < L; j++) {
-
-                spins[i + j * L] = randomDouble(0, 2 * M_PI);
-                outputFile3 << i << " " << spins[i + j * L] << std::endl;
+        std::ofstream File_Spin(Filename_spin_init);
+        if(File_Spin.is_open()) {
+            for (int i = 0; i < N; i++) {
+                File_Spin << i << " " << spins[i] << std::endl;
             }
         }
+        File_Spin.close();
+
+    } else {
+        for (int i = 0; i < N; i++) {
+                spins[i] = rn::uniform_real_box(0, 2 * M_PI);
+                std::ofstream File_Spin(Filename_spin_init);
+                File_Spin << i << " " << spins[i ] << std::endl;
+            }
+        }
+
+
+    // Run simulation --->>
+    mainloop (spins, T, n_steps, N, directory_write);
+
+    std::ofstream File_Spin_fin(Filename_spin_fin);
+    if(File_Spin_fin.is_open()) {
+        for (int i = 0; i < N; i++) {
+            File_Spin_fin << i << " " << spins[i] << std::endl;
+        }
     }
+    File_Spin_fin.close();
 
-    //Let us obtain the number of vortices at the beginning of the simulation
+    return 0;
+}
 
-    n_vort_start = vortex(spins) ;
-    std::cout<<"Number of vortices start :  "<< n_vort_start <<std::endl;
-
-
-    // Run simulation --->> void mainloop()
-
-    std::ofstream outputFile4 ("/Users/mirimi/CLionProjects/XY_model/spin_dir_f.txt");
-    if (!outputFile4.is_open()) {
-        std::cerr << "Error opening the file 4." << std::endl;
-        return 1;
-    }
+void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std::string directory_write) {
 
     double thetabox = M_PI/4.;
     std::vector<double> magnetization_values;
     double acc_ideal = 0.5;
     double acc = 0;
-    double Jp;
     Measures mis;
     int acc_rate = 0;
+
+    std::cout<< "aperto!"<< std::endl;
+
+    //Aprire i file output
+
+    std::string Filename_magnetization=(directory_write+"/Magnetization.txt");
+    std::string Filename_energy=(directory_write+"/Energy.txt");
+    std::string Filename_restart=(directory_write+"/Restart.txt");
+    std::string Filename_helicity=(directory_write+"Helicity modulus.txt");
+    std::string Filename_vortices=(directory_write+"/Vortices.txt");
+
+
+    std::ofstream File_Magetization (Filename_magnetization);
+    std::ofstream File_Energy (Filename_energy);
+    std::ofstream File_restart (Filename_restart);
+    std::ofstream File_helicity (Filename_helicity);
+    std::ofstream File_vortices (Filename_vortices);
+
+    if (File_Energy.is_open()){
+
+        std::cout<< "aperto!"<< std::endl;
+
+    }
 
     for (size_t step = 0; step < n_steps; step++) {
         acc_rate = 0;
@@ -138,12 +135,14 @@ int main(int argc, char *argv[]) {
         energy(spins, mis);
         magnetization (spins, mis, N);
         helicity_modulus (spins, mis, N);
+        vortex(spins, mis, N) ;
 
         //std::cout<<mis.Ic<<std::endl;    CORRETTO fino a qua
 
-        outputFile1 << step << " " << mis.E << std::endl;
-        outputFile2 << step << " " << mis.M << std::endl;
-        outputFile5 << mis.Jd << " " << mis.Ic << std::endl;
+        File_Energy << step << " " << mis.E << std::endl;
+        File_Magetization << step << " " << mis.M << std::endl;
+        File_helicity << mis.Jd << " " << mis.Ic << std::endl;
+        File_vortices <<mis.n_vort << "  " << mis.n_antivort <<std::endl;
 
         //CORRETTO fino a qua
 
@@ -161,47 +160,11 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    outputFile5.close();
-
-    for (int i = 0; i < L; i++) {
-        for (int j = 0; j < L; j++) {
-
-            outputFile4 << spins[i+j*L] << std::endl;
-        }
-    }
-
-    n_vort_end = vortex(spins) ;
-    std::cout<<"Number of vortices end :  "<< n_vort_end <<std::endl;
-
-
-    std::ifstream inputFile5 ("/Users/mirimi/CLionProjects/XY_model/helicity_modulus.txt");
-    if (!inputFile5.is_open()) {
-        std::cerr << "Error opening the file 5 for input." << std::endl;
-        return 1;
-    }
-
-    int index = 0;
-    while (inputFile5 >> cc[index]) {
-        index++;
-    }
-    inputFile5.close();
-
-    for (int i=0; i< cc.size(); i++) {
-        std::cout<< cc[i] <<std::endl;
-        }
-
-    std::cout<<"cc vector size is:   "<< cc.size() << std::endl;
-
-    //Jp = J_param ( cc, T);
-
-    std::cout<<"J_p:  "<< Jp <<std::endl;
-
-    outputFile1.close();
-    outputFile2.close();
-    outputFile3.close();
-    outputFile4.close();
-
-    return 0;
+    File_Energy.close();
+    File_Magetization.close();
+    File_helicity.close();
+    File_restart.close();
+    File_vortices.close();
 }
 
 // Define Monte Carlo step
@@ -251,129 +214,12 @@ double local_energy(const std::vector<double>& spins) {
     return -sum_cosines;
 }
 
-int vortex (std::vector<double> spins) {
-
-    double sq; //this should represent the sum of the angle of every square
-    int i, j;
-    int n_plus, n_minus, n_tot;
-    double phi_1, phi_1_fin,  phi_2, phi_2_fin, phi_3, phi_3_fin, phi_4, phi_4_fin;
-
-
-    n_plus = 0;
-    n_minus = 0;
-    n_tot = 0;
-
-    for ( i=0; i<L; i++ ) {
-
-        for ( j=0; j<L; j++ ) {
-
-            sq = 0 ;
-            phi_1 = 0;
-            phi_2 = 0;
-            phi_3 = 0;
-            phi_4 = 0;
-
-            if ( j == (L-1) & i != (L-1)){
-
-                phi_1 = spins[(i+1)+j*L] - spins[i+j*L] ;
-                phi_1_fin = wrapToPi(phi_1);
-
-                phi_2 = spins[(i+1)+(j+1-L)*L] - spins[(i+1)+j*L] ;
-                phi_2_fin = wrapToPi(phi_2);
-
-                phi_3 = spins[i+(j+1-L)*L] - spins[(i+1)+(j+1-L)*L] ;
-                phi_3_fin = wrapToPi(phi_3);
-
-                phi_4 = spins[i+j*L] - spins[i+(j+1-L)*L] ;
-                phi_4_fin = wrapToPi(phi_4);
-
-            } else if ( j != (L-1) & i == (L-1) ) {
-
-                phi_1 = spins[(i+1-L)+j*L] - spins[i+j*L] ;
-                phi_1_fin = wrapToPi(phi_1);
-
-                phi_2 = spins[(i+1-L)+(j+1)*L] - spins[(i+1-L)+j*L] ;
-                phi_2_fin = wrapToPi(phi_2);
-
-                phi_3 = spins[i+(j+1)*L] - spins[(i+1-L)+(j+1)*L] ;
-                phi_3_fin = wrapToPi(phi_3);
-
-                phi_4 = spins[i+j*L] - spins[i+(j+1)*L] ;
-                phi_4_fin = wrapToPi(phi_4);
-
-
-            } else if ( j == (L-1) & i == (L-1) ) {
-
-                phi_1 = spins[(i+1-L)+j*L] - spins[i+j*L] ;
-                phi_1_fin = wrapToPi(phi_1);
-
-                phi_2 = spins[(i+1-L)+(j+1-L)*L] - spins[(i+1-L)+j*L] ;
-                phi_2_fin = wrapToPi(phi_2);
-
-                phi_3 = spins[i+(j+1-L)*L] - spins[(i+1-L)+(j+1-L)*L] ;
-                phi_3_fin = wrapToPi(phi_3);
-
-                phi_4 = spins[i+j*L] - spins[i+(j+1-L)*L] ;
-                phi_4_fin = wrapToPi(phi_4);
-
-
-            } else {
-
-                phi_1 = spins[(i+1)+j*L] - spins[i+j*L] ;
-
-                // Wrap phi_1 to the range [-π, π]
-                phi_1_fin = wrapToPi(phi_1);
-
-
-                phi_2 = spins[(i+1)+(j+1)*L] - spins[(i+1)+j*L] ;
-                phi_2_fin = wrapToPi(phi_2);
-
-
-                phi_3 = spins[i+(j+1)*L] - spins[(i+1)+(j+1)*L] ;
-                phi_3_fin = wrapToPi(phi_3);
-
-                phi_4 = spins[i+j*L] - spins[i+(j+1)*L] ;
-                phi_4_fin = wrapToPi(phi_4);
-
-            }
-
-            sq = phi_1_fin + phi_2_fin + phi_3_fin + phi_4_fin ;
-
-            sq /= 2*M_PI;
-
-            if ( sq == 1 ) {
-                n_plus ++;
-            } else if ( sq == -1) {
-                n_minus++;
-            }
-
-        }
-    }
-
-    n_tot = n_plus + n_minus ;
-
-    return n_tot;
-}
-
-/*double J_param (std::vector<double> cc, double T) {
-
+void myhelp(int argd, char** argu) {
     int i;
-    double J;
-    double sum_sq = 0, sum_cc = 0;
-    double mean_sq, mean_cc;
-
-    for (i=0; i < cc.size(); i++){
-
-        sum_sq += cc[i] * cc[i];
-        sum_cc += cc[i];
-
-    }
-
-    mean_sq = sum_sq / n_steps ;
-    mean_cc = sum_cc / n_steps ;
-
-    J = N * (mean_sq - mean_cc * mean_cc) / T ;
-
-    return J;
-}*/
+    fprintf(stderr,"Errore nei parametri su linea di comando; hai scritto:\n");
+    for (i=0;i<argd;i++) fprintf(stderr," %s",argu[i]);
+    fprintf(stderr,"\n");
+    fprintf(stderr,"%s <L> <n_steps> <T> <restart> <DIR_IN> <DIR_OUT> \n",argu[0]);
+    exit (EXIT_FAILURE);
+}
 

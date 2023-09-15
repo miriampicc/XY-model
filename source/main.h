@@ -6,7 +6,15 @@
 #include <random>
 #include <cstdlib>
 #include <ctime>
-#include<fstream>
+#include <fstream>
+#include "rng.h"
+#include<cstdio>
+
+namespace paths_dir{
+    inline std::string DIR_IN;
+    inline std::string DIR_OUT;
+}
+
 
 // Define simulation parameters
 
@@ -17,7 +25,5 @@ extern bool restart;    // where does the program have to take the initial file
 
 void mc_step(std::vector<double> & spins, double T, int &acc, double thetabox);
 double local_energy(const std::vector<double> & spins);
-int vortex (std::vector<double> spins);
-double J_param (std::vector<double> cc, double T);
-
-
+void myhelp(int argd, char** argu);
+void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std::string directory_write);

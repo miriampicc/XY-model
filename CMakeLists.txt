@@ -33,6 +33,10 @@ endif()
 add_executable(CMT
         source/main.cpp
         source/measures.cpp
+        source/rng.cpp
+        source/memory_check.h
+        source/o2.h
+        source/robust_filesystem.h
 )
 target_include_directories(CMT PRIVATE source)
 set_target_properties(CMT PROPERTIES LINK_WHAT_YOU_USE TRUE)
