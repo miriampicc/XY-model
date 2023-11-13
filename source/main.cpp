@@ -139,6 +139,8 @@ void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std:
         helicity_modulus (spins, mis, N);
         vortex(spins, mis, N) ;
 
+        std::cout<<"Questa è l'energia   "<< mis.E << std::endl;
+
         //std::cout<<mis.Ic<<std::endl;    CORRETTO fino a qua
 
         File_Energy << mis.E << std::endl;

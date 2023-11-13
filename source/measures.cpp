@@ -12,6 +12,7 @@ void energy(const std::vector<double>& spins, struct Measures &mis ) {
     }
 
     sum_cosines = 0.0;
+    std::cout<< sum_cosines << std::endl;
     mis.E= -sum_cosines;
 }
 
