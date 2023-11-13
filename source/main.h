@@ -26,4 +26,4 @@ extern bool restart;    // where does the program have to take the initial file
 void mc_step(std::vector<double> & spins, double T, int &acc, double thetabox);
 double local_energy(const std::vector<double> & spins);
 void myhelp(int argd, char** argu);
-void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std::string directory_write);
+void mainloop (std::vector<double> & spins, double T, int n_steps, size_t N, std::string directory_write);

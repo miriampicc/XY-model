@@ -108,8 +108,9 @@ void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std:
     std::string Filename_magnetization=(directory_write+"/Magnetization.txt");
     std::string Filename_energy=(directory_write+"/Energy.txt");
     std::string Filename_restart=(directory_write+"/Restart.txt");
-    std::string Filename_helicity=(directory_write+"Helicity modulus.txt");
+    std::string Filename_helicity=(directory_write+"/Helicity_modulus.txt");
     std::string Filename_vortices=(directory_write+"/Vortices.txt");
+    std::string Filename_antivortices=(directory_write+"/Antivortices.txt");
 
 
     std::ofstream File_Magetization (Filename_magnetization);
@@ -117,6 +118,7 @@ void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std:
     std::ofstream File_restart (Filename_restart);
     std::ofstream File_helicity (Filename_helicity);
     std::ofstream File_vortices (Filename_vortices);
+    std::ofstream File_antivortices (Filename_antivortices);
 
     if (File_Energy.is_open()){
 
@@ -139,25 +141,27 @@ void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std:
 
         //std::cout<<mis.Ic<<std::endl;    CORRETTO fino a qua
 
-        File_Energy << step << " " << mis.E << std::endl;
-        File_Magetization << step << " " << mis.M << std::endl;
+        File_Energy << mis.E << std::endl;
+        File_Magetization << mis.M << std::endl;
         File_helicity << mis.Jd << " " << mis.Ic << std::endl;
-        File_vortices <<mis.n_vort << "  " << mis.n_antivort <<std::endl;
+        File_vortices <<mis.n_vort <<std::endl;
+        File_antivortices << mis.n_antivort <<std::endl;
+
 
         //CORRETTO fino a qua
 
         acc = (acc_rate) / ((double)N);
 
-        double new_dthetabox = 2 * thetabox * (0.5 * (acc / acc_ideal));
-
-        thetabox += new_dthetabox;
-        thetabox/=2.;
+        double new_thetabox = thetabox * (0.5 + 0.5 * (acc / acc_ideal));
+        //std::cout<< "thetabox: "<< thetabox <<  " new thetabox: "<< new_thetabox << " acc: " << acc<< std::endl;
+        thetabox=new_thetabox;
 
         if (thetabox < 0.0) {
             thetabox += 2.0 * M_PI;
         } else if (thetabox > 2.0 * M_PI) {
             thetabox -= 2.0 * M_PI;
         }
+
     }
 
     File_Energy.close();
@@ -165,13 +169,14 @@ void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std:
     File_helicity.close();
     File_restart.close();
     File_vortices.close();
+    File_antivortices.close();
 }
 
 // Define Monte Carlo step
 void mc_step(std::vector<double> & spins, double T, int &acc, double thetabox) {
 
-    int i = rand() % L;
-    int j = rand() % L;
+    int i = rn::uniform_integer_box(0,L-1);
+    int j =rn::uniform_integer_box(0,L-1);
 
     double d_spin = randomDouble(-thetabox, thetabox);
 
@@ -194,7 +199,7 @@ void mc_step(std::vector<double> & spins, double T, int &acc, double thetabox) {
         spins[i+j*L] = spins_new[i+j*L] ;
         acc += 1;
     } else {
-        double k = randomDouble(0, 1);
+        double k = rn::uniform_real_box(0,1);
         if (exp(-delta_e / T) >  k) {
             spins[i+j*L] = spins_new[i+j*L] ;
             acc += 1;

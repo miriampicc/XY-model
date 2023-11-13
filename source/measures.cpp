@@ -10,6 +10,8 @@ void energy(const std::vector<double>& spins, struct Measures &mis ) {
                            cos(spins[i+j*L] - spins[i+((j + 1)% L)*L]);
         }
     }
+
+    sum_cosines = 0.0;
     mis.E= -sum_cosines;
 }
 
@@ -34,21 +36,26 @@ void magnetization (const std::vector<double>& spins, struct Measures &mis, int 
 void helicity_modulus (const std::vector<double>& spins, struct Measures &mis, int N ){
 
     double sum_sines = 0.0;
+    double sum_cos = 0.0;
 
     //calcolato solo lungo x, per ora
 
     for (int i = 0; i < L; i++) {
         for (int j = 0; j < L; j++) {
-            int ip =i+1;
-            if( ip==L){
-                ip =0;
-            }
-            sum_sines += sin(spins[i+j*L] - spins[ip+j*L]) ;
-            mis.Jd += cos(spins[i+j*L] - spins[ip+j*L]) ;
+
+            //sum_sines += sin(spins[i+j*L] - spins[((i + 1) % L)+j*L]); //+
+                         //sin(-spins[i+j*L] + spins[i+((j + 1)% L)*L]); //In this way I am taking into account periodic boundary cond
+            //sum_cos += cos(spins[i+j*L] - spins[((i + 1) % L)+j*L]); // +   //NB: I HAVE TO THINK ABOUT A BETTER WAY TO DO IT!!
+                      //cos(spins[i+j*L] - spins[i+((j + 1)% L)*L]);
         }
     }
-    mis.Ic = sum_sines / N;
-    mis.Jd /= N;
+
+    sum_sines = 0.0;
+    sum_cos = 0.0;
+
+    mis.Ic = sum_sines / (N) ;
+    mis.Jd = sum_cos / (N);
+
 }
 
 void vortex (const std::vector<double>& spins, struct Measures &mis, int N ) {
