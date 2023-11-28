@@ -126,11 +126,11 @@ void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std:
 
     }
 
-    for (size_t step = 0; step < n_steps; step++) {
+    for (size_t step = 0; step < n_steps; step++) { //so, we know that we have n_steps montecarlo
         acc_rate = 0;
 
         for (size_t n_up = 0; n_up < N; n_up++) {
-            mc_step(spins, T, acc_rate, thetabox);
+            mc_step(spins, T, acc_rate, thetabox);   //and, here, for each monte carlo step, we have to update each spin
         }
 
         mis.reset();
@@ -139,7 +139,7 @@ void mainloop(std::vector<double> & spins, double T, int n_steps, size_t N, std:
         helicity_modulus (spins, mis, N);
         vortex(spins, mis, N) ;
 
-        std::cout<<"Questa è l'energia   "<< mis.E << std::endl;
+        //std::cout<<"Questa è l'energia   "<< mis.E << std::endl;
 
         //std::cout<<mis.Ic<<std::endl;    CORRETTO fino a qua
 

@@ -11,8 +11,6 @@ void energy(const std::vector<double>& spins, struct Measures &mis ) {
         }
     }
 
-    sum_cosines = 0.0;
-    std::cout<< sum_cosines << std::endl;
     mis.E= -sum_cosines;
 }
 
@@ -44,15 +42,12 @@ void helicity_modulus (const std::vector<double>& spins, struct Measures &mis, i
     for (int i = 0; i < L; i++) {
         for (int j = 0; j < L; j++) {
 
-            //sum_sines += sin(spins[i+j*L] - spins[((i + 1) % L)+j*L]); //+
-                         //sin(-spins[i+j*L] + spins[i+((j + 1)% L)*L]); //In this way I am taking into account periodic boundary cond
-            //sum_cos += cos(spins[i+j*L] - spins[((i + 1) % L)+j*L]); // +   //NB: I HAVE TO THINK ABOUT A BETTER WAY TO DO IT!!
-                      //cos(spins[i+j*L] - spins[i+((j + 1)% L)*L]);
+            sum_sines += sin(spins[i+j*L] - spins[((i + 1) % L)+j*L]); // +
+                        // sin(-spins[i+j*L] + spins[i+((j + 1)% L)*L]); //In this way I am taking into account periodic boundary cond
+            sum_cos += cos(spins[i+j*L] - spins[((i + 1) % L)+j*L]);  // +   //NB: I HAVE TO THINK ABOUT A BETTER WAY TO DO IT!!
+                      // cos(spins[i+j*L] - spins[i+((j + 1)% L)*L]);
         }
     }
-
-    sum_sines = 0.0;
-    sum_cos = 0.0;
 
     mis.Ic = sum_sines / (N) ;
     mis.Jd = sum_cos / (N);
