@@ -37,6 +37,10 @@ add_executable(CMT
         source/memory_check.h
         source/o2.h
         source/robust_filesystem.h
+        source/initialization.cpp
+        source/initialization.cpp
+        source/initialization.h
+        source/02.h
 )
 target_include_directories(CMT PRIVATE source)
 set_target_properties(CMT PROPERTIES LINK_WHAT_YOU_USE TRUE)
