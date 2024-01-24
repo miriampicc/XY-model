@@ -41,6 +41,9 @@ add_executable(CMT
         source/initialization.cpp
         source/initialization.h
         source/02.h
+        source/montecarlo.h
+        source/montecarlo.h
+        source/montecarlo.cpp
 )
 target_include_directories(CMT PRIVATE source)
 set_target_properties(CMT PROPERTIES LINK_WHAT_YOU_USE TRUE)

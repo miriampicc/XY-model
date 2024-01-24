@@ -9,10 +9,9 @@
 typedef double _FPTYPE;
 
 struct O2 {
-  _FPTYPE x; /* X */
-  _FPTYPE y; /* Y */
-  _FPTYPE t; /* angle */
-  _FPTYPE r; /* modulus */
+
+    _FPTYPE t; /* angle */
+
 };
 
 #define O2sum(__sum,__s1,__s2) {			\

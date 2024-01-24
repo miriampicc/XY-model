@@ -9,6 +9,7 @@
 #include <fstream>
 #include "rng.h"
 #include<cstdio>
+#include "initialization.h"
 
 namespace paths_dir{
     inline std::string DIR_IN;
@@ -23,7 +24,5 @@ extern size_t n_steps;   // Number of simulation steps
 extern double T;        // Temperature
 extern bool restart;    // where does the program have to take the initial file
 
-void mc_step(std::vector<double> & spins, double T, int &acc, double thetabox);
-double local_energy(const std::vector<double> & spins);
 void myhelp(int argd, char** argu);
-void mainloop (std::vector<double> & spins, double T, int n_steps, size_t N, std::string directory_write);
+void mainloop (std::vector <Node> &Site, double T, struct MC_parameters &MC, size_t N, struct H_parameters &Hp, std::string directory_write, int NSTART);
