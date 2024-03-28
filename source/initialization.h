@@ -18,6 +18,7 @@ struct H_parameters {
     double K ;
     double J1;
     double J2;
+    double e;
 };
 
 struct MC_parameters {

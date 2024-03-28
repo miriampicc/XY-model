@@ -11,7 +11,7 @@ typedef double _FPTYPE;
 struct O2 {
 
     _FPTYPE t; /* angle */
-
+    _FPTYPE  r; /*modulus*/
 };
 
 #define O2sum(__sum,__s1,__s2) {			\

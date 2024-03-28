@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     std::string directory_write;
 
 
-    if(argc == 13) {
+    if(argc == 14) {
         L = static_cast<size_t>(std::atoi(argv[1]));
         MC.n_steps = static_cast<size_t>(std::atoi(argv[2]));
         MC.transient = static_cast<size_t>(std::atoi(argv[3]));
@@ -43,9 +43,10 @@ int main(int argc, char *argv[]) {
         Hp.K = std::atof (argv[7]);
         Hp.J1 = std::atof (argv[8]);
         Hp.J2 = std::atof (argv[9]);
-        MC.theta_box= std::atof (argv[10]);
-        paths_dir::DIR_IN = directory_read = argv[11];
-        paths_dir::DIR_OUT = directory_write = argv[12];
+        Hp.e = std::atof(argv[10]);
+        MC.theta_box= std::atof (argv[11]);
+        paths_dir::DIR_IN = directory_read = argv[12];
+        paths_dir::DIR_OUT = directory_write = argv[13];
     }
     else{
         myhelp(argc, argv);
@@ -59,6 +60,7 @@ int main(int argc, char *argv[]) {
     std::cout<< Hp.K << std::endl;
     std::cout<< Hp.J1 << std::endl;
     std::cout<< Hp.J2 << std::endl;
+    std::cout<< Hp.e <<std::endl;
     std::cout<< restart << std::endl;
     std::cout<<MC.theta_box<<std::endl;
     std::cout<< directory_read << std::endl;
@@ -88,16 +90,16 @@ void mainloop(std::vector <Node> &Site, double T, struct MC_parameters &MC, size
     std::string Filename_helicity1=(directory_write+"/Helicity_modulus1.txt");
     std::string Filename_helicity2=(directory_write+"/Helicity_modulus2.txt");
     std::string Filename_trsb_magn=(directory_write+"/trsb_magnetization.txt");
-    std::string Filename_vortices1=(directory_write+"/Vortices.txt");
-    std::string Filename_vortices2=(directory_write+"/Vortices.txt");
+    //std::string Filename_vortices1=(directory_write+"/Vortices.txt");
+    //std::string Filename_vortices2=(directory_write+"/Vortices.txt");
 
     std::ofstream File_Magetization1 (Filename_magnetization1);
     std::ofstream File_Energy (Filename_energy);
     std::ofstream File_helicity1 (Filename_helicity1);
     std::ofstream File_helicity2 (Filename_helicity2);
     std::ofstream File_trsb_magn (Filename_trsb_magn);
-    std::ofstream File_vortices1 (Filename_vortices1);
-    std::ofstream File_vortices2 (Filename_vortices2);
+    //std::ofstream File_vortices1 (Filename_vortices1);
+    //std::ofstream File_vortices2 (Filename_vortices2);
 
     if(NSTART==0){
         /**Thermalization**/
@@ -120,15 +122,15 @@ void mainloop(std::vector <Node> &Site, double T, struct MC_parameters &MC, size
         single_magnetization(Site, mis, N);   //In this function we are calculating the magnetization of both layers separately
         trsb_magnetization(mis, Site, N);
         helicity_modulus(Hp, Site, mis, N);   //Both lattices
-        vortex(Site, mis, N) ;
+        //vortex(Site, mis, N) ;
 
         File_Energy        << mis.E << std::endl;
         File_Magetization1 << mis.m_phase[0] << " " << mis.m_phase[1] << std::endl;
         File_helicity1     << mis.Jd[0] << " " << mis.Ic[0] << std::endl;
         File_helicity2     << mis.Jd[1] << " " << mis.Ic[1] << std::endl;
         File_trsb_magn     << mis.trsb_m << std::endl;
-        File_vortices1     <<mis.vortices[0] << " " << mis.antivortices[0] <<std::endl;
-        File_vortices2     <<mis.vortices[1] <<" " << mis.antivortices[1] <<std::endl;
+        //File_vortices1     <<mis.vortices[0] << " " << mis.antivortices[0] <<std::endl;
+        //File_vortices2     <<mis.vortices[1] <<" " << mis.antivortices[1] <<std::endl;
 
     }
 
@@ -137,8 +139,8 @@ void mainloop(std::vector <Node> &Site, double T, struct MC_parameters &MC, size
     File_helicity1.close();
     File_helicity2.close();
     File_trsb_magn.close();
-    File_vortices1.close();
-    File_vortices2.close();
+    //File_vortices1.close();
+    //File_vortices2.close();
 }
 
 

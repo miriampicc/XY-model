@@ -55,6 +55,7 @@ mean_Jd_values = []
 
 i=0 
 
+K = 1
 
 
 mean_values_Jp = []
@@ -68,7 +69,7 @@ for temp in temperatures:
     Jd = []
     Ic = []
 
-    file_path = f"/Users/mirimi/Desktop/hihi/KTH/XY-model/Output_L={L}/T_{temp}" + '/Helicity_modulus1.txt' 
+    file_path = f"/Users/mirimi/Desktop/hihi/KTH/XY-model/Relative_fluctuations/K={K}/Output_L={L}/T_{temp}" + '/Helicity_modulus1.txt'
     with open(file_path, "r") as file:
         for line in file:
             

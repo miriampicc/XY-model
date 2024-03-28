@@ -19,8 +19,33 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         for (int ix = 0; ix < L; ix++) {
             /*choose randomly a site of the lattice*/
             i = rn::uniform_integer_box(0, N-1);
-            //i = k % L;
-            //j = k / L;
+
+            /*************PSI UPDATE: density update with total density contraint **********/
+
+            OldPsi[0] = Site[i].Psi[0];
+            OldPsi[1] = Site[i].Psi[1];
+            NewPsi[0] = Site[i].Psi[0];
+            NewPsi[1] = Site[i].Psi[1];
+
+            l = rn::uniform_real_box(0, 1);
+            NewPsi[0].r = sqrt(l);
+            NewPsi[1].r = sqrt(1-l);
+
+            oldE = local_energy(OldPsi, i, Hp, Site);
+            newE = local_energy(NewPsi, i, Hp, Site);
+            deltaE = (newE - oldE);
+
+            if (deltaE < 0) {
+                Site[i].Psi[0] = NewPsi[0];
+                Site[i].Psi[1] = NewPsi[1];
+            } else {
+                rand = rn::uniform_real_box(0, 1);
+                if (rand < exp(-1/T * deltaE)) {
+
+                    Site[i].Psi[0] = NewPsi[0];
+                    Site[i].Psi[1] = NewPsi[1];
+                }
+            }
 
             /*************PSI UPDATE: phase update **********/
 
@@ -31,16 +56,17 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 NewPsi[1] = Site[i].Psi[1];
                 d_theta = rn::uniform_real_box(-MC.theta_box, MC.theta_box);
                 NewPsi[alpha].t = fmod(OldPsi[alpha].t + d_theta, 2*M_PI);
+                NewPsi[alpha].r = OldPsi[alpha].r;
 
-                oldE = local_energy(OldPsi, i, Hp, Site, alpha);
-                newE = local_energy(NewPsi, i, Hp, Site, alpha);
+                oldE = local_energy(OldPsi, i, Hp, Site);
+                newE = local_energy(NewPsi, i, Hp, Site);
                 deltaE = (newE - oldE);
                 if (deltaE < 0) {
                     Site[i].Psi[alpha] = NewPsi[alpha];
                     acc_theta++;
                 } else {
                     rand = rn::uniform_real_box(0, 1);
-                    //Boltzmann weight: exp(-\beta \Delta E) E= h³ \sum_i E(i)
+
                     if (rand < exp(-1/T * deltaE)) {
                         Site[i].Psi[alpha] = NewPsi[alpha];
                         acc_theta++;
@@ -55,11 +81,12 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
 }
 
-double local_energy(std::array<O2, 2> &Psi, int i, H_parameters &Hp, const std::vector<Node> &Site, int alpha) {
+double local_energy(std::array<O2, 2> &Psi, int i, H_parameters &Hp, const std::vector<Node> &Site) {
 
-
-    double cos_in_plane, interaction, tot_energy;
+    double h_Kinetic=0., h_Josephson=0., tot_energy;
+    double gauge_phase1, gauge_phase2;
     int ix, iy;
+    int nn_ip, nn_im;
 
     ix = i % L;
     iy = i / L;
@@ -71,21 +98,26 @@ double local_energy(std::array<O2, 2> &Psi, int i, H_parameters &Hp, const std::
     int imx= (ix == 0 ? L-1: ix-1)+L*(iy); //Relevant
     int imy= ix+L*((iy == 0 ? L-1: iy-1)); //Relevant
 
+    for(int alpha=0; alpha<2; alpha ++) {
 
-    if (alpha == 0) {
-        cos_in_plane = - Hp.J1 * (cos (Psi[alpha].t-Site[ipx].Psi[alpha].t) + cos (Psi[alpha].t-Site[ipy].Psi[alpha].t) +
-                                  cos (Site[imy].Psi[alpha].t-Psi[alpha].t) + cos (Site[imx].Psi[alpha].t-Psi[alpha].t) );
-        interaction = + Hp.K * (cos (2*(Psi[alpha].t-Psi[alpha+1].t)));
-
-        tot_energy = cos_in_plane + interaction;
+        for (int vec = 0; vec < 2; vec++) {
+            if (vec == 0) {
+                 nn_ip = ipx;
+                 nn_im = imx;
+            } else if (vec == 1) {
+                 nn_ip = ipy;
+                 nn_im = imy;
+            }
+            gauge_phase1 = Site[nn_ip].Psi[alpha].t - Psi[alpha].t ;
+            gauge_phase2 = Psi[alpha].t - Site[nn_im].Psi[alpha].t ;
+            h_Kinetic -=  (Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase1);
+            h_Kinetic -=  (Psi[alpha].r * Site[nn_im].Psi[alpha].r) * cos(gauge_phase2);
+        }
     }
-    else{
-        cos_in_plane = - Hp.J2 * (cos (Psi[alpha].t-Site[ipx].Psi[alpha].t) + cos (Psi[alpha].t-Site[ipy].Psi[alpha].t) +
-                                  cos (Site[imy].Psi[alpha].t-Psi[alpha].t) + cos (Site[imx].Psi[alpha].t-Psi[alpha].t) );
-        interaction = + Hp.K * (cos (2*(Psi[alpha].t-Psi[alpha-1].t)));
 
-        tot_energy = cos_in_plane + interaction;
-    }
+    h_Josephson +=  Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)));
+
+    tot_energy=  h_Kinetic + h_Josephson;
 
     return tot_energy;
 }

@@ -13,14 +13,14 @@ void energy(struct Measures &mis, struct H_parameters &Hp, std::vector<Node> &Si
 
     for (size_t i = 0; i < L; i++) {
         for (size_t j = 0; j < L; j++) {
-            first_layer += (cos(Site[i+j*L].Psi[0].t - Site[((i + 1) % L)+j*L].Psi[0].t) +
-                              cos(Site[i+j*L].Psi[0].t - Site[i+((j + 1)% L)*L].Psi[0].t));
-            second_layer += (cos(Site[i+j*L].Psi[1].t - Site[((i + 1) % L)+j*L].Psi[1].t) +
-                              cos(Site[i+j*L].Psi[1].t - Site[i+((j + 1)% L)*L].Psi[1].t));
-            interaction +=  cos(2*(Site[i+j*L].Psi[1].t-Site[i+j*L].Psi[0].t));
+            first_layer += Site[i+j*L].Psi[0].r * Site[((i + 1) % L)+j*L].Psi[0].r *(cos(Site[i+j*L].Psi[0].t - Site[((i + 1) % L)+j*L].Psi[0].t))
+                            +Site[i+j*L].Psi[0].r*Site[i+((j + 1)% L)*L].Psi[0].r*(cos(Site[i+j*L].Psi[0].t - Site[i+((j + 1)% L)*L].Psi[0].t));
+            second_layer += Site[i+j*L].Psi[1].r* Site[((i + 1) % L)+j*L].Psi[1].r *(cos(Site[i+j*L].Psi[1].t - Site[((i + 1) % L)+j*L].Psi[1].t)
+                            + Site[i+j*L].Psi[1].r * Site[i+((j + 1)% L)*L].Psi[1].r *cos(Site[i+j*L].Psi[1].t - Site[i+((j + 1)% L)*L].Psi[1].t));
+            interaction +=  Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r * cos(2*(Site[i+j*L].Psi[1].t-Site[i+j*L].Psi[0].t));
         }
     }
-    mis.E = - Hp.J1 * first_layer - Hp.J2 * second_layer + Hp.K * interaction;
+    mis.E = - first_layer - second_layer + Hp.K * interaction;
 }
 
 // Function to calculate the total magnetization of the lattice
@@ -82,15 +82,18 @@ void helicity_modulus (struct H_parameters &Hp, const std::vector<Node> &Site, s
         for (int j = 0; j < L; j++) {
 
             for (int alpha = 0; alpha < 2; ++alpha) {
-                sum_sines[alpha] += sin(Site[i+j*L].Psi[alpha].t - Site[((i + 1) % L)+j*L].Psi[alpha].t);
-                sum_cos[alpha] += cos(Site[i+j*L].Psi[alpha].t - Site[((i + 1) % L)+j*L].Psi[alpha].t);
+                sum_sines[alpha] += Site[i+j*L].Psi[alpha].r * Site[((i + 1) % L)+j*L].Psi[alpha].r * sin(Site[i+j*L].Psi[alpha].t - Site[((i + 1) % L)+j*L].Psi[alpha].t);
+                sum_cos[alpha] += Site[i+j*L].Psi[alpha].r * Site[((i + 1) % L)+j*L].Psi[alpha].r * cos(Site[i+j*L].Psi[alpha].t - Site[((i + 1) % L)+j*L].Psi[alpha].t);
             }
         }
     }
+    sum_sines[0] /= N;
+    sum_cos[0] /= N;
+
+    sum_sines[1] /= N;
+    sum_cos[1] /= N;
 
     for (int alpha = 0; alpha < 2; ++alpha) {
-        sum_sines[alpha] /= N;
-        sum_cos[alpha] /= N;
 
         mis.Ic[alpha] = sum_sines[alpha];
         mis.Jd[alpha] = sum_cos[alpha];
@@ -228,7 +231,7 @@ void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write
 
         for(auto & s : Site){
             // Write the Psi field data of the node to the file in text format
-            fprintf(fPsi, "%.8lf %.8lf\n", s.Psi[0].t, s.Psi[1].t);  // Adjust the format as needed
+            fprintf(fPsi, "%.8lf %.8lf %.8lf %.8lf\n", s.Psi[0].t, s.Psi[0].r, s.Psi[1].t, s.Psi[1].r);
         }
         fclose(fPsi);
     } else {
