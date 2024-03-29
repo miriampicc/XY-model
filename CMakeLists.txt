@@ -57,9 +57,9 @@ add_library(cmt-flags INTERFACE)
 
 
 ### Find dependencies
-find_package(h5pp   1.11.0 REQUIRED)
-find_package(Eigen3 3.4.0  REQUIRED)
-target_link_libraries(cmt-libs INTERFACE h5pp::h5pp Eigen3::Eigen)
+#find_package(h5pp   1.11.0 REQUIRED)
+#find_package(Eigen3 3.4.0  REQUIRED)
+#target_link_libraries(cmt-libs INTERFACE h5pp::h5pp Eigen3::Eigen)
 
 
 if(CMT_ENABLE_OPENMP)
