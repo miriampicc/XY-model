@@ -8,9 +8,12 @@ project(CMT VERSION 1.1
         )
 #enable_language(CXX)
 
+set(CMAKE_OSX_SYSROOT /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk CACHE PATH "The path to the macOS SDK to use")
+
+
 ### Set options
-option(CMT_ENABLE_OPENMP "Enable OpenMP flags such as -fopenmp"   OFF)
-option(CMT_ENABLE_MPI    "Enables use of MPI (work in progress)"  OFF)
+option(CMT_ENABLE_OPENMP "Enable OpenMP flags such as -fopenmp"   ON)
+option(CMT_ENABLE_MPI    "Enables use of MPI (work in progress)"  ON)
 option(CMT_ENABLE_TESTS  "Enables CTest testing"                  OFF)
 option(CMT_CMAKE_DEBUG   "Print info during CMake configuration"  OFF)
 
@@ -38,12 +41,12 @@ add_executable(CMT
         source/o2.h
         source/robust_filesystem.h
         source/initialization.cpp
-        source/initialization.cpp
         source/initialization.h
         source/02.h
         source/montecarlo.h
-        source/montecarlo.h
         source/montecarlo.cpp
+        source/parallel_temp.cpp
+        source/parallel_temp.h
 )
 target_include_directories(CMT PRIVATE source)
 set_target_properties(CMT PROPERTIES LINK_WHAT_YOU_USE TRUE)
@@ -63,13 +66,43 @@ add_library(cmt-flags INTERFACE)
 
 
 if(CMT_ENABLE_OPENMP)
-    find_package(OpenMP COMPONENTS CXX REQUIRED) # Uses DMRG's own find module
-    target_link_libraries(cmt-libs INTERFACE OpenMP::OpenMP_CXX)
+    # Try to find the package
+    find_package(OpenMP)
+
+    if(OpenMP_CXX_FOUND)
+        message(STATUS "OpenMP found: ${OpenMP_CXX_FLAGS}")
+        target_compile_options(cmt-flags INTERFACE ${OpenMP_CXX_FLAGS})
+        target_link_libraries(cmt-flags INTERFACE OpenMP::OpenMP_CXX)
+    else()
+        message(STATUS "OpenMP not found, trying manual specification...")
+        # Set the paths manually
+        set(OpenMP_BASE_DIR "/opt/homebrew/opt/libomp")
+
+        set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I${OpenMP_BASE_DIR}/include")
+        set(OPENMP_LIBRARY "${OpenMP_BASE_DIR}/lib/libomp.dylib")
+
+        target_compile_options(cmt-flags INTERFACE ${OpenMP_CXX_FLAGS})
+        target_link_libraries(cmt-flags INTERFACE ${OPENMP_LIBRARY})
+
+        include_directories("${OpenMP_BASE_DIR}/include")
+
+    endif()
 endif()
 
 if(CMT_ENABLE_MPI)
     find_package(MPI COMPONENTS CXX REQUIRED) # Uses DMRG's own find module
-    target_link_libraries(cmt-libs INTERFACE MPI::MPI_CXX)
+    if(MPI_CXX_FOUND)
+        message(STATUS "MPI found: ${MPI_CXX_LINK_FLAGS}")
+        target_link_libraries(cmt-flags INTERFACE MPI::MPI_CXX)
+    else()
+        message(STATUS "MPI not found")
+    endif()
+endif()
+
+if(APPLE)
+    # Assume default Homebrew installation path
+    include_directories(/usr/local/opt/libomp/include)
+    link_directories(/usr/local/opt/libomp/lib)
 endif()
 
 

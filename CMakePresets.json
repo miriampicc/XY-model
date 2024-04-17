@@ -8,12 +8,12 @@
   "configurePresets": [
     {
       "name": "default",
-      "hidden": true,
+      "hidden": false,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "CMT_ENABLE_OPENMP": "TRUE",
-        "CMT_ENABLE_MPI": "FALSE",
+        "CMT_ENABLE_MPI": "TRUE",
         "CMT_ENABLE_TESTS": "TRUE",
         "CMT_ENABLE_ASAN": "FALSE",
         "CMT_ENABLE_USAN": "FALSE",
@@ -28,7 +28,10 @@
         "CMAKE_CXX_FLAGS": "",
         "CMAKE_CXX_FLAGS_DEBUG": "-O0 -g3 -ggdb -fno-omit-frame-pointer",
         "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-Og -g3 -ggdb -fno-omit-frame-pointer",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "TRUE"
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "TRUE",
+        "CMAKE_C_COMPILER": "/opt/homebrew/bin/mpicc",
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/bin/mpic++",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "13.4.1"
       },
       "environment": {
         "NINJA_STATUS": "[run %r|beg %s|fin %f|tot %t|rate %o|time %e]:"
@@ -67,6 +70,14 @@
       },
       "environment": {
         "PATH": "$env{HOME}/anaconda3/bin:$env{HOME}/miniconda3/bin:$penv{PATH}"
+      }
+    },
+    {
+      "name": "mpi-gcc-13",
+      "hidden": false,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "/opt/homebrew/bin/mpicc",
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/bin/mpic++"
       }
     },
     {
@@ -146,6 +157,10 @@
   ],
   "buildPresets": [
     {
+      "name": "mpi-gcc-13",
+      "configurePreset": "mpi-gcc-13"
+    },
+    {
       "name": "release-conan",
       "configurePreset": "release-conan"
     },
@@ -171,6 +186,20 @@
     }
   ],
   "testPresets": [
+
+    {
+      "name": "mpi-gcc-13",
+      "displayName": "MPI GCC 13",
+      "configurePreset": "mpi-gcc-13",
+      "output": {
+        "verbosity": "extra",
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    },
     {
       "name": "release-conan",
       "displayName": "Release|conan package manager",

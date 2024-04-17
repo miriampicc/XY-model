@@ -30,20 +30,20 @@ title = ['Lattice 1', 'Lattice 2']
                 0.4555, 0.4560, 0.4565, 0.4570, 0.4575, 0.4580, 0.4585, 0.4590, 0.4595, 0.46]
 """
 
-temperatures = [0.45, 0.455, 0.46, 0.465, 0.47, 0.475, 0.48, 0.485, 0.49, 0.495,
+"""temperatures = [0.45, 0.455, 0.46, 0.465, 0.47, 0.475, 0.48, 0.485, 0.49, 0.495,
                 0.5, 0.505, 0.51, 0.515, 0.52, 0.525, 0.53, 0.535, 0.54, 0.545,
                 0.55, 0.555, 0.56, 0.565, 0.57, 0.575, 0.58, 0.585, 0.59, 0.595,
-                0.6, 0.605, 0.61, 0.615, 0.62, 0.625, 0.63, 0.635, 0.64, 0.645,0.65]
+                0.6, 0.605, 0.61, 0.615, 0.62, 0.625, 0.63, 0.635, 0.64, 0.645,0.65]"""
 
-"""temperatures = [0.5, 0.502, 0.504, 0.506, 0.508, 0.51, 0.512, 0.514, 0.516, 0.518, 0.52, 
+temperatures = [0.5, 0.502, 0.504, 0.506, 0.508, 0.51, 0.512, 0.514, 0.516, 0.518, 0.52, 
                 0.522, 0.524, 0.526, 0.528, 0.53, 0.532, 0.534, 0.536, 0.538, 0.54, 0.542, 
                 0.544, 0.546, 0.548, 0.55, 0.552, 0.554, 0.556, 0.558, 0.56, 0.562, 0.564, 
                 0.566, 0.568, 0.57, 0.572, 0.574, 0.576, 0.578, 0.58, 
-                0.582, 0.584, 0.586, 0.588, 0.59, 0.592, 0.594, 0.596, 0.598, 0.6]"""
+                0.582, 0.584, 0.586, 0.588, 0.59, 0.592, 0.594, 0.596, 0.598, 0.6]
 
 #L=[8, 12, 16, 20, 24, 32, 40, 48]  #, 20, 24, 32, 40
 #L=[8, 12, 16, 20, 24, 32, 40, 48]
-L=[8, 12, 16, 20, 24, 32, 40, 48]  #, 
+L=[8, 12, 16, 20, 24, 32]  #, 
 rainbow_colors = ['red', 'orange', 'deeppink', 'indigo', 'violet', 'green', 'blue', 'brown' ]
 K=5
 
@@ -92,8 +92,8 @@ for l in L:
         Jd2 = []
         Ic2 = []
 
-        #file_path1 = f"/Users/mirimi/Desktop/hihi/KTH/XY-model/Relative_fluctuations/K={K}/Output_L={l}/T_{temp}" + '/Helicity_modulus1.txt'
-        file_path1 = f"/Users/mirimi/Desktop/hihi/KTH/XY-model-fixed/Output_K={K}/Output_L={l}/T_{temp}" + '/Helicity_modulus1.txt'
+        file_path1 = f"/Users/mirimi/Desktop/hihi/KTH/XY-model/Relative_fluctuations/K={K}/Output_L={l}/T_{temp}" + '/Helicity_modulus1.txt'
+        #file_path1 = f"/Users/mirimi/Desktop/hihi/KTH/XY-model-fixed/Output_K={K}/Output_L={l}/T_{temp}" + '/Helicity_modulus1.txt'
         with open(file_path1, "r") as file:
             for line in file:
                 columns = line.strip().split()
@@ -101,8 +101,8 @@ for l in L:
                     Jd1.append(float(columns[0]))
                     Ic1.append(float(columns[1]))
 
-        #file_path2 = f"/Users/mirimi/Desktop/hihi/KTH/XY-model/Relative_fluctuations/K={K}/Output_L={l}/T_{temp}" + '/Helicity_modulus2.txt'
-        file_path2 = f"/Users/mirimi/Desktop/hihi/KTH/XY-model-fixed/Output_K={K}/Output_L={l}/T_{temp}" + '/Helicity_modulus2.txt'
+        file_path2 = f"/Users/mirimi/Desktop/hihi/KTH/XY-model/Relative_fluctuations/K={K}/Output_L={l}/T_{temp}" + '/Helicity_modulus2.txt'
+        #file_path2 = f"/Users/mirimi/Desktop/hihi/KTH/XY-model-fixed/Output_K={K}/Output_L={l}/T_{temp}" + '/Helicity_modulus2.txt'
         with open(file_path2, "r") as file:
             for line in file:
                 columns = line.strip().split()

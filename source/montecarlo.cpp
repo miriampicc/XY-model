@@ -5,20 +5,23 @@
 #include "main.h"
 #include "rng.h"
 
-void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double T){
+void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double T_temp){
 
-    double l, d_theta, rand;
-    double acc_rate=0.5, acc_theta=0.;
+    double d_theta;
+    double l, rand, d_A;
+    double acc_rate=0.5, acc_theta=0., acc_A=0.;
     std::array<O2, 2> NewPsi;
     std::array<O2, 2> OldPsi;
+    double OldA, NewA;
     double newE, oldE, deltaE;
-    int N= L*L;
-    int k,i,j;
+    size_t N= L*L;
 
-    for (int iy = 0; iy < L; iy++) {
-        for (int ix = 0; ix < L; ix++) {
+    for (size_t iy = 0; iy < L; iy++) {
+        for (size_t ix = 0; ix < L; ix++) {
             /*choose randomly a site of the lattice*/
-            i = rn::uniform_integer_box(0, N-1);
+            //i = rn::uniform_integer_box(0, N - 1);
+
+            size_t i = ix + L * (iy);
 
             /*************PSI UPDATE: density update with total density contraint **********/
 
@@ -29,7 +32,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
             l = rn::uniform_real_box(0, 1);
             NewPsi[0].r = sqrt(l);
-            NewPsi[1].r = sqrt(1-l);
+            NewPsi[1].r = sqrt(1 - l);
 
             oldE = local_energy(OldPsi, i, Hp, Site);
             newE = local_energy(NewPsi, i, Hp, Site);
@@ -40,7 +43,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 Site[i].Psi[1] = NewPsi[1];
             } else {
                 rand = rn::uniform_real_box(0, 1);
-                if (rand < exp(-1/T * deltaE)) {
+                if (rand < exp(-1 / T_temp * deltaE)) {
 
                     Site[i].Psi[0] = NewPsi[0];
                     Site[i].Psi[1] = NewPsi[1];
@@ -55,7 +58,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 NewPsi[0] = Site[i].Psi[0];
                 NewPsi[1] = Site[i].Psi[1];
                 d_theta = rn::uniform_real_box(-MC.theta_box, MC.theta_box);
-                NewPsi[alpha].t = fmod(OldPsi[alpha].t + d_theta, 2*M_PI);
+                NewPsi[alpha].t = fmod(OldPsi[alpha].t + d_theta, 2 * M_PI);
                 NewPsi[alpha].r = OldPsi[alpha].r;
 
                 oldE = local_energy(OldPsi, i, Hp, Site);
@@ -67,36 +70,67 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 } else {
                     rand = rn::uniform_real_box(0, 1);
 
-                    if (rand < exp(-1/T * deltaE)) {
+                    if (rand < exp(-1 / T_temp * deltaE)) {
                         Site[i].Psi[alpha] = NewPsi[alpha];
                         acc_theta++;
                     }
                 }
             }
+
+            /***********VECTOR POTENTIAL*******/
+
+            if (Hp.e != 0) {   //then we also have to update the vector potential
+
+                for (int alpha = 0; alpha < 2; alpha++) {
+
+                    OldA = Site[i].A[alpha];
+                    d_A = rn::uniform_real_box(-MC.theta_box_A, MC.theta_box_A);
+                    NewA = OldA + d_A;
+
+                    oldE = local_energy_A(OldA, i, alpha, Hp, Site);
+                    newE = local_energy_A(NewA, i, alpha, Hp, Site);
+
+                    deltaE = (newE - oldE);
+                    if (deltaE < 0) {
+                        Site[i].A[alpha] = NewA;
+                        acc_A++;
+                        //std::cout<<"Updating A form "<< OldA <<" to "<< NewA << " on site "<< i<<std::endl;
+                    } else {
+                        rand = rn::uniform_real_box(0, 1);
+                        if (rand < exp(-1 / T_temp * deltaE)) {
+                            Site[i].A[alpha] = NewA;
+                            acc_A++;
+                            //std::cout<<"Updating A form "<< OldA <<" to "<< NewA << " on site "<< i<<std::endl;
+                        }
+                    }
+                }
+            }
+
         }
     }
 
-    acc_theta=(double) acc_theta/(2*N);
+    acc_theta=(double) acc_theta/static_cast<double>(2*N);
+    acc_A=(double) acc_A / static_cast<double>(2*N);
     MC.theta_box= MC.theta_box*((0.5*acc_theta/acc_rate)+0.5);
-
+    MC.theta_box_A= MC.theta_box_A*((0.5*acc_A/acc_rate)+0.5);
 }
 
-double local_energy(std::array<O2, 2> &Psi, int i, H_parameters &Hp, const std::vector<Node> &Site) {
+double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const std::vector<Node> &Site) {
 
     double h_Kinetic=0., h_Josephson=0., tot_energy;
     double gauge_phase1, gauge_phase2;
-    int ix, iy;
-    int nn_ip, nn_im;
+    size_t ix, iy;
+    size_t nn_ip, nn_im;
 
     ix = i % L;
     iy = i / L;
 
-    int ip=(ix == L-1 ? 0: ix+1);
-    int ipx= ip+L*(iy);                    //Relevant
-    int jp=(iy == L-1 ? 0: iy+1);
-    int ipy= ix+(L*jp);                    //Relevant
-    int imx= (ix == 0 ? L-1: ix-1)+L*(iy); //Relevant
-    int imy= ix+L*((iy == 0 ? L-1: iy-1)); //Relevant
+    size_t ip=(ix == L-1 ? 0: ix+1);
+    size_t ipx= ip+L*(iy);                    //Relevant
+    size_t jp=(iy == L-1 ? 0: iy+1);
+    size_t ipy= ix+(L*jp);                    //Relevant
+    size_t imx= (ix == 0 ? L-1: ix-1)+L*(iy); //Relevant
+    size_t imy= ix+L*((iy == 0 ? L-1: iy-1)); //Relevant
 
     for(int alpha=0; alpha<2; alpha ++) {
 
@@ -108,8 +142,9 @@ double local_energy(std::array<O2, 2> &Psi, int i, H_parameters &Hp, const std::
                  nn_ip = ipy;
                  nn_im = imy;
             }
-            gauge_phase1 = Site[nn_ip].Psi[alpha].t - Psi[alpha].t ;
-            gauge_phase2 = Psi[alpha].t - Site[nn_im].Psi[alpha].t ;
+            //NB: vec is useful to consider the potential vector in both the components
+            gauge_phase1 = Site[nn_ip].Psi[alpha].t - Psi[alpha].t + Hp.e * Site[i].A[vec] ;
+            gauge_phase2 = Psi[alpha].t - Site[nn_im].Psi[alpha].t + Hp.e * Site[nn_im].A[vec];
             h_Kinetic -=  (Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase1);
             h_Kinetic -=  (Psi[alpha].r * Site[nn_im].Psi[alpha].r) * cos(gauge_phase2);
         }
@@ -120,4 +155,64 @@ double local_energy(std::array<O2, 2> &Psi, int i, H_parameters &Hp, const std::
     tot_energy=  h_Kinetic + h_Josephson;
 
     return tot_energy;
+}
+
+double local_energy_A (double A, size_t i, int alpha, H_parameters &Hp, const std::vector<Node> &Site ){
+
+    double h_Kinetic=0., tot_energy;
+    double gauge_phase1, A_plaq, A_2=0.;
+    size_t ix, iy;
+    size_t nn_ip, nn_ipl, nn_iml;
+
+    ix = i % L;
+    iy = i / L;
+
+    size_t ip=(ix == L-1 ? 0: ix+1);
+    size_t ipx= ip+L*(iy);                    //Relevant
+    size_t jp=(iy == L-1 ? 0: iy+1);
+    size_t ipy= ix+(L*jp);                    //Relevant
+    size_t imx= (ix == 0 ? L-1: ix-1)+L*(iy); //Relevant
+    size_t imy= ix+L*((iy == 0 ? L-1: iy-1)); //Relevant
+
+    if (alpha == 0) {
+        nn_ip = ipx;
+    } else if (alpha == 1){
+        nn_ip = ipy;
+    }
+
+    for(int vec=0; vec<2; vec++){
+        gauge_phase1 = Site[nn_ip].Psi[vec].t - Site[i].Psi[vec].t + Hp.e * A ;
+        h_Kinetic -=  (Site[i].Psi[vec].r * Site[nn_ip].Psi[vec].r) * cos(gauge_phase1);
+    }
+
+    //considering now all the plaquettes that involve the vectors
+
+    for ( int l=0; l<2; l++){
+        if (l==0){
+            nn_ipl = ipx;
+        } else if (l==1){
+            nn_ipl = ipy;
+        }
+        if (l != alpha ) {
+            A_plaq = A + Site[nn_ip].A[l] - Site[nn_ipl].A[alpha] - Site[i].A[l];
+            A_2 += A_plaq * A_plaq;
+        }
+    }
+
+    for (int l=0; l<2; l++){
+        if(l==0){
+            nn_iml = imx;
+        } else if (l == 1){
+            nn_iml = imy;
+        }
+        if (l != alpha){
+            A_plaq = Site[nn_iml].A[alpha] + Site[nn(nn_iml, alpha, 1)].A[l] - A - Site[nn_iml].A[l];
+            A_2 += A_plaq * A_plaq;
+        }
+    }
+
+    tot_energy = h_Kinetic + A_2;
+
+    return tot_energy;
+
 }

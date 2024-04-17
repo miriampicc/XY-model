@@ -5,27 +5,54 @@
 
 
 // Define energy function
-void energy(struct Measures &mis, struct H_parameters &Hp, std::vector<Node> &Site ) {
+void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Node> &Site ) {
 
-    double first_layer = 0.0;
-    double second_layer = 0.0;
     double interaction = 0.0;
+    double gauge_phase , h_Kinetic=0.;
+    double A_plaq, A_2=0.;
+    size_t ip, nn_ip;
 
     for (size_t i = 0; i < L; i++) {
         for (size_t j = 0; j < L; j++) {
-            first_layer += Site[i+j*L].Psi[0].r * Site[((i + 1) % L)+j*L].Psi[0].r *(cos(Site[i+j*L].Psi[0].t - Site[((i + 1) % L)+j*L].Psi[0].t))
-                            +Site[i+j*L].Psi[0].r*Site[i+((j + 1)% L)*L].Psi[0].r*(cos(Site[i+j*L].Psi[0].t - Site[i+((j + 1)% L)*L].Psi[0].t));
-            second_layer += Site[i+j*L].Psi[1].r* Site[((i + 1) % L)+j*L].Psi[1].r *(cos(Site[i+j*L].Psi[1].t - Site[((i + 1) % L)+j*L].Psi[1].t)
-                            + Site[i+j*L].Psi[1].r * Site[i+((j + 1)% L)*L].Psi[1].r *cos(Site[i+j*L].Psi[1].t - Site[i+((j + 1)% L)*L].Psi[1].t));
-            interaction +=  Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r * cos(2*(Site[i+j*L].Psi[1].t-Site[i+j*L].Psi[0].t));
+
+            for (int alpha=0; alpha<2; alpha++){
+                for(int vec2=0; vec2<2; vec2++){
+                    if (vec2 == 0) {
+                        ip = (i == L - 1 ? 0 : i + 1);
+                        nn_ip = ip + L * (j);
+                    } else if (vec2 == 1) {
+                        ip = (j == L - 1 ? 0 : j + 1);
+                        nn_ip = i + L * ip;
+                    }
+                    gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i+j*L].Psi[alpha].t + Hp.e * Site[i+j*L].A[vec2];
+                    h_Kinetic -= (Site[i+j*L].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase);
+                }
+            }
+
+            interaction +=  (Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r) * (Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r) * cos(2*(Site[i+j*L].Psi[1].t-Site[i+j*L].Psi[0].t));
+
+            if (Hp.e != 0) {
+                for(size_t vec1=0; vec1<2; vec1++){
+                    for (size_t vec2 = vec1+1; vec2 < 2; vec2++) {
+                        //F_{alpha,vec}= A_alpha(r_i) + A_vec(ri+alpha) - A_alpha(r_i+vec) - A_vec(ri)
+                        A_plaq = (Site[i+j*L].A[vec1] + Site[nn(i+j*L, vec1, 1)].A[vec2] - Site[nn(i+j*L, vec2, 1)].A[vec1] -
+                               Site[i+j*L].A[vec2]);
+                        A_2 +=  (A_plaq * A_plaq);
+                    }
+                }
+
+            }
         }
     }
-    mis.E = - first_layer - second_layer + Hp.K * interaction;
+    mis.E =  h_Kinetic + Hp.K * interaction + A_2;
+    mis.E_kinetic = h_Kinetic;
+    mis.E_josephson = interaction;
+    mis.E_B = A_2;
 }
 
 // Function to calculate the total magnetization of the lattice
 
-void single_magnetization (std::vector<Node> &Site, struct Measures &mis, int N ) {
+void single_magnetization (std::vector<Node> &Site, struct Measures &mis, size_t N ) {
 
     double Mx[2]={0}, My[2]={0};
 
@@ -37,8 +64,8 @@ void single_magnetization (std::vector<Node> &Site, struct Measures &mis, int N 
     }
 
     for(int alpha=0; alpha<2; alpha++){
-        Mx[alpha] /=N;
-        My[alpha] /=N;
+        Mx[alpha] /= static_cast<double>(N);
+        My[alpha] /= static_cast<double>(N);
     }
 
     for(int alpha=0; alpha<2; alpha++) {
@@ -46,10 +73,11 @@ void single_magnetization (std::vector<Node> &Site, struct Measures &mis, int N 
     }
 }
 
-void trsb_magnetization(struct Measures &mis, const std::vector<Node> &Site, int N) {
+void trsb_magnetization(struct Measures &mis, const std::vector<Node> &Site) {
     //The Ising parameter m(x,y)=+/-1 indicates the chirality between the two phases.
 
-    long double phi_shifted = 0.;
+    long double phi_shifted;
+
     for (size_t iy = 0; iy < L; iy++) {
         for (size_t ix = 0; ix < L; ix++) {
             size_t i = ix + L * (iy);
@@ -72,26 +100,34 @@ void trsb_magnetization(struct Measures &mis, const std::vector<Node> &Site, int
 
 
 
-void helicity_modulus (struct H_parameters &Hp, const std::vector<Node> &Site, struct Measures &mis, int N ){
+void helicity_modulus (struct H_parameters &Hp, const std::vector<Node> &Site, struct Measures &mis, size_t N ){
 
     double sum_sines[2] = {0};
     double sum_cos[2] = {0};
+    double gauge_phase;
+    int vec=0; //in this case we are calculating the helicity modulus along the x direction
 
 
-    for (int i = 0; i < L; i++) {
-        for (int j = 0; j < L; j++) {
+    for (int iy = 0; iy < L; iy++) {
+        for (int ix = 0; ix < L; ix++) {
+
+            size_t i = ix + L * iy;
+            size_t ip = (ix == L-1 ? 0: ix+1);
+            size_t nn_ip = ip +L * (iy);
 
             for (int alpha = 0; alpha < 2; ++alpha) {
-                sum_sines[alpha] += Site[i+j*L].Psi[alpha].r * Site[((i + 1) % L)+j*L].Psi[alpha].r * sin(Site[i+j*L].Psi[alpha].t - Site[((i + 1) % L)+j*L].Psi[alpha].t);
-                sum_cos[alpha] += Site[i+j*L].Psi[alpha].r * Site[((i + 1) % L)+j*L].Psi[alpha].r * cos(Site[i+j*L].Psi[alpha].t - Site[((i + 1) % L)+j*L].Psi[alpha].t);
+
+                gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i].Psi[alpha].t + Hp.e * Site[i].A[vec];
+                sum_sines[alpha] += Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r * sin(gauge_phase);
+                sum_cos[alpha] += Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r * cos(gauge_phase);
             }
         }
     }
-    sum_sines[0] /= N;
-    sum_cos[0] /= N;
+    sum_sines[0] /= static_cast<double>(N);
+    sum_cos[0] /= static_cast<double>(N);
 
-    sum_sines[1] /= N;
-    sum_cos[1] /= N;
+    sum_sines[1] /= static_cast<double>(N);
+    sum_cos[1] /= static_cast<double>(N);
 
     for (int alpha = 0; alpha < 2; ++alpha) {
 
@@ -100,7 +136,29 @@ void helicity_modulus (struct H_parameters &Hp, const std::vector<Node> &Site, s
     }
 }
 
-void vortex (const std::vector<Node> &Site, struct Measures &mis, int N ) {
+void dual_stiffness (struct Measures &mis, const std::vector<Node> &Site) {
+
+    long double qx_min = (2 * M_PI) / static_cast<long double>(L);
+    long double normalization_const = 1./((2*M_PI)*(2*M_PI)*static_cast<long double>(L)*static_cast<long double>(L));
+    long double Im_dual=0., Re_dual=0.;
+    long double Dx_Ay, Dy_Ax;
+    int i, j;
+
+    for (i=0; i<L; i++){
+        for (j=0; j<L; j++){
+            Dx_Ay = Site[nn(i+j*L, 0, 1)].A[1] - Site[i+j*L].A[1];
+            Dy_Ax = Site[nn(i+j*L, 1, 1)].A[0] - Site[i+j*L].A[0];
+
+            Im_dual += (Dx_Ay - Dy_Ax) * sin (qx_min * i);
+            Re_dual += (Dx_Ay - Dy_Ax) * cos (qx_min * i);
+        }
+    }
+
+    mis.dual_stiff_Z = normalization_const * ((Im_dual * Im_dual) + (Re_dual * Re_dual));
+
+}
+
+void vortex (const std::vector<Node> &Site, struct Measures &mis) {
 
     double sq; //this should represent the sum of the angle of every square
     double phi_1, phi_1_fin,  phi_2, phi_2_fin, phi_3, phi_3_fin, phi_4, phi_4_fin;
@@ -108,19 +166,12 @@ void vortex (const std::vector<Node> &Site, struct Measures &mis, int N ) {
 
     int n_plus [2] = {0};
     int n_minus [2] = {0};
-    int n_tot [2] = {0};
 
     for (int i=0; i<L; i++ ) {
 
         for (int j=0; j<L; j++ ) {
 
             for (int alpha = 0; alpha < 2; ++alpha) {
-
-                sq = 0 ;
-                phi_1 = 0;
-                phi_2 = 0;
-                phi_3 = 0;
-                phi_4 = 0;
 
                 if ( j == (L-1) & i != (L-1)){
 
@@ -220,11 +271,12 @@ double wrapToPi(double angle) {
 }
 
 
-void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write, const std::string &configuration) {
-    fs::path outputFile = directory_write / configuration;
+void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write, const std::string &configuration_Psi, const std::string &configuration_A, struct H_parameters &Hp) {
+
+    fs::path outputFile_Psi = directory_write / configuration_Psi;
 
     // Open the file for writing in text mode
-    FILE *fPsi = fopen(outputFile.c_str(), "w");
+    FILE *fPsi = fopen(outputFile_Psi.c_str(), "w");
 
     // Check if the file is opened successfully
     if ((fPsi != nullptr)) {
@@ -236,6 +288,47 @@ void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write
         fclose(fPsi);
     } else {
         // Handle the case where the file couldn't be opened
-        std::cerr << "Error opening file for writing: " << outputFile << std::endl;
+        std::cerr << "Error opening file for writing: " << outputFile_Psi << std::endl;
     }
+
+    if (Hp.e != 0) {
+
+        fs::path outputFile_A = directory_write /configuration_A;
+
+        FILE *fA = fopen(outputFile_A.c_str(), "w");
+
+        if ((fA != nullptr)) {
+
+            for(auto & s: Site){
+                fprintf(fA, "%.8lf %.8lf\n", s.A[0], s.A[1]);
+            }
+            fclose(fA);
+        } else {
+            // Handle the case where the file couldn't be opened
+            std::cerr << "Error opening file for writing: " << outputFile_Psi << std::endl;
+        }
+    }
+}
+
+
+size_t nn (size_t i, size_t coord, int dir ){
+    size_t ix = i % L;
+    size_t iy = (i/L) % L;
+
+    if(coord==0){
+        int ix_new = static_cast<int>(ix)+ (dir == 0 ? 0 : (dir > 0 ? 1 : -1));
+        if(ix_new==L) { ix_new=0;}
+        if(ix_new < 0){ ix_new=static_cast<int>(L-1);}
+        int iy_new=static_cast<int>(iy);
+        return (static_cast<size_t>(ix_new) + L * (static_cast<size_t>(iy_new)));
+
+    }
+    if(coord==1){
+        int iy_new= static_cast<int>(iy) + (dir == 0 ? 0 : (dir > 0 ? 1 : -1));
+        if(iy_new==static_cast<int>(L)){ iy_new=0;}
+        if(iy_new<0){ iy_new=static_cast<int>(L-1);}
+        int ix_new=static_cast<int>(ix);
+        return (static_cast<size_t>(ix_new) + L * (static_cast<size_t>(iy_new)));
+    }
+    return 1;
 }
