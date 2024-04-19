@@ -18,8 +18,8 @@
         "CMT_ENABLE_ASAN": "FALSE",
         "CMT_ENABLE_USAN": "FALSE",
         "CMT_CMAKE_DEBUG": "TRUE",
-        "CMAKE_VERBOSE_MAKEFILE": "FALSE",
-        "CMAKE_MESSAGE_LOG_LEVEL": "STATUS",
+        "CMAKE_VERBOSE_MAKEFILE": "TRUE",
+        "CMAKE_MESSAGE_LOG_LEVEL": "VERBOSE",
         "CMAKE_CXX_STANDARD": "17",
         "CMAKE_CXX_STANDARD_REQUIRED": "TRUE",
         "CMAKE_CXX_EXTENSIONS": "FALSE",
@@ -29,9 +29,7 @@
         "CMAKE_CXX_FLAGS_DEBUG": "-O0 -g3 -ggdb -fno-omit-frame-pointer",
         "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-Og -g3 -ggdb -fno-omit-frame-pointer",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "TRUE",
-        "CMAKE_C_COMPILER": "/opt/homebrew/bin/mpicc",
-        "CMAKE_CXX_COMPILER": "/opt/homebrew/bin/mpic++",
-        "CMAKE_OSX_DEPLOYMENT_TARGET": "13.4.1"
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "14.0"
       },
       "environment": {
         "NINJA_STATUS": "[run %r|beg %s|fin %f|tot %t|rate %o|time %e]:"
@@ -73,14 +71,6 @@
       }
     },
     {
-      "name": "mpi-gcc-13",
-      "hidden": false,
-      "cacheVariables": {
-        "CMAKE_C_COMPILER": "/opt/homebrew/bin/mpicc",
-        "CMAKE_CXX_COMPILER": "/opt/homebrew/bin/mpic++"
-      }
-    },
-    {
       "name": "gcc-13",
       "hidden": true,
       "cacheVariables": {
@@ -93,7 +83,7 @@
       "hidden": true,
       "cacheVariables": {
         "OpenMP_ROOT" : "/opt/homebrew/opt/libomp",
-        "CMAKE_CXX_COMPILER_TARGET" : "armv8-apple-macos13.4.1"
+        "CMAKE_CXX_COMPILER_TARGET" : "armv8-apple-macos14.0"
       }
     },
     {
@@ -156,10 +146,7 @@
     }
   ],
   "buildPresets": [
-    {
-      "name": "mpi-gcc-13",
-      "configurePreset": "mpi-gcc-13"
-    },
+
     {
       "name": "release-conan",
       "configurePreset": "release-conan"
@@ -187,19 +174,6 @@
   ],
   "testPresets": [
 
-    {
-      "name": "mpi-gcc-13",
-      "displayName": "MPI GCC 13",
-      "configurePreset": "mpi-gcc-13",
-      "output": {
-        "verbosity": "extra",
-        "outputOnFailure": true
-      },
-      "execution": {
-        "noTestsAction": "error",
-        "stopOnFailure": true
-      }
-    },
     {
       "name": "release-conan",
       "displayName": "Release|conan package manager",

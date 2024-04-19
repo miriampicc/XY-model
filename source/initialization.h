@@ -39,4 +39,4 @@ struct Node {
    std::array <double, 2> A{};
 };
 
-void initialize_Lattice (std::vector <Node> &Site, const fs::path & directory_read, const fs::path & directory_write, int restart, struct H_parameters &Hp);
+void initialize_Lattice (std::vector <Node> &Site, const fs::path & directory_param_beta, int restart, struct H_parameters &Hp);

@@ -5,10 +5,9 @@
 #include "main.h"
 #include "rng.h"
 
-void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double T_temp){
+void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double my_beta){
 
-    double d_theta;
-    double l, rand, d_A;
+    double l, rand, d_A, d_theta;
     double acc_rate=0.5, acc_theta=0., acc_A=0.;
     std::array<O2, 2> NewPsi;
     std::array<O2, 2> OldPsi;
@@ -22,7 +21,6 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
             //i = rn::uniform_integer_box(0, N - 1);
 
             size_t i = ix + L * (iy);
-
             /*************PSI UPDATE: density update with total density contraint **********/
 
             OldPsi[0] = Site[i].Psi[0];
@@ -43,7 +41,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 Site[i].Psi[1] = NewPsi[1];
             } else {
                 rand = rn::uniform_real_box(0, 1);
-                if (rand < exp(-1 / T_temp * deltaE)) {
+                if (rand < exp(-my_beta * deltaE)) {
 
                     Site[i].Psi[0] = NewPsi[0];
                     Site[i].Psi[1] = NewPsi[1];
@@ -70,7 +68,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 } else {
                     rand = rn::uniform_real_box(0, 1);
 
-                    if (rand < exp(-1 / T_temp * deltaE)) {
+                    if (rand < exp(- my_beta * deltaE)) {
                         Site[i].Psi[alpha] = NewPsi[alpha];
                         acc_theta++;
                     }
@@ -97,7 +95,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                         //std::cout<<"Updating A form "<< OldA <<" to "<< NewA << " on site "<< i<<std::endl;
                     } else {
                         rand = rn::uniform_real_box(0, 1);
-                        if (rand < exp(-1 / T_temp * deltaE)) {
+                        if (rand < exp(- my_beta * deltaE)) {
                             Site[i].A[alpha] = NewA;
                             acc_A++;
                             //std::cout<<"Updating A form "<< OldA <<" to "<< NewA << " on site "<< i<<std::endl;

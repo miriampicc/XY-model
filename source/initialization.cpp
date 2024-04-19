@@ -6,11 +6,11 @@
 #include "robust_filesystem.h"
 
 
-void initialize_Lattice ( std::vector <Node> &Site, const fs::path & directory_read, const fs::path & directory_write, int restart_1, struct H_parameters &Hp) {
+void initialize_Lattice ( std::vector <Node> &Site, const fs::path & directory_param_beta, int restart_1, struct H_parameters &Hp) {
 
 
-    fs::path inputFile1 = directory_read / "Lattice_dir_fin.txt";
-    fs::path inputFile_A = directory_read / "A_dir_fin.txt";
+    fs::path inputFile1 = directory_param_beta / "Lattice_dir_fin.txt";
+    fs::path inputFile_A = directory_param_beta / "A_dir_fin.txt";
 
 
     if (restart_1 == 1) {
@@ -83,7 +83,5 @@ void initialize_Lattice ( std::vector <Node> &Site, const fs::path & directory_r
             }
         }
     }
-
-    save_lattice(Site, directory_write, std::string("Lattice_dir_init.txt"), std::string("A_dir_init.txt"), Hp);
 
 }

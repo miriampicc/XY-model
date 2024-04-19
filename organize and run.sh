@@ -8,22 +8,26 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 time_limit="1-00:00:00"
 
-LLIST="8 12 16 20 24 32 40 48"
+LLIST="8 12 16"
 
 ################ Input Parameters for the Monte Carlo simulation #################
 
-nsteps=5000
-transient=1000
-tau=32
-T=0.558
-restart=0
+#Hamiltonian input parameters
 K=5.0
-J1=1.0
-J2=2.0
 e=0.1
-theta_box=0.78539816339
-charged_fluid=1 #if we have charged_fluid=1 then we will have a superconductor, if charged_fluid=0 then we have a superfluid, it would be good if we have the option of both
+beta_high=0.244
+beta_low=0.333
+T=0.3
+J1=0.0
+J2=0.0
 
+#Monte Carlo parameters
+nsteps=50000
+transient=100000
+tau=32
+restart=0
+theta_box=0.78539816339
+theta_box_A=0.1
 
 EXECUTE_DIR="../build/release-conan"
 
@@ -50,24 +54,31 @@ for L in $LLIST; do
     cd e_${e}
 
     if [ ! -d ./SL${L}_K${K}_e${e} ]; then
-    mkdir -p L${L}_K${K}_e${e}
+    mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 
-    cd L${L}_K${K}_e${e}
-
-    if [ ! -d ./ST_${T} ]; then
-    mkdir -p T_${T}
-    fi
-
-    DIR_OUT=${BASEDIR}/Output_TBG/K_${K}/e_${e}/L${L}_K${K}_e${e}/T_${T}
+    DIR_OUT=${BASEDIR}/Output_TBG/K_${K}/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     DIR_IN="${DIR_OUT}"
 
 
     #################Creation of the submit_runs script#########################
 
-    jobname="T_${T}_L${L}_K${K}_e${e}"
-    nnodes=1
-    ntasks=1 #parallel tempering over ntasks temperatures
+    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}"
+    nnodes=2
+    ntasks=64 #parallel tempering over ntasks temperatures
+
+    #I create ntasks folder: one for each rank.
+
+    cd ${DIR_OUT}
+
+    for ((rank=0; rank<${ntasks}; rank++)); do
+
+      if [ ! -d ./Sbeta_${rank} ]; then
+        mkdir -p beta_${rank}
+      fi
+
+    done
+
 
 
     cd ${SCRIPT_DIR}
@@ -88,7 +99,7 @@ for L in $LLIST; do
     #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
     #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
-    srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${theta_box} ${e} ${DIR_IN} ${DIR_OUT}
+    srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_IN} ${DIR_OUT}
 
     " >  submit_run
 

@@ -27,8 +27,8 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
 void trsb_magnetization(struct Measures &mis, const std::vector<Node> &Site);
 void helicity_modulus (struct H_parameters &Hp, const std::vector<Node> &Site, struct Measures &mis, size_t N );
 void dual_stiffness (struct Measures &mis, const std::vector<Node> &Site);
-void vortex (const std::vector<Node> &Site, struct Measures &mis);
-void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write, const std::string &configuration_Psi, const std::string &configuration_A, struct H_parameters &Hp);
+//void vortex (const std::vector<Node> &Site, struct Measures &mis);
+void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write, const std::string &configuration, struct H_parameters &Hp);
 double wrapToPi(double angle);
 size_t nn (size_t i, size_t coord, int dir );
 

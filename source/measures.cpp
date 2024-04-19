@@ -271,12 +271,14 @@ double wrapToPi(double angle) {
 }
 
 
-void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write, const std::string &configuration_Psi, const std::string &configuration_A, struct H_parameters &Hp) {
+void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write, const std::string &configuration, struct H_parameters &Hp) {
 
-    fs::path outputFile_Psi = directory_write / configuration_Psi;
+    std::string sPsi;
+    sPsi= std::string("Lattice_")+ configuration + std::string(".txt");
+    fs::path psi_file = directory_write / sPsi;
 
     // Open the file for writing in text mode
-    FILE *fPsi = fopen(outputFile_Psi.c_str(), "w");
+    FILE *fPsi = fopen(psi_file.c_str(), "w");
 
     // Check if the file is opened successfully
     if ((fPsi != nullptr)) {
@@ -288,14 +290,16 @@ void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write
         fclose(fPsi);
     } else {
         // Handle the case where the file couldn't be opened
-        std::cerr << "Error opening file for writing: " << outputFile_Psi << std::endl;
+        std::cerr << "Error opening file for writing: " << psi_file << std::endl;
     }
 
     if (Hp.e != 0) {
 
-        fs::path outputFile_A = directory_write /configuration_A;
+        std::string sA;
+        sA= std::string("A_")+ configuration + std::string(".txt");
+        fs::path a_file = directory_write / sA;
 
-        FILE *fA = fopen(outputFile_A.c_str(), "w");
+        FILE *fA = fopen(a_file.c_str(), "w");
 
         if ((fA != nullptr)) {
 
@@ -305,7 +309,7 @@ void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write
             fclose(fA);
         } else {
             // Handle the case where the file couldn't be opened
-            std::cerr << "Error opening file for writing: " << outputFile_Psi << std::endl;
+            std::cerr << "Error opening file for writing: " << a_file << std::endl;
         }
     }
 }
