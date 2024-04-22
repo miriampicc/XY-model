@@ -96,6 +96,7 @@ for L in $LLIST; do
     #SBATCH --mem-per-cpu=2000              # Memory per allocated cpu
     #SBATCH --nodes=${nnodes}               # Number of nodes
     #SBATCH --ntasks=${ntasks}
+    #SBATCH --reservation=devel
     #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
     #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
