@@ -273,6 +273,11 @@ double wrapToPi(double angle) {
 
 void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write, const std::string &configuration, struct H_parameters &Hp) {
 
+
+    // Check if the directory exists, and create it if it doesn't
+    if (!fs::exists(directory_write))
+        fs::create_directories(directory_write);
+
     std::string sPsi;
     sPsi= std::string("Lattice_")+ configuration + std::string(".txt");
     fs::path psi_file = directory_write / sPsi;
