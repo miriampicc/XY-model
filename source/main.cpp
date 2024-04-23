@@ -182,6 +182,8 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
 
     }
 
+    //std::cout<<"I measured everything" <<std::endl;
+
     File_Energy.close();
     File_Kin_Energy.close();
     File_Joseph_Energy.close();
@@ -227,14 +229,14 @@ void update_file_path (const std::string& base_dir, std::ofstream& file_energy, 
     std::string Filename_trsb_magn= base_dir +  "/trsb_magnetization.txt";
     std::string Filename_dual_stiff= base_dir +  "/Dual_Stiffness.txt";
 
-    file_energy.open(Filename_energy);
-    file_mag1.open(Filename_magnetization1);
-    file_kin.open(File_Kin_Energy);
-    file_josph.open(File_Joseph_Energy);
-    file_B.open(Filename_B_energy);
-    file_hel1.open(Filename_helicity1);
-    file_hel2.open(Filename_helicity2);
-    file_trsb.open(Filename_trsb_magn);
-    file_ds.open(Filename_dual_stiff);
+    file_energy.open(Filename_energy, std::ios::app); // Open in append mode
+    file_mag1.open(Filename_magnetization1, std::ios::app);
+    file_kin.open(File_Kin_Energy, std::ios::app);
+    file_josph.open(File_Joseph_Energy, std::ios::app);
+    file_B.open(Filename_B_energy, std::ios::app);
+    file_hel1.open(Filename_helicity1, std::ios::app);
+    file_hel2.open(Filename_helicity2, std::ios::app);
+    file_trsb.open(Filename_trsb_magn, std::ios::app);
+    file_ds.open(Filename_dual_stiff, std::ios::app);
 }
 
