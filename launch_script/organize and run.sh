@@ -1,6 +1,6 @@
 #!/bin/bash
 
-############### SET MAIN FOLDERS ###############
+############### SET MAIN FOLDERS ######
 BASEDIR=${HOME}/XY-model
 #BASEDIR=/Users/mirimi/Desktop/hihi/KTH/XY-model
 SCRIPT_DIR=${BASEDIR}/launch_script
