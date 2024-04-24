@@ -1,0 +1,13 @@
+#!/bin/bash
+    #SBATCH --job-name=L16_K5.0_e0.1_bmin0.333_bmax0.244          # Name of the job
+    #SBATCH --time=0-00:10:00               # Allocation time
+    #SBATCH --mem-per-cpu=2000              # Memory per allocated cpu
+    #SBATCH --nodes=2               # Number of nodes
+    #SBATCH --ntasks=64
+    #SBATCH --reservation=devel
+    #SBATCH --output=/Users/mirimi/Desktop/hihi/KTH/XY-model/Output_TBG/K_5.0/e_0.1/L16_K5.0_e0.1_bmin0.333_bmax0.244/logs/log_L16_K5.0_e0.1_bmin0.333_bmax0.244.o
+    #SBATCH --error=/Users/mirimi/Desktop/hihi/KTH/XY-model/Output_TBG/K_5.0/e_0.1/L16_K5.0_e0.1_bmin0.333_bmax0.244/logs/log_L16_K5.0_e0.1_bmin0.333_bmax0.244.e
+
+    srun ../build/release-conan/CMT 16 50000 100000 32 0.3 0 5.0 0.0 0.0 0.1 0.244 0.333 0.78539816339 0.1 /Users/mirimi/Desktop/hihi/KTH/XY-model/Output_TBG/K_5.0/e_0.1/L16_K5.0_e0.1_bmin0.333_bmax0.244 &> /Users/mirimi/Desktop/hihi/KTH/XY-model/Output_TBG/K_5.0/e_0.1/L16_K5.0_e0.1_bmin0.333_bmax0.244/logs/log_L16_K5.0_e0.1_bmin0.333_bmax0.244.o
+
+    
