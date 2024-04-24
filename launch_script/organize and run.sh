@@ -95,7 +95,7 @@ for L in $LLIST; do
     #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
     #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
-    srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
+    srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_OUT}
 
     " >  submit_run
 
