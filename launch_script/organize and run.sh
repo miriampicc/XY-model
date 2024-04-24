@@ -2,6 +2,7 @@
 
 ############### SET MAIN FOLDERS ###############
 BASEDIR=${HOME}/XY-model
+#BASEDIR=/Users/mirimi/Desktop/hihi/KTH/XY-model
 SCRIPT_DIR=${BASEDIR}/launch_script
 
 #############################################
@@ -29,15 +30,13 @@ restart=0
 theta_box=0.78539816339
 theta_box_A=0.1
 
-EXECUTE_DIR="../build/release-conan"
-
 ################################################################################3
 
 for L in $LLIST; do
 
 ############Creation of the output folder and of the two files of initialization####################
 
-    cd ${BASEDIR}/Output_TBG
+    cd ${BASEDIR}/Output_TBG || exit
 
 
     if [ ! -d ./SK_${K} ]; then
@@ -45,21 +44,19 @@ for L in $LLIST; do
     mkdir -p K_${K}
     fi
 
-    cd K_${K}
+    cd K_${K} || exit
 
     if [ ! -d ./Se_${e} ]; then
     mkdir -p e_${e}
     fi
 
-    cd e_${e}
+    cd e_${e} || exit
 
     if [ ! -d ./SL${L}_K${K}_e${e} ]; then
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 
     DIR_OUT=${BASEDIR}/Output_TBG/K_${K}/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
-    DIR_IN="${DIR_OUT}"
-
 
     #################Creation of the submit_runs script#########################
 
@@ -69,7 +66,7 @@ for L in $LLIST; do
 
     #I create ntasks folder: one for each rank.
 
-    cd ${DIR_OUT}
+    cd ${DIR_OUT} || exit
 
     for ((rank=0; rank<${ntasks}; rank++)); do
 
@@ -79,9 +76,7 @@ for L in $LLIST; do
 
     done
 
-
-
-    cd ${SCRIPT_DIR}
+    cd ${SCRIPT_DIR} || exit
     DIR_PAR="${DIR_OUT}"
 
     #SEED= If I want to repeat exactly a simulation I could initialize the random number generator exactly at the same way
@@ -100,7 +95,7 @@ for L in $LLIST; do
     #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
     #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
-    srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_IN} ${DIR_OUT}
+    srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
 
     " >  submit_run
 

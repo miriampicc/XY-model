@@ -26,12 +26,12 @@ int main(int argc, char *argv[]) {
     int NSTART=0;
     size_t N;
 
-    std::string directory_read;
+    //std::string directory_read;
     std::string directory_write;
     std::string directory_param_beta;
 
 
-    if(argc == 17) {
+    if(argc == 16) {
         L = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
         MC.n_steps = static_cast<int>(std::strtol(argv[2], nullptr, 10));
         MC.transient = static_cast<int>(std::strtol(argv[3], nullptr, 10));
@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
         Hp.beta_low = std::strtod(argv[12], nullptr);
         MC.theta_box= std::strtod(argv[13], nullptr);
         MC.theta_box_A = std::strtod(argv[14], nullptr);
-        paths_dir::DIR_IN = directory_read = argv[15];
-        paths_dir::DIR_OUT = directory_write = argv[16];
+        //paths_dir::DIR_IN = directory_read = argv[15];
+        paths_dir::DIR_OUT = directory_write = argv[15];
     }
     else{
         myhelp(argc, argv);
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     std::cout<< restart << std::endl;
     std::cout<<MC.theta_box<<std::endl;
     std::cout<<MC.theta_box_A<<std::endl;
-    std::cout<< directory_read << std::endl;
+    //std::cout<< directory_read << std::endl;
     std::cout<< directory_write << std::endl;
 
     //initialization of the random number generator
