@@ -205,7 +205,7 @@ void myhelp(int argd, char **argu) {
     fprintf(stderr,"Errore nei parametri su linea di comando; hai scritto:\n");
     for (i=0;i<argd;i++) fprintf(stderr," %s",argu[i]);
     fprintf(stderr,"\n");
-    fprintf(stderr,"%s <L> <n_steps> <transient> <tau> <T> <restart> <K> <J1> <J2> <e> <theta_box> <DIR_IN> <DIR_OUT> \n",argu[0]);
+    fprintf(stderr,"%s <L> <n_steps> <transient> <tau> <T> <restart> <K> <J1> <J2> <e> <beta_high> <beta_low> <theta_box> <theta_box_A> <DIR_OUT> \n",argu[0]);
     exit (EXIT_FAILURE);
 }
 

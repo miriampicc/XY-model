@@ -14,19 +14,19 @@ LLIST="8 12 16"
 ################ Input Parameters for the Monte Carlo simulation #################
 
 #Hamiltonian input parameters
-K=5.0
-e=0.1
-beta_high=0.244
-beta_low=0.333
-T=0.3
-J1=0.0
-J2=0.0
 
 #Monte Carlo parameters
 nsteps=50000
 transient=100000
 tau=32
+T=0.3
 restart=0
+K=5.0
+J1=0.0
+J2=0.0
+e=0.1
+beta_high=0.244
+beta_low=0.333
 theta_box=0.78539816339
 theta_box_A=0.1
 

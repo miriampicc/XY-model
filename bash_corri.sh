@@ -56,7 +56,7 @@ for L in ${L_LIST}; do
 
       DIR_OUT="${BASEDIR_OUT}${L}/T_${T}"
 
-      ${EXCUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A}  ${DIR_IN} ${DIR_OUT}
+      ${EXCUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_IN} ${DIR_OUT}
 
       restart=1
       DIR_IN=${DIR_OUT}
