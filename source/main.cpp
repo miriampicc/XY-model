@@ -30,6 +30,9 @@ int main(int argc, char *argv[]) {
     std::string directory_write;
     std::string directory_param_beta;
 
+//fprintf(stderr,"%s <L> <n_steps> <transient> <tau> <T> <restart> <K> <J1> <J2> <e> <beta_high> <beta_low> <theta_box> <theta_box_A> <DIR_OUT> \n",argu[0]);
+    std::cout<<"Lunghezza parametri  "<< argc << "and " << argv <<std::endl;
+
 
     if(argc == 16) {
         L = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
