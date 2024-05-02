@@ -7,9 +7,9 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 #############################################
 
-time_limit="0-00:10:00"
+time_limit="1-00:00:00"
 
-LLIST="8 12 16"
+LLIST="8 12 16 24 32 48 64 96"
 
 ################ Input Parameters for the Monte Carlo simulation #################
 
@@ -25,8 +25,8 @@ K=5.0
 J1=0.0
 J2=0.0
 e=0.1
-beta_high=0.244
-beta_low=0.333
+beta_high=1.428
+beta_low=3.333
 theta_box=0.78539816339
 theta_box_A=0.1
 
@@ -91,7 +91,6 @@ for L in $LLIST; do
     #SBATCH --mem-per-cpu=2000              # Memory per allocated cpu
     #SBATCH --nodes=${nnodes}               # Number of nodes
     #SBATCH --ntasks=${ntasks}
-    #SBATCH --reservation=devel
     #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
     #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
