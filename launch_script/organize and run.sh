@@ -7,7 +7,7 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 #############################################
 
-time_limit="0-00:10:00"
+time_limit="0-01:00:00"
 
 LLIST="8"
 
@@ -16,7 +16,7 @@ LLIST="8"
 #Hamiltonian input parameters
 
 #Monte Carlo parameters
-nsteps=50000
+nsteps=500000
 transient=100000
 tau=32
 T=0.3
