@@ -7,9 +7,9 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 #############################################
 
-time_limit="1-00:00:00"
+time_limit="0-00:10:00"
 
-LLIST="8 12 16 24 32 48 64 96"
+LLIST="8"
 
 ################ Input Parameters for the Monte Carlo simulation #################
 
@@ -52,7 +52,7 @@ for L in $LLIST; do
 
     cd e_${e} || exit
 
-    if [ ! -d ./SL${L}_K${K}_e${e} ]; then
+    if [ ! -d ./SL${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high} ]; then
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 

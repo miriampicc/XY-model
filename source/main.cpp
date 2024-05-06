@@ -116,6 +116,8 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     std::string directory_write_param;
     directory_write_param = directory_write +"/beta_"+std::to_string(my_ind);
 
+    std::cout<< directory_write_param << std::endl;
+
 
     std::string Filename_magnetization1=(directory_write_param+"/Single_Magnetization.txt");
     std::string Filename_energy=(directory_write_param+"/Energy.txt");
