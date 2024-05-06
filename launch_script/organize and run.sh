@@ -25,8 +25,8 @@ K=1.0
 J1=0.0
 J2=0.0
 e=0.1
-beta_high=1.428
-beta_low=3.333
+beta_high=3.333
+beta_low=2.333
 theta_box=0.78539816339
 theta_box_A=0.1
 
@@ -62,7 +62,7 @@ for L in $LLIST; do
 
     jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}"
     nnodes=2
-    ntasks=64 #parallel tempering over ntasks temperatures
+    ntasks=4 #parallel tempering over ntasks temperatures
 
     #I create ntasks folder: one for each rank.
 
