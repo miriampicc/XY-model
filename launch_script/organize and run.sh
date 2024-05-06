@@ -85,18 +85,18 @@ for L in $LLIST; do
 
     #SBATCH --nodes=${nnodes}               # Number of nodes
 
-    echo "#!/bin/bash
-    #SBATCH --job-name=${jobname}          # Name of the job
-    #SBATCH --time=${time_limit}               # Allocation time
-    #SBATCH --mem-per-cpu=2000              # Memory per allocated cpu
-    #SBATCH --nodes=${nnodes}               # Number of nodes
-    #SBATCH --ntasks=${ntasks}
-    #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
-    #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
+echo "#!/bin/bash
+#SBATCH --job-name=${jobname}          # Name of the job
+#SBATCH --time=${time_limit}               # Allocation time
+#SBATCH --mem-per-cpu=2000              # Memory per allocated cpu
+#SBATCH --nodes=${nnodes}               # Number of nodes
+#SBATCH --ntasks=${ntasks}
+#SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
+#SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
-    srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
+srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
 
-    " >  submit_run
+" >  submit_run
 
     #Submission of the work --> sbatch submit_runs
 
