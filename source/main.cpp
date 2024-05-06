@@ -85,6 +85,8 @@ int main(int argc, char *argv[]) {
 /*DETERMINE TOTAL NUMBER OF PROCESSORS*/
     MPI_Comm_size(MPI_COMM_WORLD, &PTp.np);
 
+    std::cout<< PTp.np << std::endl;
+
     if(PTp.rank == PTp.root) {
         //Initialization ranks arrays
         initialize_PTarrays( PTp, PTroot, Hp);
