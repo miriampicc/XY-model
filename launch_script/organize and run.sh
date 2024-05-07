@@ -25,7 +25,7 @@ K=5.0
 J1=0.0
 J2=0.0
 e=0.1
-beta_high=1.770  #T=0.565
+beta_high=1.785  #T=0.56
 beta_low=1.695   #T=0.59
 theta_box=0.78539816339
 theta_box_A=0.1
