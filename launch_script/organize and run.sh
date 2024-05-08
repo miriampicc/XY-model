@@ -7,7 +7,7 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 #############################################
 
-time_limit="6-0:00:00"
+time_limit="0-8:00:00"
 
 LLIST="8 16 24 32 48 64 96 128"
 
