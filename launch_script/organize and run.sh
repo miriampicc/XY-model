@@ -24,8 +24,8 @@ restart=0
 K=5.0
 J1=0.0
 J2=0.0
-e=0.0
-beta_high=1.754  #T=0.56
+e=0.1
+beta_high=1.786  #T=0.56
 beta_low=1.695   #T=0.59
 theta_box=0.78539816339
 theta_box_A=0.1
