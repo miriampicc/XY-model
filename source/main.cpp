@@ -130,6 +130,7 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     std::string Filename_helicity2=(directory_write_param+"/Helicity_modulus2.txt");
     std::string Filename_trsb_magn=(directory_write_param+"/trsb_magnetization.txt");
     std::string Filename_dual_stiff=(directory_write_param+"/Dual_Stiffness.txt");
+    std::string Filename_rank=(directory_write_param+"/Rank.txt");
 
 
     std::ofstream File_Magetization1 (Filename_magnetization1);
@@ -141,6 +142,7 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     std::ofstream File_helicity2 (Filename_helicity2);
     std::ofstream File_trsb_magn (Filename_trsb_magn);
     std::ofstream File_dual_stiff (Filename_dual_stiff);
+    std::ofstream File_rank (Filename_rank);
 
     //Initial configuration
     save_lattice(Site, directory_write_param, std::string("init"), Hp);
@@ -172,6 +174,8 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
             helicity_modulus(Hp, Site, mis, N);   //Both lattices
         }
 
+        mis.my_rank=PTp.rank;
+
         File_Energy        << mis.E << std::endl;
         File_Kin_Energy    << mis.E_kinetic << std::endl;
         File_Joseph_Energy << mis.E_josephson << std::endl;
@@ -181,16 +185,14 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
         File_helicity2     << mis.Jd[1] << " " << mis.Ic[1] << std::endl;
         File_trsb_magn     << mis.trsb_m << std::endl;
         File_dual_stiff    << mis.dual_stiff_Z << std::endl;
+        File_rank          << mis.my_rank << std::endl;
 
-        mis.my_rank=PTp.rank;
         MPI_Barrier(MPI_COMM_WORLD);
-
-        //Scrivi file per tenere in considerazione degli swap, registrare my_rank !!!!!!!!!!
 
         //Parallel Tempering swap
         parallel_temp(mis.E, my_beta, my_ind, PTp, PTroot);
         directory_write_param = directory_write +"/beta_"+std::to_string(my_ind);
-        update_file_path(directory_write_param, File_Energy, File_Magetization1, File_Kin_Energy, File_Joseph_Energy, File_B_Energy, File_helicity1, File_helicity2, File_trsb_magn, File_dual_stiff );
+        update_file_path(directory_write_param, File_Energy, File_Magetization1, File_Kin_Energy, File_Joseph_Energy, File_B_Energy, File_helicity1, File_helicity2, File_trsb_magn, File_dual_stiff, File_rank );
 
     }
 
@@ -205,6 +207,7 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     File_helicity2.close();
     File_trsb_magn.close();
     File_dual_stiff.close();
+    File_rank.close();
 
     save_lattice(Site, directory_write_param, std::string("fin"), Hp);
 }
@@ -219,7 +222,7 @@ void myhelp(int argd, char **argu) {
     exit (EXIT_FAILURE);
 }
 
-void update_file_path (const std::string& base_dir, std::ofstream& file_energy, std::ofstream& file_mag1, std::ofstream& file_kin, std::ofstream& file_josph, std::ofstream& file_B, std::ofstream& file_hel1, std::ofstream& file_hel2, std::ofstream& file_trsb, std::ofstream& file_ds){
+void update_file_path (const std::string& base_dir, std::ofstream& file_energy, std::ofstream& file_mag1, std::ofstream& file_kin, std::ofstream& file_josph, std::ofstream& file_B, std::ofstream& file_hel1, std::ofstream& file_hel2, std::ofstream& file_trsb, std::ofstream& file_ds, std::ofstream& file_rank){
 
     file_energy.close();
     file_mag1.close();
@@ -230,6 +233,7 @@ void update_file_path (const std::string& base_dir, std::ofstream& file_energy, 
     file_hel2.close();
     file_trsb.close();
     file_ds.close();
+    file_rank.close();
 
     std::string Filename_energy = base_dir + "/Energy.txt";
     std::string Filename_magnetization1 = base_dir + "/Single_Magnetization.txt";
@@ -240,6 +244,7 @@ void update_file_path (const std::string& base_dir, std::ofstream& file_energy, 
     std::string Filename_helicity2= base_dir +  "/Helicity_modulus2.txt";
     std::string Filename_trsb_magn= base_dir +  "/trsb_magnetization.txt";
     std::string Filename_dual_stiff= base_dir +  "/Dual_Stiffness.txt";
+    std::string Filename_rank= base_dir +  "/Rank.txt";
 
     file_energy.open(Filename_energy, std::ios::app); // Open in append mode
     file_mag1.open(Filename_magnetization1, std::ios::app);
@@ -250,5 +255,6 @@ void update_file_path (const std::string& base_dir, std::ofstream& file_energy, 
     file_hel2.open(Filename_helicity2, std::ios::app);
     file_trsb.open(Filename_trsb_magn, std::ios::app);
     file_ds.open(Filename_dual_stiff, std::ios::app);
+    file_rank.open(Filename_rank, std::ios::app);
 }
 
