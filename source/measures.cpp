@@ -29,7 +29,7 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
                 }
             }
 
-            interaction +=  (Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r) * (Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r) * cos(2*(Site[i+j*L].Psi[1].t-Site[i+j*L].Psi[0].t));
+            interaction +=  (Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r) * (Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r) *(cos(2*(Site[i+j*L].Psi[1].t-Site[i+j*L].Psi[0].t))-1);
 
             if (Hp.e != 0) {
                 for(size_t vec1=0; vec1<2; vec1++){

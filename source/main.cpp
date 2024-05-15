@@ -165,10 +165,11 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
         energy(mis, Hp, Site);
         single_magnetization(Site, mis, N);   //In this function we are calculating the magnetization of both layers separately
         trsb_magnetization(mis, Site);
-        helicity_modulus(Hp, Site, mis, N);   //Both lattices
 
-        if(Hp.e == 1) {
+        if(Hp.e != 0) {
             dual_stiffness(mis, Site);
+        } else {
+            helicity_modulus(Hp, Site, mis, N);   //Both lattices
         }
 
         File_Energy        << mis.E << std::endl;
@@ -183,6 +184,8 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
 
         mis.my_rank=PTp.rank;
         MPI_Barrier(MPI_COMM_WORLD);
+
+        //Scrivi file per tenere in considerazione degli swap, registrare my_rank !!!!!!!!!!
 
         //Parallel Tempering swap
         parallel_temp(mis.E, my_beta, my_ind, PTp, PTroot);
