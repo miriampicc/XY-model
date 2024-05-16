@@ -73,5 +73,6 @@ plt.ylabel(' Energy ')
 plt.title(f'Total Energy')
 plt.legend()
 plt.grid(True)
+plt.savefig(f'Energy e={e}, K={K}')
 
 plt.show()
