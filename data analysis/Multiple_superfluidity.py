@@ -33,7 +33,6 @@ print("beta low=", beta_low)
 print("rank=", rank)
 
 
-N = L * L
 # Create a dictionary to store the arrays
 mean_argument_values = []
 
@@ -52,28 +51,32 @@ def calculate_mean(data):
 
 
 #let us obtain the temperatures 
-temperatures = []
+
 delta = (1/beta_low - 1/beta_high)/(rank)
 T_high = 1/beta_low
 T_low = 1/beta_high
 
 # Superfluid Stiffness
-Jp1 = []
-Js1 = []
-mean_Jd_values1 = [] 
-sin_Ic1= []
 
-Jp2 = []
-Js2 = []
-mean_Jd_values2 = [] 
-sin_Ic2= []
-
-double = []
 
 for l in L :
 
     i = 0 
+    Jp1 = []
+    Js1 = []
+    mean_Jd_values1 = [] 
+    sin_Ic1= []
 
+    Jp2 = []
+    Js2 = []
+    mean_Jd_values2 = [] 
+    sin_Ic2= []
+
+    double = []
+    temperatures = []
+
+    N = l * l 
+    
     for n in range(rank):
 
         t = T_high - n * delta
