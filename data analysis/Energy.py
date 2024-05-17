@@ -1,16 +1,37 @@
 import numpy as np 
 import pandas as pd
 import matplotlib.pyplot as plt 
+import argparse
 
-L = [8, 16, 24, 32, 48, 64]
-K = 5.0
-e = 0.1
-beta_high = 1.786   #T=0.56  1.786  #1.754
-beta_low = 1.695   #T=0.59
-rank = 64
+parser = argparse.ArgumentParser(description='Description of the script')
 
+# Add arguments
+parser.add_argument('--L', nargs='+', type=int, help='L')
+parser.add_argument('--K', type=float, help='K')
+parser.add_argument('--e', type=float, help='e')
+parser.add_argument('--b_high', type=float, help='beta high')
+parser.add_argument('--b_low', type=float, help='beta low')
+parser.add_argument('--rank', type=int, help='rank')
 
-# Create a dictionary to store the arrays
+# Parse the command-line arguments
+args = parser.parse_args()
+
+# Access the argument values
+L = args.L
+K = args.K
+e = args.e
+beta_high = args.b_high
+beta_low = args.b_low
+rank = args.rank
+
+# Now you can use these values in your script
+print("L=", L)
+print("K=", K)
+print("e=", e)
+print("beta high=", beta_high)
+print("beta low=", beta_low)
+print("rank=", rank)
+
 
 
 def calculate_std(data): 
@@ -39,6 +60,7 @@ for l in L:
     mean_energy_values = []
     std_dev = []
     temperatures = []
+    N = l * l
 
     for n in range(rank) : 
 
@@ -47,6 +69,7 @@ for l in L:
         
         temperatures.append(t)
 
+        #file_path = f"/Users/mirimi/Desktop/OUTPUT_cluster/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
         file_path = f"/home/x_mirpi/Output_TBG/K_{K}_first/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
         #print(n)
 
@@ -60,12 +83,13 @@ for l in L:
 
     
     energy = np.array(mean_energy_values)
+    energy = energy / N
     temp = np.array(temperatures) 
     std_val = np.array(std_dev)
 
     # Plot Energy vs. Temperature
     plt.plot(temp, energy, linestyle='-', label=f'L={l}')  #marker='o',
-    plt.fill_between(temp, energy - std_val, energy + std_val, alpha=0.6, linewidth=4)
+    plt.fill_between(temp, energy - std_val, energy + std_val, alpha=0.3, linewidth=4)
 
 #plt.ylim(top=0)
 plt.xlabel('Temperature (K)')
