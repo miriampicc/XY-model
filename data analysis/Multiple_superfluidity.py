@@ -76,7 +76,7 @@ for l in L :
     temperatures = []
 
     N = l * l 
-    
+
     for n in range(rank):
 
         t = T_high - n * delta
@@ -210,7 +210,7 @@ plt.grid(True)
 plt.suptitle('Relative density fluctuations K,=1 L=16')
 
 plt.tight_layout()  # Adjust layout for better appearance
-plt.savefig(f'Multiple_superflidity_K{K}_e{e}')
+plt.savefig(f'Multiple_superflidity_K{K}_e{e}.jpg')
 
 
 
