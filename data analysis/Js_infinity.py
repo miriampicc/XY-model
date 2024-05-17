@@ -166,10 +166,9 @@ plt.plot(temperatures , y, linestyle='--', label = r'$\frac{2T}{\pi}$')
 
 plt.xlabel('T (K)')
 plt.ylabel(r'$J_s$')
-plt.title(f' $K={K}$ e = {e}')
+plt.title(f' $K={K}$ e = {e} $L_0 = {L0}$')
 plt.legend()
 plt.grid(True)
-
-
+plt.savefig(f'Helicity_sum_K{K}_e{e}_L0{L0}.jpg')
 
 plt.show()
