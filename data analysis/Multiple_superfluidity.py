@@ -70,94 +70,95 @@ sin_Ic2= []
 
 double = []
 
+for l in L :
 
-i = 0 
+    i = 0 
 
-for n in range(rank):
+    for n in range(rank):
 
-    t = T_high - n * delta
-    print (t)
+        t = T_high - n * delta
+        print (t)
+            
+        temperatures.append(t)
+
+        Jd1 = []
+        Ic1 = []
+
+        Jd2 = []
+        Ic2 = []
+
+        file_path1 = f"/home/x_mirpi/Output_TBG/K_{K}_first/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus1.txt'
+
+        with open(file_path1, "r") as file:
+            for line in file:
+                columns = line.strip().split()
+                if len(columns) == 2:
+                    Jd1.append(float(columns[0]))
+                    Ic1.append(float(columns[1]))
+
         
-    temperatures.append(t)
+        file_path2 = f"/home/x_mirpi/Output_TBG/K_{K}_first/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus2.txt'
 
-    Jd1 = []
-    Ic1 = []
+        with open(file_path2, "r") as file:
+            for line in file:
+                columns = line.strip().split()
+                if len(columns) == 2:
+                    Jd2.append(float(columns[0]))
+                    Ic2.append(float(columns[1]))
 
-    Jd2 = []
-    Ic2 = []
+        mean_sin = calculate_std(Ic1) ** 2
+        sin_Ic1.append(mean_sin)
+        sin = mean_sin * N / t
 
-    file_path1 = f"/home/x_mirpi/Output_TBG/K_{K}_first/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus1.txt'
+        Jp1.append(sin)
 
-    with open(file_path1, "r") as file:
-        for line in file:
-            columns = line.strip().split()
-            if len(columns) == 2:
-                Jd1.append(float(columns[0]))
-                Ic1.append(float(columns[1]))
+        mm = calculate_mean(Jd1) 
+        cos_Jd = mm 
+        mean_Jd_values1.append(cos_Jd)
 
-    
-    file_path2 = f"/home/x_mirpi/Output_TBG/K_{K}_first/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus2.txt'
+        Js_new1 = cos_Jd - sin
+        Js1.append(Js_new1)
 
-    with open(file_path2, "r") as file:
-        for line in file:
-            columns = line.strip().split()
-            if len(columns) == 2:
-                Jd2.append(float(columns[0]))
-                Ic2.append(float(columns[1]))
+        mean_sin = calculate_std(Ic2) ** 2
+        sin_Ic2.append(mean_sin)
+        sin = mean_sin * N / t
 
-    mean_sin = calculate_std(Ic1) ** 2
-    sin_Ic1.append(mean_sin)
-    sin = mean_sin * N / t
+        Jp2.append(sin)
 
-    Jp1.append(sin)
+        mm = calculate_mean(Jd2) 
+        cos_Jd = mm 
+        mean_Jd_values2.append(cos_Jd)
 
-    mm = calculate_mean(Jd1) 
-    cos_Jd = mm 
-    mean_Jd_values1.append(cos_Jd)
+        Js_new2 = cos_Jd - sin
+        Js2.append(Js_new2)
 
-    Js_new1 = cos_Jd - sin
-    Js1.append(Js_new1)
+        result = []
+        for i in range(len(Ic1)):
+            result.append(Ic1[i] * Ic2[i])
+        
+        mean_molt = calculate_mean (result)
+        print(mean_molt)
+        molt_mean = calculate_mean(Ic1)*calculate_mean(Ic2)
+        mean_m_array = np.array(mean_molt)
+        molt_m_array = np.array(molt_mean)
+        sub = 1/t * (mean_m_array - molt_m_array)
+        sott = Js_new1 + Js_new2 +2*sub
+        #print (i, sub) 
 
-    mean_sin = calculate_std(Ic2) ** 2
-    sin_Ic2.append(mean_sin)
-    sin = mean_sin * N / t
+        double.append(sott)
 
-    Jp2.append(sin)
+        
+        i += 1 
 
-    mm = calculate_mean(Jd2) 
-    cos_Jd = mm 
-    mean_Jd_values2.append(cos_Jd)
+    Jd_matrix1 = np.column_stack((temperatures, mean_Jd_values1))
+    Jp_matrix1 = np.column_stack((temperatures, Jp1))
+    Js_matrix1 = np.column_stack((temperatures, Js1))
 
-    Js_new2 = cos_Jd - sin
-    Js2.append(Js_new2)
+    Jd_matrix2 = np.column_stack((temperatures, mean_Jd_values2))
+    Jp_matrix2 = np.column_stack((temperatures, Jp2))
+    Js_matrix2 = np.column_stack((temperatures, Js2))
 
-    result = []
-    for i in range(len(Ic1)):
-        result.append(Ic1[i] * Ic2[i])
-    
-    mean_molt = calculate_mean (result)
-    print(mean_molt)
-    molt_mean = calculate_mean(Ic1)*calculate_mean(Ic2)
-    mean_m_array = np.array(mean_molt)
-    molt_m_array = np.array(molt_mean)
-    sub = 1/t * (mean_m_array - molt_m_array)
-    sott = Js_new1 + Js_new2 +2*sub
-    #print (i, sub) 
-
-    double.append(sott)
-
-    
-    i += 1 
-
-Jd_matrix1 = np.column_stack((temperatures, mean_Jd_values1))
-Jp_matrix1 = np.column_stack((temperatures, Jp1))
-Js_matrix1 = np.column_stack((temperatures, Js1))
-
-Jd_matrix2 = np.column_stack((temperatures, mean_Jd_values2))
-Jp_matrix2 = np.column_stack((temperatures, Jp2))
-Js_matrix2 = np.column_stack((temperatures, Js2))
-
-duouble_matrix = np.column_stack ((temperatures, double))
+    duouble_matrix = np.column_stack ((temperatures, double))
 
 y = [0] * len(temperatures)
 
@@ -206,6 +207,7 @@ plt.grid(True)
 plt.suptitle('Relative density fluctuations K,=1 L=16')
 
 plt.tight_layout()  # Adjust layout for better appearance
+plt.savefig(f'Multiple_superflidity_K{K}_e{e}')
 
 
 
