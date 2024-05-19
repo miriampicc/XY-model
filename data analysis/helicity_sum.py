@@ -176,6 +176,7 @@ plt.legend()
 plt.xlabel('Temperature (K)')
 plt.ylabel('Helicity sum')
 plt.title('Helicity sum ')
+plt.ylim(bottom=0)
 plt.grid(True)
 
 # Add a title to the entire figure
