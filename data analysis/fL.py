@@ -168,7 +168,7 @@ plt.title(f'e = {e}')
 plt.legend()
 plt.grid(True)
 
-plt.savefig(f'f_L(T)_K{K}_e{e}.jpg')
+plt.savefig(f'f_LT_K{K}_e{e}.jpg')
 
 
 
