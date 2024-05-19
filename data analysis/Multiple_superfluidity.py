@@ -207,7 +207,7 @@ plt.title('Helicity sum of bilayer compound')
 plt.grid(True)
 
 # Add a title to the entire figure
-plt.suptitle('Relative density fluctuations K,=1 L=16')
+plt.suptitle(f'Relative density fluctuations K={K} L={L}, e={e}')
 
 plt.tight_layout()  # Adjust layout for better appearance
 plt.savefig(f'Multiple_superflidity_K{K}_e{e}.jpg')
