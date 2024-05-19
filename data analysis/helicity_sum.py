@@ -163,7 +163,7 @@ for l in L :
 
     duouble_matrix = np.column_stack ((temperatures, double))
 
-    plt.plot(duouble_matrix[:, 0], duouble_matrix[:, 1], lable=f'L={l}')
+    plt.plot(duouble_matrix[:, 0], duouble_matrix[:, 1], label=f'L={l}')
 
 y = [0] * len(temperatures)
 
