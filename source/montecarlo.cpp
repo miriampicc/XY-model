@@ -13,14 +13,14 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
     std::array<O2, 2> OldPsi;
     double OldA, NewA;
     double newE, oldE, deltaE;
-    size_t N= L*L;
+    size_t N= Lx * Ly;
 
-    for (size_t iy = 0; iy < L; iy++) {
-        for (size_t ix = 0; ix < L; ix++) {
+    for (size_t iy = 0; iy < Ly; iy++) {
+        for (size_t ix = 0; ix < Lx; ix++) {
             /*choose randomly a site of the lattice*/
             //i = rn::uniform_integer_box(0, N - 1);
 
-            size_t i = ix + L * (iy);
+            size_t i = ix + Lx * (iy);
             /*************PSI UPDATE: density update with total density contraint **********/
 
             OldPsi[0] = Site[i].Psi[0];
@@ -120,15 +120,15 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
     size_t ix, iy;
     size_t nn_ip, nn_im;
 
-    ix = i % L;
-    iy = i / L;
+    ix = i % Lx;
+    iy = i / Ly;
 
-    size_t ip=(ix == L-1 ? 0: ix+1);
-    size_t ipx= ip+L*(iy);                    //Relevant
-    size_t jp=(iy == L-1 ? 0: iy+1);
-    size_t ipy= ix+(L*jp);                    //Relevant
-    size_t imx= (ix == 0 ? L-1: ix-1)+L*(iy); //Relevant
-    size_t imy= ix+L*((iy == 0 ? L-1: iy-1)); //Relevant
+    size_t ip=(ix == Lx-1 ? 0: ix+1);
+    size_t ipx= ip+Lx*(iy);                    //Relevant
+    size_t jp=(iy == Ly-1 ? 0: iy+1);
+    size_t ipy= ix+(Lx*jp);                    //Relevant
+    size_t imx= (ix == 0 ? Lx-1: ix-1)+Lx*(iy); //Relevant
+    size_t imy= ix+Lx*((iy == 0 ? Ly-1: iy-1)); //Relevant
 
     for(int alpha=0; alpha<2; alpha ++) {
 
@@ -148,7 +148,7 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
         }
     }
 
-    h_Josephson +=  Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)));
+    h_Josephson +=  Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
 
     tot_energy=  h_Kinetic + h_Josephson;
 
@@ -162,15 +162,15 @@ double local_energy_A (double A, size_t i, int alpha, H_parameters &Hp, const st
     size_t ix, iy;
     size_t nn_ip, nn_ipl, nn_iml;
 
-    ix = i % L;
-    iy = i / L;
+    ix = i % Lx;
+    iy = i / Ly;
 
-    size_t ip=(ix == L-1 ? 0: ix+1);
-    size_t ipx= ip+L*(iy);                    //Relevant
-    size_t jp=(iy == L-1 ? 0: iy+1);
-    size_t ipy= ix+(L*jp);                    //Relevant
-    size_t imx= (ix == 0 ? L-1: ix-1)+L*(iy); //Relevant
-    size_t imy= ix+L*((iy == 0 ? L-1: iy-1)); //Relevant
+    size_t ip=(ix == Lx-1 ? 0: ix+1);
+    size_t ipx= ip+Lx*(iy);                    //Relevant
+    size_t jp=(iy == Ly-1 ? 0: iy+1);
+    size_t ipy= ix+(Lx*jp);                    //Relevant
+    size_t imx= (ix == 0 ? Lx-1: ix-1)+Lx*(iy); //Relevant
+    size_t imy= ix+Lx*((iy == 0 ? Ly-1: iy-1)); //Relevant
 
     if (alpha == 0) {
         nn_ip = ipx;

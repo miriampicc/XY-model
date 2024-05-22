@@ -8,7 +8,7 @@
 #include <iostream>
 
 namespace fs = std::filesystem;
-size_t L;
+size_t Lx, Ly;
 double T;
 bool restart;
 
@@ -35,7 +35,8 @@ int main(int argc, char *argv[]) {
 
 
     if(argc == 16) {
-        L = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
+        Lx = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
+        Ly = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
         MC.n_steps = static_cast<int>(std::strtol(argv[2], nullptr, 10));
         MC.transient = static_cast<int>(std::strtol(argv[3], nullptr, 10));
         MC.tau = static_cast<int>(std::strtol(argv[4], nullptr, 10));
@@ -56,9 +57,10 @@ int main(int argc, char *argv[]) {
         myhelp(argc, argv);
     }
 
-    N=L*L;
+    N=Lx*Ly;
 
-    std::cout<< L << std::endl;
+    std::cout<< Lx << std::endl;
+    std::cout<< Ly << std::endl;
     std::cout<<"Numero di step "<< MC.n_steps << std::endl;
     std::cout<< T << std::endl;
     std::cout<< Hp.K << std::endl;
@@ -70,7 +72,6 @@ int main(int argc, char *argv[]) {
     std::cout<< restart << std::endl;
     std::cout<<MC.theta_box<<std::endl;
     std::cout<<MC.theta_box_A<<std::endl;
-    //std::cout<< directory_read << std::endl;
     std::cout<< directory_write << std::endl;
 
     //initialization of the random number generator

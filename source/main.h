@@ -28,7 +28,7 @@ namespace paths_dir{
 
 // Define simulation parameters
 
-extern size_t L;            // Number of spins in each dimension
+extern size_t Lx, Ly;            // Number of spins in each dimension
 extern double T;        // Temperature
 extern bool restart;    // where does the program have to take the initial file
 

@@ -12,31 +12,35 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
     double A_plaq, A_2=0.;
     size_t ip, nn_ip;
 
-    for (size_t i = 0; i < L; i++) {
-        for (size_t j = 0; j < L; j++) {
+    for (size_t iy = 0; iy < Ly; iy++) {
+        for (size_t ix = 0; ix < Ly; ix++) {
+
+            size_t i=ix + Lx * ( iy );
 
             for (int alpha=0; alpha<2; alpha++){
-                for(int vec2=0; vec2<2; vec2++){
+
+                for (size_t vec2 = 0; vec2 < 2; vec2++) {
                     if (vec2 == 0) {
-                        ip = (i == L - 1 ? 0 : i + 1);
-                        nn_ip = ip + L * (j);
+                        ip = (ix == Lx - 1 ? 0 : ix + 1);
+                        nn_ip = ip + Lx * (iy);
                     } else if (vec2 == 1) {
-                        ip = (j == L - 1 ? 0 : j + 1);
-                        nn_ip = i + L * ip;
+                        ip = (iy == Ly - 1 ? 0 : iy + 1);
+                        nn_ip = ix + Lx * ip;
                     }
-                    gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i+j*L].Psi[alpha].t + Hp.e * Site[i+j*L].A[vec2];
-                    h_Kinetic -= (Site[i+j*L].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase);
+                    gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i].Psi[alpha].t + Hp.e * Site[i].A[vec2];
+                    h_Kinetic -= (Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase);
                 }
             }
 
-            interaction +=  (Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r) * (Site[i+j*L].Psi[1].r * Site[i+j*L].Psi[0].r) *(cos(2*(Site[i+j*L].Psi[1].t-Site[i+j*L].Psi[0].t))-1);
+            interaction +=  Hp.K *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
 
             if (Hp.e != 0) {
                 for(size_t vec1=0; vec1<2; vec1++){
                     for (size_t vec2 = vec1+1; vec2 < 2; vec2++) {
                         //F_{alpha,vec}= A_alpha(r_i) + A_vec(ri+alpha) - A_alpha(r_i+vec) - A_vec(ri)
-                        A_plaq = (Site[i+j*L].A[vec1] + Site[nn(i+j*L, vec1, 1)].A[vec2] - Site[nn(i+j*L, vec2, 1)].A[vec1] -
-                               Site[i+j*L].A[vec2]);
+                        A_plaq = (Site[i].A[vec1] + Site[nn(i, vec1, 1)].A[vec2] - Site[nn(i, vec2, 1)].A[vec1] -
+                               Site[i].A[vec2]);
+
                         A_2 +=  (A_plaq * A_plaq);
                     }
                 }
@@ -44,10 +48,12 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
             }
         }
     }
-    mis.E =  h_Kinetic + Hp.K * interaction + A_2;
+    //mis.E =  h_Kinetic + interaction + A_2;
     mis.E_kinetic = h_Kinetic;
     mis.E_josephson = interaction;
     mis.E_B = A_2;
+
+    mis.E =(mis.E_kinetic  + mis.E_josephson + mis.E_B );
 }
 
 // Function to calculate the total magnetization of the lattice
@@ -76,11 +82,11 @@ void single_magnetization (std::vector<Node> &Site, struct Measures &mis, size_t
 void trsb_magnetization(struct Measures &mis, const std::vector<Node> &Site) {
     //The Ising parameter m(x,y)=+/-1 indicates the chirality between the two phases.
 
-    long double phi_shifted;
+    long double phi_shifted = 0.;
 
-    for (size_t iy = 0; iy < L; iy++) {
-        for (size_t ix = 0; ix < L; ix++) {
-            size_t i = ix + L * (iy);
+    for (size_t iy = 0; iy < Ly; iy++) {
+        for (size_t ix = 0; ix < Lx; ix++) {
+            size_t i = ix + Lx * (iy);
             phi_shifted = Site[i].Psi[1].t - Site[i].Psi[0].t;
             while (phi_shifted >= M_PI) {
                 phi_shifted -= 2 * M_PI;
@@ -102,61 +108,62 @@ void trsb_magnetization(struct Measures &mis, const std::vector<Node> &Site) {
 
 void helicity_modulus (struct H_parameters &Hp, const std::vector<Node> &Site, struct Measures &mis, size_t N ){
 
-    double sum_sines[2] = {0};
-    double sum_cos[2] = {0};
+    double J_alpha=0., DJ_alpha_Dd=0.;
+    //double sum_sines[2] = {0};
+    //double sum_cos[2] = {0};
     double gauge_phase;
     int vec=0; //in this case we are calculating the helicity modulus along the x direction
 
 
-    for (int iy = 0; iy < L; iy++) {
-        for (int ix = 0; ix < L; ix++) {
+    for (int iy = 0; iy < Ly; iy++) {
+        for (int ix = 0; ix < Lx; ix++) {
 
-            size_t i = ix + L * iy;
-            size_t ip = (ix == L-1 ? 0: ix+1);
-            size_t nn_ip = ip +L * (iy);
+            size_t i = ix + Lx * iy;
+            size_t ip = (ix == Lx-1 ? 0: ix+1);
+            size_t nn_ip = ip + Lx * (iy);
 
             for (int alpha = 0; alpha < 2; ++alpha) {
 
-                gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i].Psi[alpha].t + Hp.e * Site[i].A[vec];
-                sum_sines[alpha] += Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r * sin(gauge_phase);
-                sum_cos[alpha] += Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r * cos(gauge_phase);
+                //gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i].Psi[alpha].t + Hp.e * Site[i].A[vec];
+                //sum_sines[alpha] += Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r * sin(gauge_phase);
+                //sum_cos[alpha] += Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r * cos(gauge_phase);
+
+                gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i].Psi[alpha].t + Hp.e*Site[i].A[vec];
+                J_alpha = (Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * sin(gauge_phase);
+                DJ_alpha_Dd = (Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase);
+                mis.Ic[alpha] += ( J_alpha )/ N;
+                mis.Jd[alpha]+= ( DJ_alpha_Dd ) / N;
             }
         }
-    }
-    sum_sines[0] /= static_cast<double>(N);
-    sum_cos[0] /= static_cast<double>(N);
-
-    sum_sines[1] /= static_cast<double>(N);
-    sum_cos[1] /= static_cast<double>(N);
-
-    for (int alpha = 0; alpha < 2; ++alpha) {
-
-        mis.Ic[alpha] = sum_sines[alpha];
-        mis.Jd[alpha] = sum_cos[alpha];
     }
 }
 
 void dual_stiffness (struct Measures &mis, const std::vector<Node> &Site) {
 
-    long double qx_min = (2 * M_PI) / static_cast<long double>(L);
-    long double normalization_const = 1./((2*M_PI)*(2*M_PI)*static_cast<long double>(L)*static_cast<long double>(L));
+    long double qx_min = (2 * M_PI) / static_cast<long double>(Lx);
+    long double normalization_const = 1./((2*M_PI)*(2*M_PI)*static_cast<long double>(Lx)*static_cast<long double>(Lx));
     long double Im_dual=0., Re_dual=0.;
     long double Dx_Ay, Dy_Ax;
-    int i, j;
+    int ix, iy;
 
-    for (i=0; i<L; i++){
-        for (j=0; j<L; j++){
-            Dx_Ay = Site[nn(i+j*L, 0, 1)].A[1] - Site[i+j*L].A[1];
-            Dy_Ax = Site[nn(i+j*L, 1, 1)].A[0] - Site[i+j*L].A[0];
+    for (iy=0; iy<Ly; iy++){
+        for (ix=0; ix<Lx; ix++){
 
-            Im_dual += (Dx_Ay - Dy_Ax) * sin (qx_min * i);
-            Re_dual += (Dx_Ay - Dy_Ax) * cos (qx_min * i);
+            size_t i=ix +Lx*(iy);
+
+            Dx_Ay = Site[nn(i, 0, 1)].A[1] - Site[i].A[1];
+            Dy_Ax = Site[nn(i, 1, 1)].A[0] - Site[i].A[0];
+
+            Im_dual += (Dx_Ay - Dy_Ax) * sin ((double)(qx_min * ix));
+            Re_dual += (Dx_Ay - Dy_Ax) * cos ((double)(qx_min * ix));
+
         }
     }
 
     mis.dual_stiff_Z = normalization_const * ((Im_dual * Im_dual) + (Re_dual * Re_dual));
 
 }
+/*
 
 void vortex (const std::vector<Node> &Site, struct Measures &mis) {
 
@@ -257,6 +264,7 @@ void vortex (const std::vector<Node> &Site, struct Measures &mis) {
         mis.antivortices[alpha] = n_minus[alpha];
     }
 }
+*/
 
 
 
@@ -321,23 +329,23 @@ void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write
 
 
 size_t nn (size_t i, size_t coord, int dir ){
-    size_t ix = i % L;
-    size_t iy = (i/L) % L;
+    size_t ix = i % Lx;
+    size_t iy = (i/Ly) % Ly;
 
     if(coord==0){
         int ix_new = static_cast<int>(ix)+ (dir == 0 ? 0 : (dir > 0 ? 1 : -1));
-        if(ix_new==L) { ix_new=0;}
-        if(ix_new < 0){ ix_new=static_cast<int>(L-1);}
+        if(ix_new==Lx) { ix_new=0;}
+        if(ix_new < 0){ ix_new=static_cast<int>(Lx-1);}
         int iy_new=static_cast<int>(iy);
-        return (static_cast<size_t>(ix_new) + L * (static_cast<size_t>(iy_new)));
+        return (static_cast<size_t>(ix_new) + Lx * (static_cast<size_t>(iy_new)));
 
     }
     if(coord==1){
         int iy_new= static_cast<int>(iy) + (dir == 0 ? 0 : (dir > 0 ? 1 : -1));
-        if(iy_new==static_cast<int>(L)){ iy_new=0;}
-        if(iy_new<0){ iy_new=static_cast<int>(L-1);}
+        if(iy_new==static_cast<int>(Ly)){ iy_new=0;}
+        if(iy_new<0){ iy_new=static_cast<int>(Ly-1);}
         int ix_new=static_cast<int>(ix);
-        return (static_cast<size_t>(ix_new) + L * (static_cast<size_t>(iy_new)));
+        return (static_cast<size_t>(ix_new) + Ly * (static_cast<size_t>(iy_new)));
     }
     return 1;
 }
