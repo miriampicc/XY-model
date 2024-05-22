@@ -4,6 +4,7 @@
 #include "montecarlo.h"
 #include "main.h"
 #include "rng.h"
+#include "initialization.h"
 
 void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double my_beta){
 
