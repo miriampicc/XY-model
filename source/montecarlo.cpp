@@ -10,16 +10,14 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
     double l, rand, d_A, d_theta;
     double acc_rate=0.5, acc_theta=0., acc_A=0.;
-    std::array<O2, 2> NewPsi;
-    std::array<O2, 2> OldPsi;
+    std::array<O2, 2> NewPsi{};
+    std::array<O2, 2> OldPsi{};
     double OldA, NewA;
     double newE, oldE, deltaE;
-    size_t N= Lx * Ly;
+    size_t N = Lx * Ly;
 
     for (size_t iy = 0; iy < Ly; iy++) {
         for (size_t ix = 0; ix < Lx; ix++) {
-            /*choose randomly a site of the lattice*/
-            //i = rn::uniform_integer_box(0, N - 1);
 
             size_t i = ix + Lx * (iy);
             /*************PSI UPDATE: density update with total density contraint **********/
@@ -69,17 +67,22 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 } else {
                     rand = rn::uniform_real_box(0, 1);
 
-                    if (rand < exp(- my_beta * deltaE)) {
+                    if (rand < exp(-my_beta * deltaE)) {
                         Site[i].Psi[alpha] = NewPsi[alpha];
                         acc_theta++;
                     }
                 }
             }
+        }
+    }
 
-            /***********VECTOR POTENTIAL*******/
+    /***********VECTOR POTENTIAL*******/
+    if (Hp.e != 0) {   //then we also have to update the vector potential
 
-            if (Hp.e != 0) {   //then we also have to update the vector potential
+        for (int iy = 0; iy < Ly; iy++) {
+            for (int ix = 0; ix < Lx; ix++) {
 
+                size_t i = ix + Lx * (iy);
                 for (int alpha = 0; alpha < 2; alpha++) {
 
                     OldA = Site[i].A[alpha];
@@ -90,13 +93,13 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                     newE = local_energy_A(NewA, i, alpha, Hp, Site);
 
                     deltaE = (newE - oldE);
-                    if (deltaE < 0) {
+                    if (deltaE < 0.) {
                         Site[i].A[alpha] = NewA;
                         acc_A++;
                         //std::cout<<"Updating A form "<< OldA <<" to "<< NewA << " on site "<< i<<std::endl;
                     } else {
                         rand = rn::uniform_real_box(0, 1);
-                        if (rand < exp(- my_beta * deltaE)) {
+                        if (rand < exp(-my_beta * deltaE)) {
                             Site[i].A[alpha] = NewA;
                             acc_A++;
                             //std::cout<<"Updating A form "<< OldA <<" to "<< NewA << " on site "<< i<<std::endl;
@@ -104,7 +107,6 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                     }
                 }
             }
-
         }
     }
 
@@ -210,7 +212,7 @@ double local_energy_A (double A, size_t i, int alpha, H_parameters &Hp, const st
         }
     }
 
-    tot_energy = h_Kinetic + A_2;
+    tot_energy = h_Kinetic + 0.5 * A_2;
 
     return tot_energy;
 

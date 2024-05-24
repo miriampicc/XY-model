@@ -17,7 +17,7 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
 
             size_t i=ix + Lx * ( iy );
 
-            for (int alpha=0; alpha<2; alpha++){
+            for (size_t alpha=0; alpha<2; alpha++){
 
                 for (size_t vec2 = 0; vec2 < 2; vec2++) {
                     if (vec2 == 0) {
@@ -41,7 +41,7 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
                         A_plaq = (Site[i].A[vec1] + Site[nn(i, vec1, 1)].A[vec2] - Site[nn(i, vec2, 1)].A[vec1] -
                                Site[i].A[vec2]);
 
-                        A_2 +=  (A_plaq * A_plaq);
+                        A_2 +=  0.5 * (A_plaq * A_plaq);
                     }
                 }
 
