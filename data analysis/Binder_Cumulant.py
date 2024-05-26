@@ -99,7 +99,7 @@ plt.ylabel('U')
 plt.title(f'Binder Cumulant e={e}')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'Binder_Cumulant_e={e}_K={K}.jpg')
+plt.savefig(f'Binder_Cumulant2_e={e}_K={K}.jpg')
 
 
 plt.show()
