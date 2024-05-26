@@ -75,8 +75,7 @@ for l in L:
         
         temperatures.append(t)
 
-        #file_path = f"/Users/mirimi/Desktop/OUTPUT_cluster/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/trsb_magnetization.txt'
-        file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/trsb_magnetization.txt'
+        file_path = f"/home/x_mirpi/Output_TBG/K2_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/trsb_magnetization.txt'
 
         #print(n)
 
