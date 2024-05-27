@@ -90,7 +90,7 @@ for l in L :
         Jd2 = []
         Ic2 = []
 
-        file_path1 = f"/home/x_mirpi/Output_TBG/K2_{K}_first/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus1.txt'
+        file_path1 = f"/home/x_mirpi/Output_TBG/K2_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus1.txt'
 
         with open(file_path1, "r") as file:
             for line in file:
@@ -100,7 +100,7 @@ for l in L :
                     Ic1.append(float(columns[1]))
 
         
-        file_path2 = f"/home/x_mirpi/Output_TBG/K2_{K}_first/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus2.txt'
+        file_path2 = f"/home/x_mirpi/Output_TBG/K2_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus2.txt'
 
         with open(file_path2, "r") as file:
             for line in file:
