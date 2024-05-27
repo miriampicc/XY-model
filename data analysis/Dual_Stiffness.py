@@ -72,7 +72,7 @@ for l in L:
         
         temperatures.append(t)
 
-        file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Dual_Stiffness.txt'
+        file_path = f"/home/x_mirpi/Output_TBG/K2_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Dual_Stiffness.txt'
 
         with open(file_path, 'r') as file:
             numbers = [float(line.strip()) for line in file.readlines()]
@@ -88,7 +88,7 @@ plt.ylabel('U')
 plt.title(f'Dual Stiffness e={e}, K={K}')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'Dual_Stiffness_e={e}_K={K}.jpg')
+plt.savefig(f'Dual_Stiffness2_e={e}_K={K}.jpg')
 
 
 plt.show()
