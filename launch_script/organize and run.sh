@@ -24,9 +24,9 @@ restart=0
 K=5.0
 J1=0.0
 J2=0.0
-e=0.1
-beta_high=1.818    #1.754   #1.818  #T=0.57 #0.55
-beta_low=1.695   #T=0.59
+e=0.0
+beta_high=1.8    #1.754   #1.818  #T=0.57 #0.55
+beta_low=1.6   #T=0.59
 theta_box=0.78539816339
 theta_box_A=0.1
 
@@ -39,12 +39,12 @@ for L in $LLIST; do
     cd ${BASEDIR}/Output_TBG || exit
 
 
-    if [ ! -d ./SK2_${K} ]; then
+    if [ ! -d ./SK_${K} ]; then
 
-    mkdir -p K2_${K}
+    mkdir -p K_${K}
     fi
 
-    cd K2_${K} || exit
+    cd K_${K} || exit
 
     if [ ! -d ./Se_${e} ]; then
     mkdir -p e_${e}
@@ -56,7 +56,7 @@ for L in $LLIST; do
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 
-    DIR_OUT=${BASEDIR}/Output_TBG/K2_${K}/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
+    DIR_OUT=${BASEDIR}/Output_TBG/K_${K}/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
 
     #################Creation of the submit_runs script#########################
 
