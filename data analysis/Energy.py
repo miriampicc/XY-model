@@ -56,18 +56,23 @@ T_high = 1/beta_low
 T_low = 1/beta_high
 print(delta)
 
+delta_beta = (beta_high - beta_low)/(rank)
+
 for l in L:
     mean_energy_values = []
     std_dev = []
     temperatures = []
+    betas = []
     N = l * l
 
     for n in range(rank) : 
 
         t = T_high - n * delta
         #print (t)
+        bb = beta_low + delta_beta * n 
         
         temperatures.append(t)
+        betas.append(bb)
 
         #file_path = f"/Users/mirimi/Desktop/OUTPUT_cluster/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
         file_path = f"/home/x_mirpi/Output_TBG/K2_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
@@ -86,13 +91,16 @@ for l in L:
     energy = energy / N
     temp = np.array(temperatures) 
     std_val = np.array(std_dev)
+    std_val = std_val / N
+
+    beta_array = np.array(betas)
 
     # Plot Energy vs. Temperature
-    plt.plot(temp, energy, linestyle='-', label=f'L={l}')  #marker='o',
-    plt.fill_between(temp, energy - std_val, energy + std_val, alpha=0.3, linewidth=4)
+    plt.plot(beta_array, energy, linestyle='-', label=f'L={l}')  #marker='o',
+    plt.fill_between(beta_array, energy - std_val, energy + std_val, alpha=0.3, linewidth=4)
 
 #plt.ylim(top=0)
-plt.xlabel('Temperature (K)')
+plt.xlabel('Beta (1/K)')
 plt.ylabel(' Energy ')
 plt.title(f'Total Energy')
 plt.legend()
