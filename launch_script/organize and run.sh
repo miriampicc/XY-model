@@ -9,7 +9,7 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 time_limit="5-0:00:00"
 
-LLIST="12 20 40 96"
+LLIST="8 12 20 24 32 40 48 64 96"
 
 ################ Input Parameters for the Monte Carlo simulation #################
 
@@ -24,8 +24,8 @@ restart=0
 K=5.0
 J1=0.0
 J2=0.0
-e=0.0
-beta_high=1.8    #1.754   #1.818  #T=0.57 #0.55
+e=0.1
+beta_high=1.9    #1.754   #1.818  #T=0.57 #0.55
 beta_low=1.6   #T=0.59
 theta_box=0.78539816339
 theta_box_A=0.1
