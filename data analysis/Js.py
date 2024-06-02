@@ -149,7 +149,7 @@ for l in L:
 
     Jd_matrix1 = np.column_stack((temperatures, mean_Jd_values1))
     Jp_matrix1 = np.column_stack((temperatures, Jp1))
-    Js_matrix1 = np.column_stack((temperatures, helicity_sum_inf))
+    Js_matrix1 = np.column_stack((temperatures, helicity))
     
     plt.plot(Js_matrix1[:, 0], Js_matrix1[:, 1], label=f'L={l}')
 
@@ -166,9 +166,9 @@ plt.plot(temperatures , y, linestyle='--', label = r'$\frac{2T}{\pi}$')
 
 plt.xlabel('T (K)')
 plt.ylabel(r'$J_s$')
-plt.title(f' $K={K}$ e = {e} $L_0 = {L0}$')
+plt.title(r'$J_s$ $K={K}$ e = {e} $L_0 = {L0}$')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'Helicity_sum2_K{K}_e{e}_L0{L0}.jpg')
+plt.savefig(f'Js_K{K}_e{e}_L0{L0}.jpg')
 
 plt.show()
