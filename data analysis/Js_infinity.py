@@ -12,7 +12,7 @@ parser.add_argument('--e', type=float, help='e')
 parser.add_argument('--b_high', type=float, help='beta high')
 parser.add_argument('--b_low', type=float, help='beta low')
 parser.add_argument('--rank', type=int, help='rank')
-parser.add_argument('--L0', type=int, help='L0' )
+parser.add_argument('--L0', type=float, help='L0' )
 
 # Parse the command-line arguments
 args = parser.parse_args()
