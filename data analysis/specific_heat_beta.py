@@ -72,7 +72,7 @@ for l in L:
             numbers = [float(line.strip()) for line in file.readlines()]
             mm = calculate_mean(numbers)
             en_var = (np.std(numbers))**2
-            cc = ((1/t)**2) * en_var
+            cc = (((1/t)**2) * en_var )/ N
         
             specific_heat.append(cc)
         
@@ -84,7 +84,7 @@ for l in L:
     plt.plot(betas, sh_val, linestyle='-', label = f'L={l}')  
    
 
-plt.xlabel(r'$T(K)$')
+plt.xlabel(r'$\beta$')
 plt.ylabel('$C_V$')
 plt.title(f'Specific Heat $K = {K}$, $e={e}$ ')
 plt.legend()
