@@ -89,7 +89,7 @@ plt.ylabel('$C_V$')
 plt.title(f'Specific Heat $K = {K}$, $e={e}$ ')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'Energy_e={e}_K={K}.jpg')
+plt.savefig(f'Specific_heat_e={e}_K={K}.jpg')
 
 
 plt.show()
