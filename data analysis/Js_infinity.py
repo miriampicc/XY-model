@@ -50,6 +50,20 @@ def calculate_mean(data):
     return mean
 
 
+colors = [
+    "#00008B",  # Dark Blue
+    "#0000CD",  # Medium Blue
+    "#4169E1",  # Royal Blue
+    "#1E90FF",  # Dodger Blue
+    "#00BFFF",  # Deep Sky Blue
+    "#87CEEB",  # Sky Blue
+    "#87CEFA",  # Light Sky Blue
+    "#EEE8AA",  # Pale Goldenrod
+    "#F0E68C",  # Khaki
+    "#FFD700"   # Gold
+]
+
+
 #let us obtain the temperatures 
 temperatures = []
 delta = (1/beta_low - 1/beta_high)/(rank)
@@ -97,9 +111,13 @@ for l in L:
                     Jd1.append(float(columns[0]))
                     Ic1.append(float(columns[1]))
 
-        Ic_std1 = calculate_std(Ic1) ** 2
+        Jd1 = [x * N for x in Jd1]
+        Ic1 = [x * N for x in Ic1]
+
+        #Ic_std1 = calculate_std(Ic1) ** 2
+        Ic_std1 = np.std(Ic1) ** 2
         sin_Ic1.append(Ic_std1)
-        sin = Ic_std1 * N / t
+        sin = Ic_std1 / t
         Jp1.append(sin)
 
         mm = calculate_mean(Jd1) 
@@ -117,9 +135,14 @@ for l in L:
                     Jd2.append(float(columns[0]))
                     Ic2.append(float(columns[1]))
 
-        Ic_std2 = calculate_std(Ic2) ** 2
+        Jd2 = [x * N for x in Jd2]
+        Ic2 = [x * N for x in Ic2]
+
+        #Ic_std2 = calculate_std(Ic2) ** 2
+        Ic_std2 = np.std(Ic2) ** 2
         sin_Ic2.append(Ic_std2)
-        sin = Ic_std2 * N / t
+        #sin = Ic_std2 * N / t
+        sin = Ic_std2 / t
 
         Jp2.append(sin)
 
@@ -139,7 +162,7 @@ for l in L:
         mean_m_array = np.array(mean_molt)
         molt_m_array = np.array(molt_mean)
         sub = 1/t * (mean_m_array - molt_m_array)
-        helicity_sum = Js_new1 + Js_new2 -2*sub
+        helicity_sum = (Js_new1 + Js_new2 -2*sub)/N
         #print(helicity_sum)
 
         helicity.append(helicity_sum)
