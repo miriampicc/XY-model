@@ -71,6 +71,8 @@ T_high = 1/beta_low
 T_low = 1/beta_high
 #print(delta)
 
+i = 0
+
 for l in L:
     
     N= l * l
@@ -174,7 +176,9 @@ for l in L:
     Jp_matrix1 = np.column_stack((temperatures, Jp1))
     Js_matrix1 = np.column_stack((temperatures, helicity_sum_inf))
     
-    plt.plot(Js_matrix1[:, 0], Js_matrix1[:, 1], label=f'L={l}')
+    plt.plot(Js_matrix1[:, 0], Js_matrix1[:, 1], label=f'L={l}', color=colors[i])
+
+    i = i+1
 
 
 
