@@ -58,7 +58,9 @@ colors = [
     "#87CEFA",  # Light Sky Blue
     "#EEE8AA",  # Pale Goldenrod
     "#F0E68C",  # Khaki
-    "#FFD700"   # Gold
+    "#FFD700",  # Gold
+    "#F08080",  # Light Coral
+    "#FF6347"   # Tomato
 ]
 
 
