@@ -33,7 +33,17 @@ print("beta low=", beta_low)
 print("rank=", rank)
 
 
-# Create a dictionary to store the arrays
+colors = [
+    "#00008B",  # Dark Blue
+    "#0000CD",  # Medium Blue
+    "#4169E1",  # Royal Blue
+    "#1E90FF",  # Dodger Blue
+    "#87CEEB",  # Sky Blue
+    "#87CEFA",  # Light Sky Blue
+    "#EEE8AA",  # Pale Goldenrod
+    "#F0E68C",  # Khaki
+    "#FFD700"   # Gold
+]
 
 
 def calculate_std(data): 
@@ -59,6 +69,8 @@ T_low = 1/beta_high
 #print(delta)
 
 delta_beta = (beta_high - beta_low)/(rank)
+
+i=0
 
 for l in L:
     
@@ -100,7 +112,9 @@ for l in L:
     beta_array = np.array(betas)
 
     
-    plt.plot(beta_array, cumulant, linestyle='-', label = f'L={l}')
+    plt.plot(beta_array, cumulant, linestyle='-', label = f'L={l}', color=colors[i])
+
+    i = i+1
 
 
 plt.xlabel(r'$\beta$')
