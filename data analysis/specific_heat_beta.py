@@ -46,7 +46,18 @@ print(delta)
 
 delta_beta = (beta_high - beta_low)/(rank)
 
-
+colors = [
+    "#00008B",  # Dark Blue
+    "#4169E1",  # Royal Blue
+    "#00BFFF",  # Deep Sky Blue
+    "#87CEEB",  # Sky Blue
+    "#87CEFA",  # Light Sky Blue
+    "#EEE8AA",  # Pale Goldenrod
+    "#F0E68C",  # Khaki
+    "#F08080",  # Light Coral
+    "#FF6347",  # Tomato
+    "#FFD700"   # Gold
+]
 
 #PLOT OF THE SPECIFIC HEAT 
 i = 0
@@ -81,7 +92,8 @@ for l in L:
     beta_array = np.array (betas)
 
     # Plot Energy vs. Temperature
-    plt.plot(betas, sh_val, linestyle='-', label = f'L={l}')  
+    plt.plot(betas, sh_val, linestyle='-', label = f'L={l}', color=colors[i])  
+    i = i+1
    
 
 plt.xlabel(r'$\beta$')

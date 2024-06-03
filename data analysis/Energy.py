@@ -48,6 +48,19 @@ def calculate_mean(data):
     mean = sum(data) / len(data)
     return mean
 
+colors = [
+    "#00008B",  # Dark Blue
+    "#4169E1",  # Royal Blue
+    "#00BFFF",  # Deep Sky Blue
+    "#87CEEB",  # Sky Blue
+    "#87CEFA",  # Light Sky Blue
+    "#EEE8AA",  # Pale Goldenrod
+    "#F0E68C",  # Khaki
+    "#F08080",  # Light Coral
+    "#FF6347",  # Tomato
+    "#FFD700"   # Gold
+]
+
 
 #let us obtain the temperatures 
 temperatures = []
@@ -57,6 +70,8 @@ T_low = 1/beta_high
 print(delta)
 
 delta_beta = (beta_high - beta_low)/(rank)
+
+i = 0
 
 for l in L:
     mean_energy_values = []
@@ -96,8 +111,10 @@ for l in L:
     beta_array = np.array(betas)
 
     # Plot Energy vs. Temperature
-    plt.plot(beta_array, energy, linestyle='-', label=f'L={l}')  #marker='o',
+    plt.plot(beta_array, energy, linestyle='-', label=f'L={l}', color = colors[i])  #marker='o',
     plt.fill_between(beta_array, energy - std_val, energy + std_val, alpha=0.3, linewidth=4)
+
+    i = i+1
 
 #plt.ylim(top=0)
 plt.xlabel('Beta (1/K)')

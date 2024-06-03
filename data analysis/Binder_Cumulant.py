@@ -50,6 +50,19 @@ def calculate_mean(data):
     mean = sum(data) / len(data)
     return mean
 
+colors = [
+    "#00008B",  # Dark Blue
+    "#4169E1",  # Royal Blue
+    "#00BFFF",  # Deep Sky Blue
+    "#87CEEB",  # Sky Blue
+    "#87CEFA",  # Light Sky Blue
+    "#EEE8AA",  # Pale Goldenrod
+    "#F0E68C",  # Khaki
+    "#F08080",  # Light Coral
+    "#FF6347",  # Tomato
+    "#FFD700"   # Gold
+]
+
 
 #let us obtain the temperatures 
 temperatures = []
@@ -57,6 +70,8 @@ delta = (1/beta_low - 1/beta_high)/(rank)
 T_high = 1/beta_low
 T_low = 1/beta_high
 #print(delta)
+
+i = 0
 
 for l in L:
     
@@ -91,7 +106,9 @@ for l in L:
             pseudo_magn.append(np.abs(mm))
 
     
-    plt.plot(temperatures, cumulant, linestyle='-', label = f'L={l}')
+    plt.plot(temperatures, cumulant, linestyle='-', label = f'L={l}', color = colors[i])
+
+    i = i +1
 
 
 plt.xlabel('Temperature (K)')

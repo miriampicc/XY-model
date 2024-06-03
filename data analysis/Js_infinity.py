@@ -189,7 +189,7 @@ for temp in range(len(temperatures)):
     y[temp] = 2 * temperatures[temp] / np.pi
 
 
-plt.plot(temperatures , y, linestyle='--', label = r'$\frac{2T}{\pi}$')
+plt.plot(temperatures , y, linestyle='--', label = r'$\frac{2T}{\pi}$', color = 'black')
 
 plt.xlabel('T (K)')
 plt.ylabel(r'$J_s$')
