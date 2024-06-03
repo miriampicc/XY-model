@@ -48,14 +48,14 @@ delta_beta = (beta_high - beta_low)/(rank)
 
 colors = [
     "#00008B",  # Dark Blue
+    "#0000CD",  # Medium Blue
     "#4169E1",  # Royal Blue
+    "#1E90FF",  # Dodger Blue
     "#00BFFF",  # Deep Sky Blue
     "#87CEEB",  # Sky Blue
     "#87CEFA",  # Light Sky Blue
     "#EEE8AA",  # Pale Goldenrod
     "#F0E68C",  # Khaki
-    "#F08080",  # Light Coral
-    "#FF6347",  # Tomato
     "#FFD700"   # Gold
 ]
 
