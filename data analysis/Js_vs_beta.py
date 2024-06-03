@@ -49,6 +49,18 @@ def calculate_mean(data):
     mean = sum(data) / len(data)
     return mean
 
+colors = [
+    "#00008B",  # Dark Blue
+    "#0000CD",  # Medium Blue
+    "#4169E1",  # Royal Blue
+    "#1E90FF",  # Dodger Blue
+    "#00BFFF",  # Deep Sky Blue
+    "#87CEEB",  # Sky Blue
+    "#87CEFA",  # Light Sky Blue
+    "#EEE8AA",  # Pale Goldenrod
+    "#F0E68C",  # Khaki
+    "#FFD700"   # Gold
+]
 
 #let us obtain the temperatures 
 temperatures = []
@@ -58,6 +70,8 @@ T_low = 1/beta_high
 delta_beta = (beta_high - beta_low)/(rank)
 
 #print(delta)
+
+i=0
 
 for l in L:
     
@@ -170,7 +184,9 @@ for l in L:
     Jp_matrix1 = np.column_stack((temperatures, Jp1))
     Js_matrix1 = np.column_stack((betas, helicity))
     
-    plt.plot(Js_matrix1[:, 0], Js_matrix1[:, 1], label=f'L={l}')
+    plt.plot(Js_matrix1[:, 0], Js_matrix1[:, 1], label=f'L={l}', color = colors[i])
+
+    i = i+1
 
 
 
