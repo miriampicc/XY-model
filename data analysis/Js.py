@@ -195,6 +195,6 @@ plt.ylabel(r'$J_s$')
 plt.title(r'$J_s$ $K={K}$ e = {e} $L_0 = {L0}$')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'TRY_Js_K{K}_e{e}_L0{L0}.jpg')
+plt.savefig(f'Js_K{K}_e{e}_L0{L0}.jpg')
 
 plt.show()
