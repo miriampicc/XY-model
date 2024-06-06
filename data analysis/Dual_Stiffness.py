@@ -78,13 +78,13 @@ for l in L:
             numbers = [float(line.strip()) for line in file.readlines()]
 
         d_s = calculate_mean(numbers)
-        dual_stiff.append (d_s)
+        dual_stiff.append (d_s  * l )
     
     plt.plot(temperatures, dual_stiff, linestyle='-', label = f'L={l}')
 
 
 plt.xlabel('Temperature (K)')
-plt.ylabel('U')
+plt.ylabel(r'$\rho')
 plt.title(f'Dual Stiffness e={e}, K={K}')
 plt.legend()
 plt.grid(True)
