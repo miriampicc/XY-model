@@ -101,8 +101,11 @@ for l in L:
 
                 rand_index = random.randint(1, len(blocks)-1)
                 new_dataset.append(blocks[rand_index])
+
+            energy_dataset = np.array([])
             
-            energy_dataset = np.append(new_dataset)
+            for block in new_dataset:
+                energy_dataset = np.append(energy_dataset, block)  # Append each block to the dataset
 
             mm = calculate_mean(energy_dataset)
             en_var = (np.var(energy_dataset))
