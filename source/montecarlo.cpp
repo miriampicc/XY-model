@@ -110,6 +110,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         }
     }
 
+    //Use a box instead of a circle
     acc_theta=(double) acc_theta/static_cast<double>(2*N);
     acc_A=(double) acc_A / static_cast<double>(2*N);
     MC.theta_box= MC.theta_box*((0.5*acc_theta/acc_rate)+0.5);
