@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ############### SET MAIN FOLDERS ######
-BASEDIR=${HOME}/XY-model
+BASEDIR=${HOME}/XY-model/relative_density_fluctuations
 #BASEDIR=/Users/mirimi/Desktop/hihi/KTH/XY-model
 SCRIPT_DIR=${BASEDIR}/launch_script
 
