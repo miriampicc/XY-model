@@ -97,15 +97,15 @@ for l in L:
 
             new_dataset = []
 
-            for b in len(blocks): 
+            for b in blocks: 
 
-                rand = random.randint(1, len(blocks)-1)
-                new_dataset.append(blocks[rand])
+                rand_index = random.randint(1, len(blocks)-1)
+                new_dataset.append(blocks[rand_index])
             
-            energy_dataset = np.array(new_dataset)
+            energy_dataset = np.append(new_dataset)
 
             mm = calculate_mean(energy_dataset)
-            en_var = (np.std(energy_dataset))**2
+            en_var = (np.var(energy_dataset))
             cc = (((1/t)**2) * en_var )/ N
         
             specific_heat.append(cc)
