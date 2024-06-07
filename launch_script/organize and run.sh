@@ -36,7 +36,7 @@ for L in $LLIST; do
 
 ############Creation of the output folder and of the two files of initialization####################
 
-    cd ${BASEDIR}/Output_TBG || exit
+    cd ${BASEDIR}/Output_TBG_rdf || exit
 
 
     if [ ! -d ./SK_${K} ]; then
@@ -56,11 +56,11 @@ for L in $LLIST; do
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 
-    DIR_OUT=${BASEDIR}/Output_TBG/K_${K}/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
+    DIR_OUT=${BASEDIR}/Output_TBG_rdf/K_${K}/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
 
     #################Creation of the submit_runs script#########################
 
-    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}"
+    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_rdf"
     nnodes=2
     ntasks=64 #parallel tempering over ntasks temperatures
 
