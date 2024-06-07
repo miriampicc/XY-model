@@ -92,8 +92,10 @@ plt.title('Autocorrelation Functions for Different Temperatures')
 plt.xlabel('Lag')
 plt.ylabel('Autocorrelation')
 plt.grid(True)
+plt.savefig(f'Autocorr_lag_K{K}_e{e}.jpg')
 plt.legend()
 plt.show()
+
 
 # Plot the correlation times as a function of temperature
 plt.figure(figsize=(10, 6))
@@ -101,5 +103,6 @@ plt.plot(temperatures, correlation_times1, linestyle='-') #marker='o',
 plt.title('Correlation Time (\u03C4) as a Function of Temperature')
 plt.xlabel('Temperature')
 plt.ylabel('Correlation Time (\u03C4)')
+plt.savefig(f'Autocorr_temp_K{K}_e{e}.jpg')
 plt.grid(True)
 plt.show()
