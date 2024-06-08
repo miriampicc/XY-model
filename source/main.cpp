@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iostream>
 
+//Total deensity fluctuations branch
+
 namespace fs = std::filesystem;
 size_t Lx, Ly;
 double T;
