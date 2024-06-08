@@ -8,7 +8,7 @@
 
 void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double my_beta){
 
-    double l, rand, d_A, d_theta;
+    double l, rand, d_A, d_theta, m;
     double acc_rate=0.5, acc_theta=0., acc_A=0.;
     std::array<O2, 2> NewPsi{};
     std::array<O2, 2> OldPsi{};
@@ -27,9 +27,12 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
             NewPsi[0] = Site[i].Psi[0];
             NewPsi[1] = Site[i].Psi[1];
 
-            l = rn::uniform_real_box(0, 1);
-            NewPsi[0].r = sqrt(l);
-            NewPsi[1].r = sqrt(1 - l);
+            l = rn::uniform_real_box(0, RAND_MAX);
+            NewPsi[0].r = l;
+            m = rn::uniform_real_box(0, RAND_MAX);
+            NewPsi[1].r = m;
+
+            //And, remember, you are interested in the total density fluctuations, thus  NewPsi[0].r^2+ NewPsi[1].r^2
 
             oldE = local_energy(OldPsi, i, Hp, Site);
             newE = local_energy(NewPsi, i, Hp, Site);
@@ -118,7 +121,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
 double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const std::vector<Node> &Site) {
 
-    double h_Kinetic=0., h_Josephson=0., tot_energy;
+    double h_Kinetic=0., h_Josephson=0., tot_energy, dens_fluct=0.;
     double gauge_phase1, gauge_phase2;
     size_t ix, iy;
     size_t nn_ip, nn_im;
@@ -152,8 +155,9 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
     }
 
     h_Josephson +=  Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
+    dens_fluct += - ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - 0.5 * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
-    tot_energy=  h_Kinetic + h_Josephson;
+    tot_energy=  h_Kinetic + h_Josephson + dens_fluct;
 
     return tot_energy;
 }

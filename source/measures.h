@@ -8,6 +8,7 @@ struct Measures {
     double E_kinetic=0;
     double E_josephson=0;
     double E_B=0;
+    double density_fluct=0;
     double m_phase[2] ={0}; //x-component of the single phase. We are defining a sort of vector with two components
     double trsb_m=0;
     double Ic[2]= {0};

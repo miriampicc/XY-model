@@ -7,7 +7,7 @@
 // Define energy function
 void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Node> &Site ) {
 
-    double interaction = 0.0;
+    double interaction = 0.0, dens_fluct = 0.0;
     double gauge_phase , h_Kinetic=0.;
     double A_plaq, A_2=0.;
     size_t ip, nn_ip;
@@ -33,6 +33,8 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
             }
 
             interaction +=  Hp.K *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
+            dens_fluct += - ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) * ( 1 - 0.5 * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) ) ;
+
 
             if (Hp.e != 0) {
                 for(size_t vec1=0; vec1<2; vec1++){
@@ -52,8 +54,9 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
     mis.E_kinetic = h_Kinetic;
     mis.E_josephson = interaction;
     mis.E_B = A_2;
+    mis.density_fluct = dens_fluct;
 
-    mis.E =(mis.E_kinetic  + mis.E_josephson + mis.E_B );
+    mis.E =(mis.E_kinetic  + mis.E_josephson + mis.E_B + mis.density_fluct );
 }
 
 // Function to calculate the total magnetization of the lattice

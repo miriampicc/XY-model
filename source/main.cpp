@@ -129,6 +129,7 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     std::string Filename_kin_energy=(directory_write_param+"/Kin_Energy.txt");
     std::string Filename_joseph_energy=(directory_write_param+"/Joseph_Energy.txt");
     std::string Filename_B_energy=(directory_write_param+"/B_Energy.txt");
+    std::string Filename_Fluctuation_energy=(directory_write_param+"/Fluctuation_Energy.txt");
     std::string Filename_helicity1=(directory_write_param+"/Helicity_modulus1.txt");
     std::string Filename_helicity2=(directory_write_param+"/Helicity_modulus2.txt");
     std::string Filename_trsb_magn=(directory_write_param+"/trsb_magnetization.txt");
@@ -141,6 +142,7 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     std::ofstream File_Kin_Energy (Filename_kin_energy);
     std::ofstream File_Joseph_Energy (Filename_joseph_energy);
     std::ofstream File_B_Energy (Filename_B_energy);
+    std::ofstream File_Fluctuation_Energy (Filename_Fluctuation_energy);
     std::ofstream File_helicity1 (Filename_helicity1);
     std::ofstream File_helicity2 (Filename_helicity2);
     std::ofstream File_trsb_magn (Filename_trsb_magn);
@@ -179,23 +181,24 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
 
         mis.my_rank=PTp.rank;
 
-        File_Energy        << mis.E << std::endl;
-        File_Kin_Energy    << mis.E_kinetic << std::endl;
-        File_Joseph_Energy << mis.E_josephson << std::endl;
-        File_B_Energy      << mis.E_B << std::endl;
-        File_Magetization1 << mis.m_phase[0] << " " << mis.m_phase[1] << std::endl;
-        File_helicity1     << mis.Jd[0] << " " << mis.Ic[0] << std::endl;
-        File_helicity2     << mis.Jd[1] << " " << mis.Ic[1] << std::endl;
-        File_trsb_magn     << mis.trsb_m << std::endl;
-        File_dual_stiff    << mis.dual_stiff_Z << std::endl;
-        File_rank          << mis.my_rank << std::endl;
+        File_Energy              << mis.E << std::endl;
+        File_Kin_Energy          << mis.E_kinetic << std::endl;
+        File_Joseph_Energy       << mis.E_josephson << std::endl;
+        File_B_Energy            << mis.E_B << std::endl;
+        File_Fluctuation_Energy  << mis.density_fluct << std::endl;
+        File_Magetization1       << mis.m_phase[0] << " " << mis.m_phase[1] << std::endl;
+        File_helicity1           << mis.Jd[0] << " " << mis.Ic[0] << std::endl;
+        File_helicity2           << mis.Jd[1] << " " << mis.Ic[1] << std::endl;
+        File_trsb_magn           << mis.trsb_m << std::endl;
+        File_dual_stiff          << mis.dual_stiff_Z << std::endl;
+        File_rank                << mis.my_rank << std::endl;
 
         MPI_Barrier(MPI_COMM_WORLD);
 
         //Parallel Tempering swap
         parallel_temp(mis.E, my_beta, my_ind, PTp, PTroot);
         directory_write_param = directory_write +"/beta_"+std::to_string(my_ind);
-        update_file_path(directory_write_param, File_Energy, File_Magetization1, File_Kin_Energy, File_Joseph_Energy, File_B_Energy, File_helicity1, File_helicity2, File_trsb_magn, File_dual_stiff, File_rank );
+        update_file_path(directory_write_param, File_Energy, File_Magetization1, File_Kin_Energy, File_Joseph_Energy, File_B_Energy, File_Fluctuation_Energy, File_helicity1, File_helicity2, File_trsb_magn, File_dual_stiff, File_rank );
 
     }
 
@@ -225,13 +228,14 @@ void myhelp(int argd, char **argu) {
     exit (EXIT_FAILURE);
 }
 
-void update_file_path (const std::string& base_dir, std::ofstream& file_energy, std::ofstream& file_mag1, std::ofstream& file_kin, std::ofstream& file_josph, std::ofstream& file_B, std::ofstream& file_hel1, std::ofstream& file_hel2, std::ofstream& file_trsb, std::ofstream& file_ds, std::ofstream& file_rank){
+void update_file_path (const std::string& base_dir, std::ofstream& file_energy, std::ofstream& file_mag1, std::ofstream& file_kin, std::ofstream& file_josph, std::ofstream& file_B, std::ofstream& file_Fluct, std::ofstream& file_hel1, std::ofstream& file_hel2, std::ofstream& file_trsb, std::ofstream& file_ds, std::ofstream& file_rank){
 
     file_energy.close();
     file_mag1.close();
     file_kin.close();
     file_josph.close();
     file_B.close();
+    file_Fluct.close();
     file_hel1.close();
     file_hel2.close();
     file_trsb.close();
@@ -243,6 +247,7 @@ void update_file_path (const std::string& base_dir, std::ofstream& file_energy, 
     std::string File_Kin_Energy = base_dir + "/Kin_Energy.txt";
     std::string File_Joseph_Energy = base_dir +  "/Joseph_Energy.txt";
     std::string Filename_B_energy= base_dir + "/B_Energy.txt";
+    std::string Filename_Fluctuation_energy=(base_dir + "/Fluctuation_Energy.txt");
     std::string Filename_helicity1= base_dir +  "/Helicity_modulus1.txt";
     std::string Filename_helicity2= base_dir +  "/Helicity_modulus2.txt";
     std::string Filename_trsb_magn= base_dir +  "/trsb_magnetization.txt";
@@ -254,6 +259,7 @@ void update_file_path (const std::string& base_dir, std::ofstream& file_energy, 
     file_kin.open(File_Kin_Energy, std::ios::app);
     file_josph.open(File_Joseph_Energy, std::ios::app);
     file_B.open(Filename_B_energy, std::ios::app);
+    file_Fluct.open(Filename_Fluctuation_energy, std::ios::app);
     file_hel1.open(Filename_helicity1, std::ios::app);
     file_hel2.open(Filename_helicity2, std::ios::app);
     file_trsb.open(Filename_trsb_magn, std::ios::app);
