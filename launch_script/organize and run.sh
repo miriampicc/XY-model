@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ############### SET MAIN FOLDERS ######
-BASEDIR=${HOME}/XY-model
+BASEDIR=${HOME}/XY-model/total_density_fluctuations
 #BASEDIR=/Users/mirimi/Desktop/hihi/KTH/XY-model
 SCRIPT_DIR=${BASEDIR}/launch_script
 
@@ -36,15 +36,15 @@ for L in $LLIST; do
 
 ############Creation of the output folder and of the two files of initialization####################
 
-    cd ${BASEDIR}/Output_TBG || exit
+    cd ${BASEDIR}/Output_TBG_tdf || exit
 
 
-    if [ ! -d ./SK_${K} ]; then
+    if [ ! -d ./SK_${K}_tdf ]; then
 
-    mkdir -p K_${K}
+    mkdir -p K_${K}_tdf
     fi
 
-    cd K_${K} || exit
+    cd K_${K}_tdf || exit
 
     if [ ! -d ./Se_${e} ]; then
     mkdir -p e_${e}
@@ -56,11 +56,11 @@ for L in $LLIST; do
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 
-    DIR_OUT=${BASEDIR}/Output_TBG/K_${K}/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
+    DIR_OUT=${BASEDIR}/Output_TBG_tdf/K_${K}_tdf/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
 
     #################Creation of the submit_runs script#########################
 
-    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}"
+    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_tdf"
     nnodes=2
     ntasks=64 #parallel tempering over ntasks temperatures
 
