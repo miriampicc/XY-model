@@ -20,35 +20,32 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         for (size_t ix = 0; ix < Lx; ix++) {
 
             size_t i = ix + Lx * (iy);
-            /*************PSI UPDATE: density update with total density contraint **********/
+            /*************PSI UPDATE: first component density update and then second component, no total density contraint **********/
 
-            OldPsi[0] = Site[i].Psi[0];
-            OldPsi[1] = Site[i].Psi[1];
-            NewPsi[0] = Site[i].Psi[0];
-            NewPsi[1] = Site[i].Psi[1];
+            for (int alpha = 0; alpha < 2 ; ++alpha) {
 
-            l = rn::uniform_real_box(0, RAND_MAX);
-            NewPsi[0].r = l;
-            m = rn::uniform_real_box(0, RAND_MAX);
-            NewPsi[1].r = m;
+                OldPsi[0] = Site[i].Psi[0];
+                OldPsi[1] = Site[i].Psi[1];
+                NewPsi[0] = Site[i].Psi[0];
+                NewPsi[1] = Site[i].Psi[1];
 
-            //And, remember, you are interested in the total density fluctuations, thus  NewPsi[0].r^2+ NewPsi[1].r^2
+                l = rn::uniform_real_box(0, 1);
+                NewPsi[alpha].r = sqrt(l);
 
-            oldE = local_energy(OldPsi, i, Hp, Site);
-            newE = local_energy(NewPsi, i, Hp, Site);
-            deltaE = (newE - oldE);
-
-            if (deltaE < 0) {
-                Site[i].Psi[0] = NewPsi[0];
-                Site[i].Psi[1] = NewPsi[1];
-            } else {
-                rand = rn::uniform_real_box(0, 1);
-                if (rand < exp(-my_beta * deltaE)) {
-
-                    Site[i].Psi[0] = NewPsi[0];
-                    Site[i].Psi[1] = NewPsi[1];
+                oldE = local_energy(OldPsi, i, Hp, Site);
+                newE = local_energy(NewPsi, i, Hp, Site);
+                deltaE = (newE - oldE);
+                if (deltaE < 0) {
+                    Site[i].Psi[alpha] = NewPsi[alpha];
+                } else {
+                    rand = rn::uniform_real_box(0, 1);
+                    if (rand < exp(-my_beta * deltaE)) {
+                        Site[i].Psi[alpha] = NewPsi[alpha];
+                    }
                 }
+
             }
+            //And, remember, you are interested in the total density fluctuations, thus  NewPsi[0].r^2+ NewPsi[1].r^2
 
             /*************PSI UPDATE: phase update **********/
 

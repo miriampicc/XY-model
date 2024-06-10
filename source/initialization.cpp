@@ -8,6 +8,7 @@
 
 void initialize_Lattice ( std::vector <Node> &Site, const fs::path & directory_param_beta, int restart_1, struct H_parameters &Hp) {
 
+    int l, m;
 
     fs::path inputFile1 = directory_param_beta / "Lattice_dir_fin.txt";
     fs::path inputFile_A = directory_param_beta / "A_dir_fin.txt";
@@ -44,8 +45,10 @@ void initialize_Lattice ( std::vector <Node> &Site, const fs::path & directory_p
         for (auto &s: Site) {
             s.Psi[0].t = rn::uniform_real_box(0, 2 * M_PI);
             s.Psi[1].t = rn::uniform_real_box(0, 2 * M_PI);
-            s.Psi[0].r = sqrt(rn::uniform_real_box(0, 1));
-            s.Psi[1].r = (1. - s.Psi[0].r * s.Psi[0].r);
+            l = rn::uniform_real_box(0, 1);
+            s.Psi[0].r = sqrt(l);
+            m = rn::uniform_real_box(0, 1);
+            s.Psi[1].r = sqrt(m);
         }
     }
 

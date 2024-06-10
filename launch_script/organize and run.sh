@@ -9,7 +9,7 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 time_limit="5-0:00:00"
 
-LLIST="8 12 20 24 32 40 48 64 96"
+LLIST="8 12 16 20 24 32 40 48 64 96"
 
 ################ Input Parameters for the Monte Carlo simulation #################
 
@@ -39,12 +39,12 @@ for L in $LLIST; do
     cd ${BASEDIR}/Output_TBG_tdf || exit
 
 
-    if [ ! -d ./SK_${K}_tdf ]; then
+    if [ ! -d ./SK_${K}_tdf2 ]; then
 
-    mkdir -p K_${K}_tdf
+    mkdir -p K_${K}_tdf2
     fi
 
-    cd K_${K}_tdf || exit
+    cd K_${K}_tdf2 || exit
 
     if [ ! -d ./Se_${e} ]; then
     mkdir -p e_${e}
@@ -56,7 +56,7 @@ for L in $LLIST; do
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 
-    DIR_OUT=${BASEDIR}/Output_TBG_tdf/K_${K}_tdf/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
+    DIR_OUT=${BASEDIR}/Output_TBG_tdf/K_${K}_tdf2/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
 
     #################Creation of the submit_runs script#########################
 
