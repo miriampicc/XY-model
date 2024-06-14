@@ -34,9 +34,11 @@ struct MC_parameters {
 
 struct Node {
     //complex order parameter of the NC and SC components
-   std::array <O2, 2> Psi {};
-   //Fluctuating vector potential A, with 2 spatial dimensions
-   std::array <double, 2> A{};
+    std::array <O2, 2> Psi {};
+    //Fluctuating vector potential A, with 2 spatial dimensions
+    std::array <double, 2> A{};
+    //Defects in the lattice: we are going to build an array
+    std::array <double, 2> defect{};
 };
 
 void initialize_Lattice (std::vector <Node> &Site, const fs::path & directory_param_beta, int restart, struct H_parameters &Hp);

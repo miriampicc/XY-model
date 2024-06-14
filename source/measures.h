@@ -8,6 +8,8 @@ struct Measures {
     double E_kinetic=0;
     double E_josephson=0;
     double E_B=0;
+    double E_defects=0;
+    std::vector <double> B;
     double m_phase[2] ={0}; //x-component of the single phase. We are defining a sort of vector with two components
     double trsb_m=0;
     double Ic[2]= {0};
@@ -23,7 +25,7 @@ struct Measures {
 };
 
 void single_magnetization (std::vector<Node> &Site, struct Measures &mis, size_t N );
-void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Node> &Site );
+void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Node> &Site, std::vector <double> B_plaquette );
 void trsb_magnetization(struct Measures &mis, const std::vector<Node> &Site);
 void helicity_modulus (struct H_parameters &Hp, const std::vector<Node> &Site, struct Measures &mis, size_t N );
 void dual_stiffness (struct Measures &mis, const std::vector<Node> &Site);

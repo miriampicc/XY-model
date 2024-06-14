@@ -5,8 +5,9 @@
 
 
 // Define energy function
-void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Node> &Site ) {
+void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Node> &Site, std::vector <double> B_plaquette) {
 
+    double defects_energy = 0.0;
     double interaction = 0.0;
     double gauge_phase , h_Kinetic=0.;
     double A_plaq, A_2=0.;
@@ -30,6 +31,8 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
                     gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i].Psi[alpha].t + Hp.e * Site[i].A[vec2];
                     h_Kinetic -= (Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase);
                 }
+
+                defects_energy += Site[i].defect[alpha] * ( Site[i].Psi[alpha].r * Site[i].Psi[alpha].r) ;
             }
 
             interaction +=  Hp.K *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
@@ -39,21 +42,23 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
                     for (size_t vec2 = vec1+1; vec2 < 2; vec2++) {
                         //F_{alpha,vec}= A_alpha(r_i) + A_vec(ri+alpha) - A_alpha(r_i+vec) - A_vec(ri)
                         A_plaq = (Site[i].A[vec1] + Site[nn(i, vec1, 1)].A[vec2] - Site[nn(i, vec2, 1)].A[vec1] -
-                               Site[i].A[vec2]);
+                                  Site[i].A[vec2]);
 
                         A_2 +=  0.5 * (A_plaq * A_plaq);
                     }
                 }
-
             }
+            B_plaquette[i]= A_plaq;
         }
     }
     //mis.E =  h_Kinetic + interaction + A_2;
     mis.E_kinetic = h_Kinetic;
     mis.E_josephson = interaction;
     mis.E_B = A_2;
+    mis.E_defects = defects_energy;
+    mis.B =  B_plaquette;
 
-    mis.E =(mis.E_kinetic  + mis.E_josephson + mis.E_B );
+    mis.E =(mis.E_kinetic  + mis.E_josephson + mis.E_B + mis.E_defects );
 }
 
 // Function to calculate the total magnetization of the lattice
@@ -324,6 +329,22 @@ void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write
             // Handle the case where the file couldn't be opened
             std::cerr << "Error opening file for writing: " << a_file << std::endl;
         }
+    }
+
+    std::string sDef;
+    sDef= std::string("Defect_")+ configuration + std::string(".txt");
+    fs::path defect_file = directory_write / sDef;
+
+    FILE *fDef = fopen(defect_file.c_str(), "w");
+    if ((fDef != nullptr)) {
+
+        for(auto & s : Site){
+            // Write the Psi field data of the node to the file in text format
+            fprintf(fDef, "%.8lf %.8lf \n", s.defect[0], s.defect[1]);
+        }
+        fclose(fDef);
+    } else {
+        std::cerr << "Error opening file for writing: " << defect_file << std::endl;
     }
 }
 

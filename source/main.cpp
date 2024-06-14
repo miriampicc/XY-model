@@ -115,6 +115,9 @@ int main(int argc, char *argv[]) {
 void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, double &my_beta, struct PT_parameters PTp, struct PTroot_parameters PTroot, size_t N, struct H_parameters &Hp, const std::string directory_write, int NSTART) {
 
     Measures mis;
+    std::vector <double> B_plaquette;
+    B_plaquette.resize(N);
+
 
     std::string directory_write_param;
     directory_write_param = directory_write +"/beta_"+std::to_string(my_ind);
@@ -127,6 +130,7 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     std::string Filename_kin_energy=(directory_write_param+"/Kin_Energy.txt");
     std::string Filename_joseph_energy=(directory_write_param+"/Joseph_Energy.txt");
     std::string Filename_B_energy=(directory_write_param+"/B_Energy.txt");
+    std::string Filename_B_plaquette=(directory_write_param+"/B_Plaquette.txt");
     std::string Filename_helicity1=(directory_write_param+"/Helicity_modulus1.txt");
     std::string Filename_helicity2=(directory_write_param+"/Helicity_modulus2.txt");
     std::string Filename_trsb_magn=(directory_write_param+"/trsb_magnetization.txt");
@@ -139,6 +143,7 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     std::ofstream File_Kin_Energy (Filename_kin_energy);
     std::ofstream File_Joseph_Energy (Filename_joseph_energy);
     std::ofstream File_B_Energy (Filename_B_energy);
+    std::ofstream File_B_plaquette (Filename_B_plaquette);
     std::ofstream File_helicity1 (Filename_helicity1);
     std::ofstream File_helicity2 (Filename_helicity2);
     std::ofstream File_trsb_magn (Filename_trsb_magn);
@@ -159,13 +164,15 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
 
     for (int nM = NSTART; nM<MC.n_steps; nM++) {
 
+        B_plaquette.assign(N, 0.0);
+
         for (int t = 0; t < MC.tau; t++) {
             metropolis(Site, MC, Hp, my_beta);
         }
 
         //Measures
         mis.reset();
-        energy(mis, Hp, Site);
+        energy(mis, Hp, Site, B_plaquette);
         single_magnetization(Site, mis, N);   //In this function we are calculating the magnetization of both layers separately
         trsb_magnetization(mis, Site);
 
@@ -188,12 +195,16 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
         File_dual_stiff    << mis.dual_stiff_Z << std::endl;
         File_rank          << mis.my_rank << std::endl;
 
+        for (const auto& p : mis.B) {
+            File_B_plaquette << p << std::endl;
+        }
+
         MPI_Barrier(MPI_COMM_WORLD);
 
         //Parallel Tempering swap
         parallel_temp(mis.E, my_beta, my_ind, PTp, PTroot);
         directory_write_param = directory_write +"/beta_"+std::to_string(my_ind);
-        update_file_path(directory_write_param, File_Energy, File_Magetization1, File_Kin_Energy, File_Joseph_Energy, File_B_Energy, File_helicity1, File_helicity2, File_trsb_magn, File_dual_stiff, File_rank );
+        update_file_path(directory_write_param, File_Energy, File_Magetization1, File_Kin_Energy, File_Joseph_Energy, File_B_Energy, File_B_plaquette, File_helicity1, File_helicity2, File_trsb_magn, File_dual_stiff, File_rank );
 
     }
 
@@ -203,6 +214,7 @@ void mainloop(std::vector <Node> &Site, struct MC_parameters &MC, int &my_ind, d
     File_Kin_Energy.close();
     File_Joseph_Energy.close();
     File_B_Energy.close();
+    File_B_plaquette.close();
     File_Magetization1.close();
     File_helicity1.close();
     File_helicity2.close();
@@ -223,13 +235,14 @@ void myhelp(int argd, char **argu) {
     exit (EXIT_FAILURE);
 }
 
-void update_file_path (const std::string& base_dir, std::ofstream& file_energy, std::ofstream& file_mag1, std::ofstream& file_kin, std::ofstream& file_josph, std::ofstream& file_B, std::ofstream& file_hel1, std::ofstream& file_hel2, std::ofstream& file_trsb, std::ofstream& file_ds, std::ofstream& file_rank){
+void update_file_path (const std::string& base_dir, std::ofstream& file_energy, std::ofstream& file_mag1, std::ofstream& file_kin, std::ofstream& file_josph, std::ofstream& file_B, std::ofstream& file_plaquette, std::ofstream& file_hel1, std::ofstream& file_hel2, std::ofstream& file_trsb, std::ofstream& file_ds, std::ofstream& file_rank){
 
     file_energy.close();
     file_mag1.close();
     file_kin.close();
     file_josph.close();
     file_B.close();
+    file_plaquette.close();
     file_hel1.close();
     file_hel2.close();
     file_trsb.close();
@@ -241,6 +254,7 @@ void update_file_path (const std::string& base_dir, std::ofstream& file_energy, 
     std::string File_Kin_Energy = base_dir + "/Kin_Energy.txt";
     std::string File_Joseph_Energy = base_dir +  "/Joseph_Energy.txt";
     std::string Filename_B_energy= base_dir + "/B_Energy.txt";
+    std::string Filename_B_plaquette=(base_dir+"/B_Plaquette.txt");
     std::string Filename_helicity1= base_dir +  "/Helicity_modulus1.txt";
     std::string Filename_helicity2= base_dir +  "/Helicity_modulus2.txt";
     std::string Filename_trsb_magn= base_dir +  "/trsb_magnetization.txt";
@@ -252,10 +266,10 @@ void update_file_path (const std::string& base_dir, std::ofstream& file_energy, 
     file_kin.open(File_Kin_Energy, std::ios::app);
     file_josph.open(File_Joseph_Energy, std::ios::app);
     file_B.open(Filename_B_energy, std::ios::app);
+    file_plaquette.open(Filename_B_plaquette, std::ios::app );
     file_hel1.open(Filename_helicity1, std::ios::app);
     file_hel2.open(Filename_helicity2, std::ios::app);
     file_trsb.open(Filename_trsb_magn, std::ios::app);
     file_ds.open(Filename_dual_stiff, std::ios::app);
     file_rank.open(Filename_rank, std::ios::app);
 }
-

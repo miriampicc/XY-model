@@ -118,7 +118,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
 double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const std::vector<Node> &Site) {
 
-    double h_Kinetic=0., h_Josephson=0., tot_energy;
+    double h_Kinetic=0., h_Josephson=0., defects_energy=0., tot_energy;
     double gauge_phase1, gauge_phase2;
     size_t ix, iy;
     size_t nn_ip, nn_im;
@@ -137,11 +137,11 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
 
         for (int vec = 0; vec < 2; vec++) {
             if (vec == 0) {
-                 nn_ip = ipx;
-                 nn_im = imx;
+                nn_ip = ipx;
+                nn_im = imx;
             } else if (vec == 1) {
-                 nn_ip = ipy;
-                 nn_im = imy;
+                nn_ip = ipy;
+                nn_im = imy;
             }
             //NB: vec is useful to consider the potential vector in both the components
             gauge_phase1 = Site[nn_ip].Psi[alpha].t - Psi[alpha].t + Hp.e * Site[i].A[vec] ;
@@ -149,6 +149,9 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
             h_Kinetic -=  (Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase1);
             h_Kinetic -=  (Psi[alpha].r * Site[nn_im].Psi[alpha].r) * cos(gauge_phase2);
         }
+
+        defects_energy += Site[i].defect[alpha] * ( Site[i].Psi[alpha].r * Site[i].Psi[alpha].r) ;
+
     }
 
     h_Josephson +=  Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
