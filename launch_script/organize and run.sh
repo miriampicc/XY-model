@@ -1,7 +1,8 @@
 #!/bin/bash
 
 ############### SET MAIN FOLDERS ######
-BASEDIR=${HOME}/XY-model
+BASEDIR=${HOME}/XY-model/spontaneous_B
+/home/x_mirpi/XY-model/spontaneous_B/Output_TBG_spontaneousB
 #BASEDIR=/Users/mirimi/Desktop/hihi/KTH/XY-model
 SCRIPT_DIR=${BASEDIR}/launch_script
 
@@ -25,7 +26,6 @@ K=5.0
 J1=0.0
 J2=0.0
 e=0.1
-p=0.1
 beta_high=1.9    #1.754   #1.818  #T=0.57 #0.55
 beta_low=1.6   #T=0.59
 theta_box=0.78539816339
@@ -37,15 +37,15 @@ for L in $LLIST; do
 
 ############Creation of the output folder and of the two files of initialization####################
 
-    cd ${BASEDIR}/Output_TBG || exit
+    cd ${BASEDIR}/Output_TBG_spontaneousB || exit
 
 
-    if [ ! -d ./SK_${K} ]; then
+    if [ ! -d ./SK_${K}_sB ]; then
 
-    mkdir -p K_${K}
+    mkdir -p K_${K}_sB
     fi
 
-    cd K_${K} || exit
+    cd K_${K}_sB || exit
 
     if [ ! -d ./Se_${e} ]; then
     mkdir -p e_${e}
@@ -57,7 +57,7 @@ for L in $LLIST; do
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 
-    DIR_OUT=${BASEDIR}/Output_TBG/K_${K}/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
+    DIR_OUT=${BASEDIR}/Output_TBG_spontaneousB/K_${K}_sB/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
 
     #################Creation of the submit_runs script#########################
 
@@ -95,7 +95,7 @@ echo "#!/bin/bash
 #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
 #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
-srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${p} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
+srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
 
 " >  submit_run
 
