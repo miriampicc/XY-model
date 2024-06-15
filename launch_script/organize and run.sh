@@ -14,8 +14,6 @@ LLIST="8 12 20 24 32 40 48 64 96"
 
 ################ Input Parameters for the Monte Carlo simulation #################
 
-#Hamiltonian input parameters
-
 #Monte Carlo parameters
 nsteps=500000
 transient=100000
