@@ -79,9 +79,10 @@ for l in L:
         betas.append(bb)
         
 
-        file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
+        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
 
-        with open(file_path, 'r') as file:
+
+    with open(file_path, 'r') as file:
             numbers = [float(line.strip()) for line in file.readlines()]
             mm = calculate_mean(numbers)
             en_var = (np.std(numbers))**2
