@@ -63,7 +63,7 @@ def plot_histogram(data):
     plt.xlabel('Rank')
     plt.ylabel('Frequency')
     plt.title('Frequency of Numbers from 0 to 63')
-    plt.savefig(f'Histogram_e={e}_K={K}.jpg')
+    plt.savefig(f'Histogram_e={e}_K={K}_beta{beta}.jpg')
     plt.show()
 
 
