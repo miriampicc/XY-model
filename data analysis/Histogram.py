@@ -85,14 +85,16 @@ def plot_histogram(data):
 hist = []
 betas = []
 delta_beta = (beta_high - beta_low)/(rank)
-N = L * L
 
-#file_path = f"/Users/mirimi/Desktop/OUTPUT_cluster/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
-file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{beta}" + '/Energy.txt'
+for l in L: 
+    N = L * L
+
+    #file_path = f"/Users/mirimi/Desktop/OUTPUT_cluster/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
+    file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{beta}" + '/Energy.txt'
     #print(n)
 
-with open(file_path, 'r') as file:
-    hist = [float(line.strip()) for line in file.readlines()]
+    with open(file_path, 'r') as file:
+        hist = [float(line.strip()) for line in file.readlines()]
 
-plot_histogram(hist)
+    plot_histogram(hist)
 
