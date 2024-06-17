@@ -73,6 +73,13 @@ def plot_histogram(data):
     plt.ylabel('Frequency')
     plt.title(f'Frequency of moving of teh replica {beta} ')
     plt.xticks(ticks=range(0, 64, 5))
+
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=0, vmax=63))
+    sm.set_array([])
+    # Add the colorbar to the plot
+    cbar = plt.colorbar(sm)
+    cbar.set_label('Rank')
+    
     plt.savefig(f'Histogram_e={e}_K={K}_beta{beta}.jpg')
     plt.show()
 
