@@ -53,21 +53,6 @@ def calculate_mean(data):
     mean = sum(data) / len(data)
     return mean
 
-colors = [
-    "#00008B",  # Dark Blue
-    "#0000CD",  # Medium Blue
-    "#4169E1",  # Royal Blue
-    "#1E90FF",  # Dodger Blue
-    "#00BFFF",  # Deep Sky Blue
-    "#87CEEB",  # Sky Blue
-    "#87CEFA",  # Light Sky Blue
-    "#EEE8AA",  # Pale Goldenrod
-    "#F0E68C",  # Khaki
-    "#FFD700",  # Gold
-    "#F08080",  # Light Coral
-    "#FF6347"   # Tomato
-]
-
 def plot_histogram(data):
     # Count frequency of each number from 0 to 63
     counter = Counter(data)
@@ -90,7 +75,7 @@ for l in L:
     N = l * l
 
     #file_path = f"/Users/mirimi/Desktop/OUTPUT_cluster/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
-    file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{beta}" + '/Energy.txt'
+    file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{beta}" + '/Rank.txt'
     #print(n)
 
     with open(file_path, 'r') as file:
