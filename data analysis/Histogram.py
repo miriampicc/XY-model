@@ -84,7 +84,7 @@ def plot_histogram(data):
 
     # Add the colorbar to the plot, stealing space from the axes
     cbar = plt.colorbar(sm, ax=ax)
-    cbar.set_label('Rank')
+    cbar.set_label('T')
 
 
     plt.savefig(f'Histogram_e={e}_K={K}_beta{beta}.jpg')
