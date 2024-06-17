@@ -68,18 +68,25 @@ def plot_histogram(data):
 
     colors = [cmap(i / 63) for i in range(64)]
 
-    plt.bar(range(64), frequencies, tick_label=range(64),color=colors)
-    plt.xlabel('Rank')
-    plt.ylabel('Frequency')
-    plt.title(f'Frequency of moving of teh replica {beta} ')
-    plt.xticks(ticks=range(0, 64, 5))
+    fig, ax = plt.subplots()
 
+    bars = ax.bar(range(64), frequencies, tick_label=range(64), color=colors)
+    ax.set_xlabel('Rank')
+    ax.set_ylabel('Frequency')
+    ax.set_title(f'Frequency of moving of the replica {beta}')
+
+    # Set x-ticks to multiples of 5
+    ax.set_xticks(range(0, 64, 5))
+
+    # Create a ScalarMappable for the colorbar
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=0, vmax=63))
     sm.set_array([])
-    # Add the colorbar to the plot
-    cbar = plt.colorbar(sm)
+
+    # Add the colorbar to the plot, stealing space from the axes
+    cbar = plt.colorbar(sm, ax=ax)
     cbar.set_label('Rank')
-    
+
+
     plt.savefig(f'Histogram_e={e}_K={K}_beta{beta}.jpg')
     plt.show()
 
