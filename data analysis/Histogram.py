@@ -79,7 +79,7 @@ def plot_histogram(data):
     ax.set_xticks(range(0, 64, 5))
 
     # Create a ScalarMappable for the colorbar
-    sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=0.555, vmax=0.625))
+    sm = plt.cm.ScalarMappable(cmap=cmap.reversed(), norm=plt.Normalize(vmin=0.555, vmax=0.625))
     sm.set_array([])
 
     # Add the colorbar to the plot, stealing space from the axes
