@@ -1,4 +1,5 @@
 from collections import Counter
+import matplotlib.colors as mcolors
 import numpy as np 
 import pandas as pd
 import matplotlib.pyplot as plt 
@@ -59,7 +60,15 @@ def plot_histogram(data):
     frequencies = [counter[i] for i in range(64)]
 
     # Plotting
-    plt.bar(range(64), frequencies, tick_label=range(64))
+
+    start_color = 'red'
+    end_color = 'lightblue'
+    cmap = mcolors.LinearSegmentedColormap.from_list('red_to_blue', [start_color, end_color], N=64)
+
+
+    colors = [cmap(i / 63) for i in range(64)]
+
+    plt.bar(range(64), frequencies, tick_label=range(64),color=colors)
     plt.xlabel('Rank')
     plt.ylabel('Frequency')
     plt.title(f'Frequency of moving of teh replica {beta} ')
