@@ -62,7 +62,8 @@ def plot_histogram(data):
     plt.bar(range(64), frequencies, tick_label=range(64))
     plt.xlabel('Rank')
     plt.ylabel('Frequency')
-    plt.title('Frequency of Numbers from 0 to 63')
+    plt.title(f'Frequency of moving of teh replica {beta} ')
+    plt.xticks(ticks=range(0, 64, 5))
     plt.savefig(f'Histogram_e={e}_K={K}_beta{beta}.jpg')
     plt.show()
 
