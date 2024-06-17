@@ -1,6 +1,6 @@
-import numpy as np 
+import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
 import argparse
 
@@ -33,8 +33,7 @@ print("beta high=", beta_high)
 print("beta low=", beta_low)
 print("rank=", rank)
 
-
-def calculate_mean(data): 
+def calculate_mean(data):
     mean = sum(data) / len(data)
     return mean
 
@@ -61,7 +60,7 @@ colors = [
     "#FF6347"   # Tomato
 ]
 
-#PLOT OF THE SPECIFIC HEAT 
+#PLOT OF THE SPECIFIC HEAT
 i = 0
 for l in L:
     N = l * l
@@ -71,33 +70,35 @@ for l in L:
     temperatures = []
 
     for n in range(rank):
-
         t = T_high - n * delta
-        bb = beta_low + delta_beta * n 
-        
+        bb = beta_low + delta_beta * n
+
         temperatures.append(t)
         betas.append(bb)
-        
 
         file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
 
+        try:
+            with open(file_path, 'r') as file:
+                numbers = [float(line.strip()) for line in file.readlines()]
+                mm = calculate_mean(numbers)
+                en_var = (np.std(numbers))**2
+                cc = (((1/t)**2) * en_var )/ N
+                specific_heat.append(cc)
+        except FileNotFoundError:
+            print(f"File not found: {file_path}")
+            specific_heat.append(np.nan)  # Append NaN if file not found
 
-    with open(file_path, 'r') as file:
-            numbers = [float(line.strip()) for line in file.readlines()]
-            mm = calculate_mean(numbers)
-            en_var = (np.std(numbers))**2
-            cc = (((1/t)**2) * en_var )/ N
-        
-            specific_heat.append(cc)
-        
-    
-    sh_val = np.array (specific_heat)
-    beta_array = np.array (betas)
+    sh_val = np.array(specific_heat)
+    beta_array = np.array(betas)
 
-    # Plot Energy vs. Temperature
-    plt.plot(betas, sh_val, linestyle='-', label = f'L={l}', color=colors[i])  
-    i = i+1
-   
+    # Ensure both arrays have the same length
+    if len(beta_array) == len(sh_val):
+        # Plot Energy vs. Temperature
+        plt.plot(beta_array, sh_val, linestyle='-', label=f'L={l}', color=colors[i])
+        i += 1
+    else:
+        print(f"Length mismatch: betas ({len(beta_array)}) and specific_heat ({len(sh_val)})")
 
 plt.xlabel(r'$\beta$')
 plt.ylabel('$C_V$')
@@ -105,6 +106,5 @@ plt.title(f'Specific Heat $K = {K}$, $e={e}$ ')
 plt.legend()
 plt.grid(True)
 plt.savefig(f'Specific_heat_e={e}_K={K}.jpg')
-
 
 plt.show()
