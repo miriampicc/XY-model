@@ -125,7 +125,7 @@ plt.xscale('log')  # Set the x-axis to be logarithmic
 plt.xlabel('Monte Carlo Steps (log scale)')
 plt.ylabel('Energy')
 plt.legend()
-plt.title(f'Energy Thermalization, T={T}, MC ={steps} ')
+plt.title(f'Energy Thermalization, T={T}, MC ={steps}, L={l} ')
 plt.grid()
 plt.savefig(f'T_Energy_e={e}_K={K}_L{l}.jpg')
 plt.show()
