@@ -85,7 +85,9 @@ for l in L:
         energies = [float(line.strip()) for line in file.readlines()]
             #print(len(energies))
     steps = len(energies)
-    
+    energy = np.array(energies)
+    energy = energy / N
+
     log_bins = np.logspace(0, np.log10(steps), num_bins, base=10.0) 
 
     mean_values = []
@@ -101,9 +103,9 @@ for l in L:
     for j in range(len(log_bins)-1) : 
         inside_bin = []
 
-        for i in range(len(energies)):
+        for i in range(len(energy)):
             if log_bins[j] <= i < log_bins[j + 1]:
-                inside_bin.append(energies[i])
+                inside_bin.append(energy[i])
 
         mean_val = np.mean(inside_bin)
         std_val = np.std(inside_bin)
@@ -123,7 +125,7 @@ plt.xscale('log')  # Set the x-axis to be logarithmic
 plt.xlabel('Monte Carlo Steps (log scale)')
 plt.ylabel('Energy')
 plt.legend()
-plt.title(f'Energy Thermalization, T={T}, n$_{steps} ={steps}$ ')
+plt.title(f'Energy Thermalization, T={T}, MC ={steps} ')
 plt.grid()
-plt.savefig(f'Thermalization_Energy_e={e}_K={K}.jpg')
+plt.savefig(f'T_Energy_e={e}_K={K}_L{l}.jpg')
 plt.show()
