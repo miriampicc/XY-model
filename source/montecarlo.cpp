@@ -156,7 +156,7 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
 
     h_Josephson +=  Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
 
-    tot_energy=  h_Kinetic + h_Josephson;
+    tot_energy=  h_Kinetic + h_Josephson + defects_energy;
 
     return tot_energy;
 }
