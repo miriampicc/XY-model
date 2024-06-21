@@ -113,8 +113,10 @@ for l in L:
         squared_Psi2 = [x**2 for x in Psi2_r]
 
         mm_Psi1 = calculate_mean(squared_Psi1)
+        mm_Psi1 = mm_Psi1 / N
         std_psi1 = calculate_std(squared_Psi1)
         mm_Psi2 = calculate_mean(squared_Psi2)
+        mm_Psi2 = mm_Psi2 / N
         std_psi2 = calculate_std(squared_Psi2)
 
         combination = mm_Psi1+ mm_Psi2
