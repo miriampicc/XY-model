@@ -130,8 +130,8 @@ for l in L:
     Sum_matrix = np.column_stack((temperatures, sum_Psis))
     
     #plt.plot(Psi1_matrix[:, 0], Psi1_matrix[:, 1], label=r'$|\psi_1|^2$', color = colors[k])
-    plt.plot(Psi2_matrix[:, 0], Psi2_matrix[:, 1], label=r'$|\psi_2|^2$', color = colors[k+1])
-    #plt.plot(Sum_matrix[:, 0], Sum_matrix[:, 1], label=r'$|\psi_2|^2 + |\psi_2|^2$', color = colors[k+2])
+    #plt.plot(Psi2_matrix[:, 0], Psi2_matrix[:, 1], label=r'$|\psi_2|^2$', color = colors[k+1])
+    plt.plot(Sum_matrix[:, 0], Sum_matrix[:, 1], label=r'$|\psi_2|^2 + |\psi_2|^2$', color = colors[k+2])
 
 
     k = k+1
@@ -141,6 +141,6 @@ plt.ylabel('Probability density of the compounds')
 #plt.title(f'K={K} e = {e} L_0 = {L0}')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'Probability_densities_Psi12_L={l}.jpg')
+plt.savefig(f'Probability_densities_sum_L={l}.jpg')
 
 plt.show()
