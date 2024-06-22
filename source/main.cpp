@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     std::cout<<"Lunghezza parametri  "<< argc << "and " << argv <<std::endl;
 
 
-    if(argc == 16) {
+    if(argc == 17) {
         Lx = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
         Ly = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
         MC.n_steps = static_cast<int>(std::strtol(argv[2], nullptr, 10));
@@ -52,8 +52,9 @@ int main(int argc, char *argv[]) {
         Hp.beta_low = std::strtod(argv[12], nullptr);
         MC.theta_box= std::strtod(argv[13], nullptr);
         MC.theta_box_A = std::strtod(argv[14], nullptr);
+        MC.theta_box_density = std::strtod(argv[15], nullptr);
         //paths_dir::DIR_IN = directory_read = argv[15];
-        paths_dir::DIR_OUT = directory_write = argv[15];
+        paths_dir::DIR_OUT = directory_write = argv[16];
     }
     else{
         myhelp(argc, argv);
@@ -74,6 +75,7 @@ int main(int argc, char *argv[]) {
     std::cout<< restart << std::endl;
     std::cout<<MC.theta_box<<std::endl;
     std::cout<<MC.theta_box_A<<std::endl;
+    std::cout<<MC.theta_box_density<<std::endl;
     std::cout<< directory_write << std::endl;
 
     //initialization of the random number generator

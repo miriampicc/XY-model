@@ -29,6 +29,7 @@ beta_high=1.9    #1.754   #1.818  #T=0.57 #0.55
 beta_low=1.6   #T=0.59
 theta_box=0.78539816339
 theta_box_A=0.1
+theta_box_density=0.1
 
 ################################################################################3
 
@@ -94,7 +95,7 @@ echo "#!/bin/bash
 #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
 #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
-srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
+srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${theta_box_density} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
 
 " >  submit_run
 

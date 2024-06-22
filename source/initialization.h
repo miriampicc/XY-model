@@ -29,6 +29,7 @@ struct MC_parameters {
     double tau;
     double theta_box;
     double theta_box_A;
+    double theta_box_density;
 };
 
 
