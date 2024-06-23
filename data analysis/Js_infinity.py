@@ -132,7 +132,7 @@ for l in L:
         Js_new1 = cos_Jd - sin
         Js1.append(Js_new1)
 
-        file_path2 = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus2.txt'
+        file_path2 = f"/home/x_mirpi/Output_TBG/K_{K}_tdf/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Helicity_modulus2.txt'
         with open(file_path2, "r") as file:
             for line in file:
                 columns = line.strip().split()
