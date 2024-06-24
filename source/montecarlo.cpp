@@ -8,7 +8,7 @@
 
 void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double my_beta){
 
-    double l, rand, d_A, d_theta, d_Density, m;
+    double rand, d_A, d_theta, d_Density;
     double acc_rate=0.5, acc_theta=0., acc_A=0.;
     std::array<O2, 2> NewPsi{};
     std::array<O2, 2> OldPsi{};
@@ -152,8 +152,8 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
         }
     }
 
-    h_Josephson +=  Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) + 5 / 7 );
-    dens_fluct += - ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - 0.5 * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
+    h_Josephson +=  2 * Hp.b2 * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1 );
+    dens_fluct += - ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
     tot_energy=  h_Kinetic + h_Josephson + dens_fluct;
 

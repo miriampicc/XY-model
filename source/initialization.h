@@ -16,11 +16,11 @@
 
 struct H_parameters {
     double K ;
-    double J1;
-    double J2;
     double e;
     double beta_high;
     double beta_low;
+    double b1;
+    double b2;
 };
 
 struct MC_parameters {

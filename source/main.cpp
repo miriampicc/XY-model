@@ -45,14 +45,14 @@ int main(int argc, char *argv[]) {
         T = std::strtod(argv[5], nullptr);
         restart = std::strtol(argv[6], nullptr, 10);
         Hp.K = std::strtod(argv[7], nullptr);
-        Hp.J1 = std::strtod(argv[8], nullptr);
-        Hp.J2 = std::strtod(argv[9], nullptr);
-        Hp.e = std::strtod(argv[10], nullptr);
-        Hp.beta_high = std::strtod(argv[11], nullptr);
-        Hp.beta_low = std::strtod(argv[12], nullptr);
-        MC.theta_box= std::strtod(argv[13], nullptr);
-        MC.theta_box_A = std::strtod(argv[14], nullptr);
-        MC.theta_box_density = std::strtod(argv[15], nullptr);
+        Hp.e = std::strtod(argv[8], nullptr);
+        Hp.beta_high = std::strtod(argv[9], nullptr);
+        Hp.beta_low = std::strtod(argv[10], nullptr);
+        MC.theta_box= std::strtod(argv[11], nullptr);
+        MC.theta_box_A = std::strtod(argv[12], nullptr);
+        MC.theta_box_density = std::strtod(argv[13], nullptr);
+        Hp.b1 = std::strtod(argv[14], nullptr);
+        Hp.b2 = std::strtod(argv[15], nullptr);
         //paths_dir::DIR_IN = directory_read = argv[15];
         paths_dir::DIR_OUT = directory_write = argv[16];
     }
@@ -62,20 +62,20 @@ int main(int argc, char *argv[]) {
 
     N=Lx*Ly;
 
-    std::cout<< Lx << std::endl;
-    std::cout<< Ly << std::endl;
+    std::cout<<"Lx= "<< Lx << std::endl;
+    std::cout<<"Ly= "<< Ly << std::endl;
     std::cout<<"Numero di step "<< MC.n_steps << std::endl;
-    std::cout<< T << std::endl;
-    std::cout<< Hp.K << std::endl;
-    std::cout<< Hp.J1 << std::endl;
-    std::cout<< Hp.J2 << std::endl;
-    std::cout<< Hp.e <<std::endl;
-    std::cout << Hp.beta_high <<std::endl;
-    std::cout << Hp.beta_low <<std::endl;
-    std::cout<< restart << std::endl;
-    std::cout<<MC.theta_box<<std::endl;
-    std::cout<<MC.theta_box_A<<std::endl;
-    std::cout<<MC.theta_box_density<<std::endl;
+    std::cout<<"T= "<< T << std::endl;
+    std::cout<<"K= "<< Hp.K << std::endl;
+    std::cout<<"charge= "<< Hp.e <<std::endl;
+    std::cout<<"beta high = " << Hp.beta_high <<std::endl;
+    std::cout<<"beta low= "<< Hp.beta_low <<std::endl;
+    std::cout<<"restart= "<< restart << std::endl;
+    std::cout<<"theta_box= "<<MC.theta_box<<std::endl;
+    std::cout<<"theta_box_A= "<<MC.theta_box_A<<std::endl;
+    std::cout<<"theta_box_density= "<<MC.theta_box_density<<std::endl;
+    std::cout<<"b1= "<< Hp.b1 <<std::endl;
+    std::cout<<"b2= "<< Hp.b2 <<std::endl;
     std::cout<< directory_write << std::endl;
 
     //initialization of the random number generator

@@ -9,7 +9,8 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 time_limit="5-0:00:00"
 
-LLIST="8 12 16 20 24 32 40 48 64 96"
+LLIST="8 12 16 20 24 32"
+#40 48 64 96
 
 ################ Input Parameters for the Monte Carlo simulation #################
 
@@ -22,15 +23,14 @@ tau=32
 T=0.3
 restart=0
 K=5.0
-J1=0.0
-J2=0.0
 e=0.0
 beta_high=1.8    #1.754   #1.818  #T=0.57 #0.55
 beta_low=1.6   #T=0.59
 theta_box=0.78539816339
 theta_box_A=0.1
 theta_box_density=0.1
-
+b1=3.5
+b2=2.5
 ################################################################################3
 
 for L in $LLIST; do
@@ -61,7 +61,7 @@ for L in $LLIST; do
 
     #################Creation of the submit_runs script#########################
 
-    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_tdf"
+    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}"
     nnodes=2
     ntasks=64 #parallel tempering over ntasks temperatures
 
@@ -95,7 +95,7 @@ echo "#!/bin/bash
 #SBATCH --output=${DIR_PAR}/logs/log_${jobname}.o
 #SBATCH --error=${DIR_PAR}/logs/log_${jobname}.e
 
-srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${J1} ${J2} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${theta_box_density} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
+srun ${EXECUTE_DIR}/CMT ${L} ${nsteps} ${transient} ${tau} ${T} ${restart} ${K} ${e} ${beta_high} ${beta_low} ${theta_box} ${theta_box_A} ${theta_box_density} ${b1} ${b2} ${DIR_OUT} &> ${DIR_PAR}/logs/log_${jobname}.o
 
 " >  submit_run
 
