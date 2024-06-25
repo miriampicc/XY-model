@@ -8,8 +8,8 @@
 
 void initialize_Lattice ( std::vector <Node> &Site, const fs::path & directory_param_beta, int restart_1, struct H_parameters &Hp) {
 
-    int pos = Lx + 2;
-    int a = 2, b = Lx / 4 ;
+    size_t pos = Lx + 2;
+    size_t a = 2, b = Lx / 4 ;
     fs::path inputFile1 = directory_param_beta / "Lattice_dir_fin.txt";
     fs::path inputFile_A = directory_param_beta / "A_dir_fin.txt";
     fs::path inputFile_Defects = directory_param_beta / "Defect_dir_fin.txt";
