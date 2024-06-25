@@ -9,7 +9,7 @@
 void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double my_beta){
 
     double rand, d_A, d_theta, d_Density;
-    double acc_rate=0.5, acc_theta=0., acc_A=0.;
+    double acc_rate=0.5, acc_theta=0., acc_A=0., acc_density=0.;
     std::array<O2, 2> NewPsi{};
     std::array<O2, 2> OldPsi{};
     double OldA, NewA;
@@ -38,10 +38,12 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 deltaE = (newE - oldE);
                 if (deltaE < 0) {
                     Site[i].Psi[alpha] = NewPsi[alpha];
+                    acc_density++;
                 } else {
                     rand = rn::uniform_real_box(0, 1);
                     if (rand < exp(-my_beta * deltaE)) {
                         Site[i].Psi[alpha] = NewPsi[alpha];
+                        acc_density++;
                     }
                 }
 
@@ -113,8 +115,11 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
     acc_theta=(double) acc_theta/static_cast<double>(2*N);
     acc_A=(double) acc_A / static_cast<double>(2*N);
+    acc_density=(double) acc_density / static_cast<double>(2*N);
+
     MC.theta_box= MC.theta_box*((0.5*acc_theta/acc_rate)+0.5);
     MC.theta_box_A= MC.theta_box_A*((0.5*acc_A/acc_rate)+0.5);
+    MC.theta_box_density= MC.theta_box_density*((0.5*acc_density/acc_rate)+0.5);
 }
 
 double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const std::vector<Node> &Site) {
