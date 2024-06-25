@@ -56,46 +56,47 @@ def calculate_mean(data):
 
 N = L * L
 
-file_path = f"/home/x_mirpi/Output_TBG/K_{K}_sB/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{beta}" + '/B_Plaquette.txt'
+for n in range(rank):
 
-with open(file_path, 'r') as file:
-    all_values = [float(line.strip()) for line in file.readlines()]
+    file_path = f"/home/x_mirpi/Output_TBG/K_{K}_sB/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/B_Plaquette.txt'
 
-lattices = []
+    with open(file_path, 'r') as file:
+        all_values = [float(line.strip()) for line in file.readlines()]
 
-# Divide data into lattices of size N
-lattices = [all_values[i:i + N] for i in range(0, len(all_values), N)]
+    lattices = []
 
-    
-mean_energy = []
+    # Divide data into lattices of size N
+    lattices = [all_values[i:i + N] for i in range(0, len(all_values), N)]
 
-for site in range(N):
+        
+    mean_energy = []
 
-    Plaquette_en = []
+    for site in range(N):
 
-    for n_array in range(N_steps): 
+        Plaquette_en = []
 
-        val = lattices [n_array][site]
-        Plaquette_en.append(val)
+        for n_array in range(N_steps): 
 
-    plaqette = np.array(Plaquette_en)
+            val = lattices [n_array][site]
+            Plaquette_en.append(val)
 
-    energy_avg = calculate_mean(plaqette)
-    mean_energy.append(energy_avg)
+        plaqette = np.array(Plaquette_en)
+
+        energy_avg = calculate_mean(plaqette)
+        mean_energy.append(energy_avg)
 
 
-energy = np.array(mean_energy)
-energy = energy / N
+    energy = np.array(mean_energy)
+    energy = energy / N
 
-# Reshape energy into a 2D array of size LxL
-energy_matrix = energy.reshape(L, L)
+    # Reshape energy into a 2D array of size LxL
+    energy_matrix = energy.reshape(L, L)
 
-plt.figure(figsize=(8, 6))
-plt.imshow(energy_matrix, cmap='viridis', interpolation='nearest', origin='lower')
-plt.colorbar(label='Mean Energy')
-plt.title('Mean Energy Map')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-plt.grid(False)  # Disable grid lines
-plt.savefig(f'Color_map_L={L}_beta={beta}.jpg')
-plt.show()
+    plt.figure(figsize=(8, 6))
+    plt.imshow(energy_matrix, cmap='viridis', interpolation='nearest', origin='lower')
+    plt.colorbar(label='Magnetic field')
+    plt.title('Magnetic field')
+    plt.xlabel('X-axis')
+    plt.ylabel('Y-axis')
+    plt.grid(False)  # Disable grid lines
+    plt.savefig(f'Color_map_L={L}_beta={n}.jpg')
