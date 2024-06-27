@@ -79,7 +79,7 @@ for l in L:
 
     N = l * l
 
-    file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{beta}" + '/Energy.txt'
+    file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{beta}" + '/Energy.txt'
 
     with open(file_path, 'r') as file:
         energies = [float(line.strip()) for line in file.readlines()]
