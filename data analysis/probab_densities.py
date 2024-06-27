@@ -130,8 +130,8 @@ for l in L:
     Sum_matrix = np.column_stack((temperatures, sum_Psis))
     
     #plt.plot(Psi1_matrix[:, 0], Psi1_matrix[:, 1], label=r'$|\psi_1|^2$', color = colors[k])
-    #plt.plot(Psi2_matrix[:, 0], Psi2_matrix[:, 1], label=r'$|\psi_2|^2$', color = colors[k+1])
-    plt.plot(Sum_matrix[:, 0], Sum_matrix[:, 1], label=r'$|\psi_2|^2 + |\psi_2|^2$', color = colors[k+2])
+    plt.plot(Psi2_matrix[:, 0], Psi2_matrix[:, 1], label=r'$|\psi_2|^2$', color = colors[k+1])
+    #plt.plot(Sum_matrix[:, 0], Sum_matrix[:, 1], label=r'$|\psi_2|^2 + |\psi_2|^2$', color = colors[k+2])
 
 
     k = k+1
