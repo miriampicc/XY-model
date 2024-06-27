@@ -100,3 +100,4 @@ for n in range(rank):
     plt.ylabel('Y-axis')
     plt.grid(False)  # Disable grid lines
     plt.savefig(f'Color_map_L={L}_beta={n}.jpg')
+    plt.close()
