@@ -180,7 +180,7 @@ plt.plot(temperatures , y, linestyle='--', label = r'$\frac{2T}{\pi}$')
 
 plt.xlabel('Temperature (K)')
 plt.ylabel('superfluid stiffness')
-plt.title(' Lattice 1')
+plt.title(' Component 1')
 plt.legend()
 plt.grid(True)
 
@@ -194,7 +194,7 @@ plt.plot(temperatures , y, linestyle='--', label = r'$\frac{2T}{\pi}$')
 plt.legend()
 plt.xlabel('Temperature (K)')
 plt.ylabel('superfluid stiffness')
-plt.title('Lattice 2')
+plt.title('Component 2')
 plt.grid(True)
 
 # Plot 3
