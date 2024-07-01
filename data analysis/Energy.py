@@ -1,6 +1,6 @@
-import numpy as np 
+import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import argparse
 
 parser = argparse.ArgumentParser(description='Description of the script')
@@ -32,9 +32,7 @@ print("beta high=", beta_high)
 print("beta low=", beta_low)
 print("rank=", rank)
 
-
-
-def calculate_std(data): 
+def calculate_std(data):
     try:
         std_deviation = np.std(data)
         std_deviation = std_deviation / (np.sqrt(len(data)-1))
@@ -44,7 +42,7 @@ def calculate_std(data):
         print(f"Error: {e}")
         return None
 
-def calculate_mean(data): 
+def calculate_mean(data):
     mean = sum(data) / len(data)
     return mean
 
@@ -60,8 +58,7 @@ colors = [
     "#FF6347"   # Tomato
 ]
 
-
-#let us obtain the temperatures 
+# Let us obtain the temperatures
 temperatures = []
 delta = (1/beta_low - 1/beta_high)/(rank)
 T_high = 1/beta_low
@@ -79,12 +76,11 @@ for l in L:
     betas = []
     N = l * l
 
-    for n in range(rank) : 
-
+    for n in range(rank) :
         t = T_high - n * delta
         #print (t)
-        bb = beta_low + delta_beta * n 
-        
+        bb = beta_low + delta_beta * n
+
         temperatures.append(t)
         betas.append(bb)
 
@@ -93,17 +89,24 @@ for l in L:
         #print(n)
 
         with open(file_path, 'r') as file:
-            energies = [float(line.strip()) for line in file.readlines()]
+            energies = []
+            for line in file:
+                stripped_line = line.strip()
+                try:
+                    energy = float(stripped_line)
+                    energies.append(energy)
+                except ValueError:
+                    print(f"Warning: Could not convert line to float: {stripped_line}")
             #print(len(energies))
-            en_avg = calculate_mean(energies)
-            en_std = calculate_std(energies)
-            mean_energy_values.append(en_avg) 
-            std_dev.append(en_std)
+            if energies:  # Ensure there are valid energy values to calculate
+                en_avg = calculate_mean(energies)
+                en_std = calculate_std(energies)
+                mean_energy_values.append(en_avg)
+                std_dev.append(en_std)
 
-    
     energy = np.array(mean_energy_values)
     energy = energy / N
-    temp = np.array(temperatures) 
+    temp = np.array(temperatures)
     std_val = np.array(std_dev)
     std_val = std_val / N
 
