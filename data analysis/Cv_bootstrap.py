@@ -123,8 +123,11 @@ for l in L:
         beta_array = np.array(betas)
 
     # Plot Cv vs. Temperature
+
+    values = np.array(val)
+    err = np.array(error)
     plt.plot(betas, val, linestyle='-', label=f'L={l}', color=colors[i])
-    plt.fill_between(betas, val - error, val + error, color=colors[i], alpha=0.3)
+    plt.fill_between(betas, values - err, values + err, color=colors[i], alpha=0.3)
 
     i = i + 1
 
