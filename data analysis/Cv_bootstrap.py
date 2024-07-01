@@ -72,6 +72,7 @@ for l in L:
     error = []
 
     for n in range(rank):
+        print(n)
         t = T_high - n * delta
         bb = beta_low + delta_beta * n
 
