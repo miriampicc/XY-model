@@ -114,39 +114,33 @@ for l in L :
         Jd1 = [x * N for x in Jd1]
         Ic1 = [x * N for x in Ic1]
 
-        Ic1 = np.asarray(Ic1)
-        Jd1 = np.asarray(Jd1)
-
-        mean_sin = calculate_std(Ic1)
-        sin_Ic1.append(mean_sin)
-        sin = mean_sin / t
-
+        Ic_std1 = np.std(Ic1) ** 2
+        sin_Ic1.append(Ic_std1)
+        sin = Ic_std1 / t
         Jp1.append(sin)
 
-        mm = calculate_mean(Jd1) 
-        cos_Jd = mm 
+
+        mm = calculate_mean(Jd1)
+        cos_Jd = mm
         mean_Jd_values1.append(cos_Jd)
 
-        Js_new1 = (cos_Jd - sin) / N
+        Js_new1 = cos_Jd - sin
         Js1.append(Js_new1)
 
         Jd2 = [x * N for x in Jd2]
         Ic2 = [x * N for x in Ic2]
 
-        Ic2 = np.asarray(Ic2)
-        Jd2 = np.asarray(Jd2)
-
-        mean_sin = calculate_std(Ic2)
-        sin_Ic2.append(mean_sin)
-        sin = mean_sin / t
+        Ic_std2 = np.std(Ic2) ** 2
+        sin_Ic2.append(Ic_std2)
+        sin = Ic_std2 / t
 
         Jp2.append(sin)
 
-        mm = calculate_mean(Jd2) 
-        cos_Jd = mm 
+        mm = calculate_mean(Jd2)
+        cos_Jd = mm
         mean_Jd_values2.append(cos_Jd)
 
-        Js_new2 = (cos_Jd - sin)/N
+        Js_new2 = cos_Jd - sin
         Js2.append(Js_new2)
 
         result = []
@@ -158,9 +152,9 @@ for l in L :
         molt_mean = calculate_mean(Ic1)*calculate_mean(Ic2)
         mean_m_array = np.array(mean_molt)
         molt_m_array = np.array(molt_mean)
-        sub = 1/(N*t) * (mean_m_array - molt_m_array)
-        sott = Js_new1 + Js_new2 +2*sub
-        #print (i, sub) 
+        sub = 1/(t) * (mean_m_array - molt_m_array)
+        sott = (Js_new1 + Js_new2 - 2*sub)/N
+        #print (i, sub)
 
         double.append(sott)
 
