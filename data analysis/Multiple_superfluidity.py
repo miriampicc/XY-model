@@ -38,7 +38,9 @@ mean_argument_values = []
 
 def calculate_std(data): 
     try:
-        std_deviation = np.std(data)
+
+        std_deviation = np.mean(data**2) - (np.mean(data))**2
+        #std_deviation = np.std(data)
         return std_deviation
     except Exception as e:
         # Handle any exceptions that may occur during the calculation
@@ -112,9 +114,9 @@ for l in L :
         Jd1 = [x * N for x in Jd1]
         Ic1 = [x * N for x in Ic1]
 
-        mean_sin = calculate_std(Ic1) ** 2
+        mean_sin = calculate_std(Ic1)
         sin_Ic1.append(mean_sin)
-        sin = mean_sin * N / t
+        sin = mean_sin / t
 
         Jp1.append(sin)
 
@@ -128,9 +130,9 @@ for l in L :
         Jd2 = [x * N for x in Jd2]
         Ic2 = [x * N for x in Ic2]
 
-        mean_sin = calculate_std(Ic2) ** 2
+        mean_sin = calculate_std(Ic2)
         sin_Ic2.append(mean_sin)
-        sin = mean_sin * N / t
+        sin = mean_sin / t
 
         Jp2.append(sin)
 
