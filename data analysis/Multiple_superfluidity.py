@@ -114,6 +114,9 @@ for l in L :
         Jd1 = [x * N for x in Jd1]
         Ic1 = [x * N for x in Ic1]
 
+        Ic1 = np.asarray(Ic1)
+        Jd1 = np.asarray(Jd1)
+
         mean_sin = calculate_std(Ic1)
         sin_Ic1.append(mean_sin)
         sin = mean_sin / t
@@ -129,6 +132,9 @@ for l in L :
 
         Jd2 = [x * N for x in Jd2]
         Ic2 = [x * N for x in Ic2]
+
+        Ic2 = np.asarray(Ic2)
+        Jd2 = np.asarray(Jd2)
 
         mean_sin = calculate_std(Ic2)
         sin_Ic2.append(mean_sin)
