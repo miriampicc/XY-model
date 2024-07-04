@@ -29,10 +29,13 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 NewPsi[0] = Site[i].Psi[0];
                 NewPsi[1] = Site[i].Psi[1];
 
+                //In this way we have the square
+
                 X = Site[i].Psi[alpha].r *  Site[i].Psi[alpha].r;
                 d_X = rn::uniform_real_box(- 0.25 * Site[i].Psi[alpha].r * Site[i].Psi[alpha].r ,  0.25 * Site[i].Psi[alpha].r * Site[i].Psi[alpha].r );
 
                 NewPsi[alpha].r = sqrt(X + d_X);
+
 
                 oldE = local_energy(OldPsi, i, Hp, Site);
                 newE = local_energy(NewPsi, i, Hp, Site);
