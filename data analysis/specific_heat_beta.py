@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
 import argparse
 
 parser = argparse.ArgumentParser(description='Description of the script')
@@ -38,12 +37,12 @@ def calculate_mean(data):
     return mean
 
 temperatures = []
-delta = (1/beta_low - 1/beta_high)/(rank)
-T_high = 1/beta_low
-T_low = 1/beta_high
+delta = (1 / beta_low - 1 / beta_high) / rank
+T_high = 1 / beta_low
+T_low = 1 / beta_high
 print(delta)
 
-delta_beta = (beta_high - beta_low)/(rank)
+delta_beta = (beta_high - beta_low) / rank
 
 colors = [
     "#00008B",  # Dark Blue
@@ -60,7 +59,7 @@ colors = [
     "#FF6347"   # Tomato
 ]
 
-#PLOT OF THE SPECIFIC HEAT
+# PLOT OF THE SPECIFIC HEAT
 i = 0
 for l in L:
     N = l * l
@@ -76,15 +75,26 @@ for l in L:
         temperatures.append(t)
         betas.append(bb)
 
-        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
+        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}/Energy.txt"
 
         try:
             with open(file_path, 'r') as file:
-                numbers = [float(line.strip()) for line in file.readlines()]
-                mm = calculate_mean(numbers)
-                en_var = (np.std(numbers))**2
-                cc = (((1/t)**2) * en_var )/ N
-                specific_heat.append(cc)
+                numbers = []
+                for line in file:
+                    line = line.strip()
+                    if line:
+                        try:
+                            numbers.append(float(line))
+                        except ValueError:
+                            print(f"Warning: Could not convert line to float: '{line}'")
+                            continue
+                if numbers:
+                    mm = calculate_mean(numbers)
+                    en_var = (np.std(numbers)) ** 2
+                    cc = (((1 / t) ** 2) * en_var) / N
+                    specific_heat.append(cc)
+                else:
+                    specific_heat.append(np.nan)  # Append NaN if no valid data
         except FileNotFoundError:
             print(f"File not found: {file_path}")
             specific_heat.append(np.nan)  # Append NaN if file not found
