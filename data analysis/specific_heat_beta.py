@@ -76,7 +76,7 @@ for l in L:
         temperatures.append(t)
         betas.append(bb)
 
-        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
+        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/Energy.txt'
 
         try:
             with open(file_path, 'r') as file:
