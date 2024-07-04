@@ -40,12 +40,12 @@ for L in $LLIST; do
     cd ${BASEDIR}/Output_TBG_tdf || exit
 
 
-    if [ ! -d ./SK_${K}_tdf3 ]; then
+    if [ ! -d ./SK_${K}_tdf2 ]; then
 
-    mkdir -p K_${K}_tdf3
+    mkdir -p K_${K}_tdf2
     fi
 
-    cd K_${K}_tdf3 || exit
+    cd K_${K}_tdf2 || exit
 
     if [ ! -d ./Se_${e} ]; then
     mkdir -p e_${e}
@@ -61,7 +61,7 @@ for L in $LLIST; do
 
     #################Creation of the submit_runs script#########################
 
-    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}"
+    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_b1${b1}_b2${b2}"
     nnodes=2
     ntasks=64 #parallel tempering over ntasks temperatures
 
