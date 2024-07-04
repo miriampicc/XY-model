@@ -30,7 +30,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 NewPsi[1] = Site[i].Psi[1];
 
                 X = Site[i].Psi[alpha].r *  Site[i].Psi[alpha].r;
-                d_X = rn::uniform_real_box(- MC.theta_box_density * Site[i].Psi[alpha].r ,  MC.theta_box_density * Site[i].Psi[alpha].r );
+                d_X = rn::uniform_real_box(- 0.25 * Site[i].Psi[alpha].r * Site[i].Psi[alpha].r ,  0.25 * Site[i].Psi[alpha].r * Site[i].Psi[alpha].r );
 
                 NewPsi[alpha].r = sqrt(X + d_X);
 
