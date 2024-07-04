@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
@@ -32,11 +32,7 @@ print("beta high=", beta_high)
 print("beta low=", beta_low)
 print("rank=", rank)
 
-
-# Create a dictionary to store the arrays
-
-
-def calculate_std(data): 
+def calculate_std(data):
     try:
         std_deviation = np.std(data)
         std_deviation = std_deviation / (np.sqrt(len(data)-1))
@@ -46,7 +42,7 @@ def calculate_std(data):
         print(f"Error: {e}")
         return None
 
-def calculate_mean(data): 
+def calculate_mean(data):
     mean = sum(data) / len(data)
     return mean
 
@@ -65,55 +61,62 @@ colors = [
     "#FF6347"   # Tomato
 ]
 
-
-#let us obtain the temperatures 
+# Obtain the temperatures
 temperatures = []
-delta = (1/beta_low - 1/beta_high)/(rank)
-T_high = 1/beta_low
-T_low = 1/beta_high
-#print(delta)
+delta = (1 / beta_low - 1 / beta_high) / rank
+T_high = 1 / beta_low
+T_low = 1 / beta_high
 
 i = 0
 
 for l in L:
-    
-    N= l * l
+    N = l * l
 
     pseudo_magn = []
     mm_2_values = []
-    mm_4_values = [] 
+    mm_4_values = []
     cumulant = []
     temperatures = []
 
-    for n in range(rank) : 
-
+    for n in range(rank):
         t = T_high - n * delta
-        print (t)
-        
+        print(t)
+
         temperatures.append(t)
 
-        #file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/trsb_magnetization.txt'
-        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}" + '/trsb_magnetization.txt'
+        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}/trsb_magnetization.txt"
 
+        try:
+            with open(file_path, 'r') as file:
+                numbers = []
+                for line in file:
+                    line = line.strip()
+                    if line:
+                        try:
+                            numbers.append(float(line))
+                        except ValueError:
+                            print(f"Warning: Could not convert line to float: '{line}'")
+                            continue
 
-    #print(n)
+                if numbers:
+                    m2 = [x ** 2 for x in numbers]
+                    m4 = [x ** 4 for x in numbers]
+                    avg_m2 = calculate_mean(m2)
+                    avg_m4 = calculate_mean(m4)
+                    mm = calculate_mean(numbers)
+                    U = avg_m4 / (3 * avg_m2 ** 2)
+                    cumulant.append(np.abs(U))
+                    pseudo_magn.append(np.abs(mm))
+                else:
+                    cumulant.append(np.nan)
+                    pseudo_magn.append(np.nan)
+        except FileNotFoundError:
+            print(f"File not found: {file_path}")
+            cumulant.append(np.nan)
+            pseudo_magn.append(np.nan)
 
-        with open(file_path, 'r') as file:
-            numbers = [float(line.strip()) for line in file.readlines()]
-            m2= [x**2 for x in numbers ]
-            m4= [x**4 for x in numbers ]
-            avg_m2 = calculate_mean (m2)
-            avg_m4 = calculate_mean (m4)
-            mm = calculate_mean(numbers)
-            U = avg_m4 / (3 * avg_m2**2)
-            cumulant.append (np.abs(U))
-            pseudo_magn.append(np.abs(mm))
-
-    
-    plt.plot(temperatures, cumulant, linestyle='-', label = f'L={l}', color = colors[i])
-
-    i = i +1
-
+    plt.plot(temperatures, cumulant, linestyle='-', label=f'L={l}', color=colors[i])
+    i += 1
 
 plt.xlabel('Temperature (K)')
 plt.ylabel('U')
@@ -121,6 +124,5 @@ plt.title(f'Binder Cumulant e={e}')
 plt.legend()
 plt.grid(True)
 plt.savefig(f'Binder_Cumulant_e={e}_K={K}.jpg')
-
 
 plt.show()
