@@ -1,6 +1,6 @@
-import numpy as np 
+import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import argparse
 
 parser = argparse.ArgumentParser(description='Description of the script')
@@ -35,7 +35,7 @@ print("beta low=", beta_low)
 print("rank=", rank)
 print("L0=", L0)
 
-def calculate_std(data): 
+def calculate_std(data):
     try:
         std_deviation = np.std(data)
         std_deviation = std_deviation / (np.sqrt(len(data)-1))
@@ -45,7 +45,7 @@ def calculate_std(data):
         print(f"Error: {e}")
         return None
 
-def calculate_mean(data): 
+def calculate_mean(data):
     mean = sum(data) / len(data)
     return mean
 
@@ -66,7 +66,7 @@ colors = [
 ]
 
 
-#let us obtain the temperatures 
+#let us obtain the temperatures
 temperatures = []
 delta = (1/beta_low - 1/beta_high)/(rank)
 T_high = 1/beta_low
@@ -76,30 +76,30 @@ T_low = 1/beta_high
 k = 0
 
 for l in L:
-    
+
     N= l * l
 
     Jp1 = []
     Js1 = []
-    mean_Jd_values1 = [] 
+    mean_Jd_values1 = []
     sin_Ic1= []
 
     Js_inf = []
 
     Jp2 = []
     Js2 = []
-    mean_Jd_values2 = [] 
+    mean_Jd_values2 = []
     sin_Ic2= []
 
     helicity_sum_inf = []
     helicity = []
     temperatures = []
 
-    for n in range(rank) : 
+    for n in range(rank) :
 
         t = T_high - n * delta
         print (t)
-        
+
         temperatures.append(t)
         Jd1 = []
         Ic1 = []
@@ -124,8 +124,8 @@ for l in L:
         sin = Ic_std1 / t
         Jp1.append(sin)
 
-        mm = calculate_mean(Jd1) 
-        cos_Jd = mm 
+        mm = calculate_mean(Jd1)
+        cos_Jd = mm
         mean_Jd_values1.append(cos_Jd)
 
         Js_new1 = cos_Jd - sin
@@ -150,50 +150,54 @@ for l in L:
 
         Jp2.append(sin)
 
-        mm = calculate_mean(Jd2) 
-        cos_Jd = mm 
+        mm = calculate_mean(Jd2)
+        cos_Jd = mm
         mean_Jd_values2.append(cos_Jd)
 
         Js_new2 = cos_Jd - sin
         Js2.append(Js_new2)
+
+        # Ensure lengths of Ic1 and Ic2 are the same
+        if len(Ic1) != len(Ic2):
+            print(f"Length mismatch: len(Ic1)={len(Ic1)}, len(Ic2)={len(Ic2)}")
+            # Handle the mismatch, e.g., by truncating the longer list or skipping this iteration
+            min_length = min(len(Ic1), len(Ic2))
+            Ic1 = Ic1[:min_length]
+            Ic2 = Ic2[:min_length]
 
         result = []
 
         m=0
         for m in range(len(Ic1)):
             result.append(Ic1[m] * Ic2[m])
-    
-        mean_molt = calculate_mean (result)
-        molt_mean = calculate_mean(Ic1)*calculate_mean(Ic2)
+
+        mean_molt = calculate_mean(result)
+        molt_mean = calculate_mean(Ic1) * calculate_mean(Ic2)
         mean_m_array = np.array(mean_molt)
         molt_m_array = np.array(molt_mean)
         sub = 1/t * (mean_m_array - molt_m_array)
-        helicity_sum = (Js_new1 + Js_new2 -2*sub)/N
+        helicity_sum = (Js_new1 + Js_new2 - 2 * sub) / N
         #print(helicity_sum)
 
         helicity.append(helicity_sum)
 
-        helicity_sum_crit = helicity_sum/ (1 + (1/(2 * np.log(l/L0))))
+        helicity_sum_crit = helicity_sum / (1 + (1 / (2 * np.log(l/L0))))
         helicity_sum_inf.append(helicity_sum_crit)
 
     Jd_matrix1 = np.column_stack((temperatures, mean_Jd_values1))
     Jp_matrix1 = np.column_stack((temperatures, Jp1))
     Js_matrix1 = np.column_stack((temperatures, helicity_sum_inf))
-    
+
     plt.plot(Js_matrix1[:, 0], Js_matrix1[:, 1], label=f'L={l}', color=colors[k])
 
-    k = k+1
+    k = k + 1
 
+y = [0] * len(temperatures)
 
-
-
-y = [0] * len(temperatures) 
-
-for temp in range(len(temperatures)): 
+for temp in range(len(temperatures)):
     y[temp] = 2 * temperatures[temp] / np.pi
 
-
-plt.plot(temperatures , y, linestyle='--', label = r'$\frac{2T}{\pi}$', color = 'black')
+plt.plot(temperatures, y, linestyle='--', label=r'$\frac{2T}{\pi}$', color='black')
 
 plt.xlabel('T (K)')
 plt.ylabel(r'$J_s$')
