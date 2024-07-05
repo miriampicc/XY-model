@@ -158,6 +158,8 @@ for l in L:
         Js2.append(Js_new2)
 
         result = []
+
+        m=0
         for m in range(len(Ic1)):
             result.append(Ic1[m] * Ic2[m])
     
