@@ -158,8 +158,8 @@ for l in L:
         Js2.append(Js_new2)
 
         result = []
-        for i in range(len(Ic1)):
-            result.append(Ic1[i] * Ic2[i])
+        for m in range(len(Ic1)):
+            result.append(Ic1[m] * Ic2[m])
     
         mean_molt = calculate_mean (result)
         molt_mean = calculate_mean(Ic1)*calculate_mean(Ic2)
