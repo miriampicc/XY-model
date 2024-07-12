@@ -160,12 +160,12 @@ for l in L:
         for i in range(len(Ic1)):
             result.append(Ic1[i] * Ic2[i])
     
-        mean_molt = calculate_mean (result)
+        mean_molt = calculate_mean(result)
         molt_mean = calculate_mean(Ic1)*calculate_mean(Ic2)
         mean_m_array = np.array(mean_molt)
         molt_m_array = np.array(molt_mean)
         sub = 1/t * (mean_m_array - molt_m_array)
-        helicity_sum = (Js_new1 + Js_new2 -2*sub) /N
+        helicity_sum = (Js_new1 + Js_new2 - 2 * sub) / N
         #print(helicity_sum)
 
         helicity.append(helicity_sum)
