@@ -31,8 +31,8 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
                 //In this way we have the square
 
-                X = Site[i].Psi[alpha].r *  Site[i].Psi[alpha].r;
-                d_X = rn::uniform_real_box(- 0.25 * Site[i].Psi[alpha].r * Site[i].Psi[alpha].r ,  0.25 * Site[i].Psi[alpha].r * Site[i].Psi[alpha].r );
+                X = Site[i].Psi[alpha].r * Site[i].Psi[alpha].r;
+                d_X = rn::uniform_real_box(- 0.25 * X ,  0.25 * X );
 
                 NewPsi[alpha].r = sqrt(X + d_X);
 
@@ -119,7 +119,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
     acc_theta=(double) acc_theta/static_cast<double>(2*N);
     acc_A=(double) acc_A / static_cast<double>(2*N);
-    acc_density=(double) acc_density / static_cast<double>(2*N);
+    //acc_density=(double) acc_density / static_cast<double>(2*N);
 
     MC.theta_box= MC.theta_box*((0.5*acc_theta/acc_rate)+0.5);
     MC.theta_box_A= MC.theta_box_A*((0.5*acc_A/acc_rate)+0.5);
@@ -161,8 +161,11 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
         }
     }
 
-    h_Josephson +=  2 * Hp.b2 * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
-    dens_fluct -=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
+    //h_Josephson +=  2 * Hp.b2 * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
+    //dens_fluct -=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
+
+    h_Josephson +=  2 * Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
+    dens_fluct -=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 -  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
     tot_energy=  h_Kinetic + h_Josephson + dens_fluct;
 
