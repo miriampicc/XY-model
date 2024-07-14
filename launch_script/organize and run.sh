@@ -40,12 +40,12 @@ for L in $LLIST; do
     cd ${BASEDIR}/Output_TBG_tdf || exit
 
 
-    if [ ! -d ./SK_${K}_tdf3 ]; then
+    if [ ! -d ./SK_${K}_tdf4 ]; then
 
-    mkdir -p K_${K}_tdf3
+    mkdir -p K_${K}_tdf4
     fi
 
-    cd K_${K}_tdf3 || exit
+    cd K_${K}_tdf4 || exit
 
     if [ ! -d ./Se_${e} ]; then
     mkdir -p e_${e}
@@ -57,11 +57,11 @@ for L in $LLIST; do
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
     fi
 
-    DIR_OUT=${BASEDIR}/Output_TBG_tdf/K_${K}_tdf3/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
+    DIR_OUT=${BASEDIR}/Output_TBG_tdf/K_${K}_tdf4/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}
 
     #################Creation of the submit_runs script#########################
 
-    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_b1${b1}_b2${b2}"
+    jobname="L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_b1${b1}_b2${b2}_new"
     nnodes=2
     ntasks=64 #parallel tempering over ntasks temperatures
 

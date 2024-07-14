@@ -165,7 +165,7 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
     //dens_fluct -=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
     h_Josephson +=  2 * Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
-    dens_fluct -=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 -  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
+    dens_fluct +=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( - 1 + 0.5 *  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
     tot_energy=  h_Kinetic + h_Josephson + dens_fluct;
 
