@@ -22,7 +22,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
             size_t i = ix + Lx * (iy);
             /*************PSI UPDATE: first component density update and then second component, no total density contraint *********/
 
-            for (int alpha = 0; alpha < 2 ; ++alpha) {
+            for (int alpha = 0; alpha < 2 ; alpha++) {
 
                 OldPsi[0] = Site[i].Psi[0];
                 OldPsi[1] = Site[i].Psi[1];
