@@ -46,9 +46,12 @@ void initialize_Lattice ( std::vector <Node> &Site, const fs::path & directory_p
             s.Psi[0].t = rn::uniform_real_box(0, 2 * M_PI);
             s.Psi[1].t = rn::uniform_real_box(0, 2 * M_PI);
             //l = rn::uniform_real_box(0, 1);
-            s.Psi[0].r = 1;
+            //s.Psi[0].r = 0;
+            //s.Psi[1].r = 0;
+            s.Psi[0].r = rn::uniform_real_box(0, 1);
+            s.Psi[1].r = rn::uniform_real_box(0, 1);
             //m = rn::uniform_real_box(0, 1);
-            s.Psi[1].r = 1;
+
         }
     }
 

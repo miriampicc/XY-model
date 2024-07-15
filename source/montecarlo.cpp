@@ -119,11 +119,11 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
     acc_theta=(double) acc_theta/static_cast<double>(2*N);
     acc_A=(double) acc_A / static_cast<double>(2*N);
-    //acc_density=(double) acc_density / static_cast<double>(2*N);
+    acc_density=(double) acc_density / static_cast<double>(2*N);
 
     MC.theta_box= MC.theta_box*((0.5*acc_theta/acc_rate)+0.5);
     MC.theta_box_A= MC.theta_box_A*((0.5*acc_A/acc_rate)+0.5);
-    //MC.theta_box_density= MC.theta_box_density*((0.5*acc_density/acc_rate)+0.5);
+    MC.theta_box_density= MC.theta_box_density*((0.5*acc_density/acc_rate)+0.5);
 }
 
 double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const std::vector<Node> &Site) {
