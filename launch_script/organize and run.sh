@@ -7,9 +7,9 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 #############################################
 
-time_limit="5-0:00:00"
+time_limit="1-0:00:00"
 
-LLIST="8 12 16 20 24 "
+LLIST="8 12 16 20 24 32 "
 #32 40 48 64 96
 
 ################ Input Parameters for the Monte Carlo simulation #################
