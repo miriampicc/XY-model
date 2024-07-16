@@ -8,7 +8,7 @@
 
 void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double my_beta){
 
-    double rand, d_A, d_theta, d_X, X;
+    double rand, d_A, d_theta, d_X, X,  max_d_X,  min_d_X;
     double acc_rate=0.5, acc_theta=0., acc_A=0., acc_density=0.;
     std::array<O2, 2> NewPsi{};
     std::array<O2, 2> OldPsi{};
@@ -32,9 +32,10 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 //In this way we have the square
 
                 X = Site[i].Psi[alpha].r * Site[i].Psi[alpha].r;
-                d_X = rn::uniform_real_box(- 0.25 * X ,  0.25 * X );
-
+                d_X = rn::uniform_real_box(-MC.theta_box_density * X, -MC.theta_box_density * X);
                 NewPsi[alpha].r = sqrt(X + d_X);
+
+                std::cout<<"Update Psi = "<< NewPsi[alpha].r  << std::endl;
 
 
                 oldE = local_energy(OldPsi, i, Hp, Site);
@@ -165,7 +166,7 @@ double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const st
     //dens_fluct -=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
     h_Josephson +=  2 * Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
-    dens_fluct +=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( - 1 + 0.5 *  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
+    dens_fluct +=  0.001 * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( - 1 + 0.5 *  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
     tot_energy=  h_Kinetic + h_Josephson + dens_fluct;
 
