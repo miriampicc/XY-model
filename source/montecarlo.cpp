@@ -8,7 +8,7 @@
 
 void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_parameters &Hp,  double my_beta) {
 
-    double rand, d_A, d_theta, d_X, X, max_d_X, min_d_X;
+    double rand, d_A, d_theta, d_X, X;
     double acc_rate = 0.5, acc_theta = 0., acc_A = 0., acc_density = 0.;
     std::array<O2, 2> NewPsi{};
     std::array<O2, 2> OldPsi{};
@@ -32,12 +32,12 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 //In this way we have the square
 
                 X = Site[i].Psi[alpha].r * Site[i].Psi[alpha].r;
-                //d_X = rn::uniform_real_box(-MC.theta_box_density * X, MC.theta_box_density * X);
-                d_X = rn::uniform_real_box(-0.0001 * X, 0.0001  * X);
+                d_X = rn::uniform_real_box(-0.0001 * X, 0.0001 * X);
+                //d_X = rn::uniform_real_box(-0.25 * X, 0.25  * X);
                 NewPsi[alpha].r = sqrt(X + d_X);
 
-                std::cout << "Update Psi = " << NewPsi[alpha].r << std::endl;
-                std::cout << "Theta box = " << MC.theta_box_density << std::endl;
+                //std::cout << "Update Psi = " << NewPsi[alpha].r << std::endl;
+                //std::cout << "Theta box = " << MC.theta_box_density << std::endl;
 
                 oldE = local_energy(OldPsi, i, Hp, Site);
                 newE = local_energy(NewPsi, i, Hp, Site);
@@ -57,7 +57,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
                 /*************PSI UPDATE: phase update **********/
 
-                for (int alpha = 0; alpha < 2; alpha++) {
+                for ( alpha = 0; alpha < 2; alpha++) {
                     OldPsi[0] = Site[i].Psi[0];
                     OldPsi[1] = Site[i].Psi[1];
                     NewPsi[0] = Site[i].Psi[0];
@@ -123,6 +123,9 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         acc_A = (double) acc_A / static_cast<double>(2 * N);
         acc_density = (double) acc_density / static_cast<double>(2 * N);
 
+        std::cout << "Acc = " << acc_density << std::endl;
+
+
         MC.theta_box = MC.theta_box * ((0.5 * acc_theta / acc_rate) + 0.5);
         MC.theta_box_A = MC.theta_box_A * ((0.5 * acc_A / acc_rate) + 0.5);
         MC.theta_box_density = MC.theta_box_density * ((0.5 * acc_density / acc_rate) + 0.5);
@@ -167,7 +170,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         //dens_fluct -=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
         h_Josephson += 2 * Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2 * (Psi[0].t - Psi[1].t)) - 1.);
-        dens_fluct += ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) *
+        dens_fluct += Hp.a * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) *
                       (-1 + 0.5 * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)));
 
         tot_energy = h_Kinetic + h_Josephson + dens_fluct;

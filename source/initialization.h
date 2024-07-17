@@ -19,8 +19,7 @@ struct H_parameters {
     double e;
     double beta_high;
     double beta_low;
-    double b1;
-    double b2;
+    double a;
 };
 
 struct MC_parameters {

@@ -35,7 +35,7 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
             //interaction +=  2 * Hp.b2 *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
             //dens_fluct -=  ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) ) ;
             interaction +=  2 * Hp.K *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
-            dens_fluct +=  ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) * ( - 1 + 0.5 * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) ) ;
+            dens_fluct +=  Hp.a * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) * ( - 1 + 0.5 * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) ) ;
 
 
             if (Hp.e != 0) {

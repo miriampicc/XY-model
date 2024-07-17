@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     std::cout<<"Lunghezza parametri  "<< argc << "and " << argv <<std::endl;
 
 
-    if(argc == 17) {
+    if(argc == 16) {
         Lx = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
         Ly = static_cast<size_t>(std::strtol(argv[1], nullptr,  10));
         MC.n_steps = static_cast<int>(std::strtol(argv[2], nullptr, 10));
@@ -51,10 +51,9 @@ int main(int argc, char *argv[]) {
         MC.theta_box= std::strtod(argv[11], nullptr);
         MC.theta_box_A = std::strtod(argv[12], nullptr);
         MC.theta_box_density = std::strtod(argv[13], nullptr);
-        Hp.b1 = std::strtod(argv[14], nullptr);
-        Hp.b2 = std::strtod(argv[15], nullptr);
+        Hp.a = std::strtod(argv[14], nullptr);
         //paths_dir::DIR_IN = directory_read = argv[15];
-        paths_dir::DIR_OUT = directory_write = argv[16];
+        paths_dir::DIR_OUT = directory_write = argv[15];
     }
     else{
         myhelp(argc, argv);
@@ -74,8 +73,7 @@ int main(int argc, char *argv[]) {
     std::cout<<"theta_box= "<<MC.theta_box<<std::endl;
     std::cout<<"theta_box_A= "<<MC.theta_box_A<<std::endl;
     std::cout<<"theta_box_density= "<<MC.theta_box_density<<std::endl;
-    std::cout<<"b1= "<< Hp.b1 <<std::endl;
-    std::cout<<"b2= "<< Hp.b2 <<std::endl;
+    std::cout<<"b1= "<< Hp.a <<std::endl;
     std::cout<< directory_write << std::endl;
 
     //initialization of the random number generator
