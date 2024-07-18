@@ -32,7 +32,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 //In this way we have the square
 
                 X = Site[i].Psi[alpha].r * Site[i].Psi[alpha].r;
-                d_X = rn::uniform_real_box(-0.0001 * X, 0.0001 * X);
+                d_X = rn::uniform_real_box(-0.25 * X, 0.25 * X);
                 //d_X = rn::uniform_real_box(-0.25 * X, 0.25  * X);
                 NewPsi[alpha].r = sqrt(X + d_X);
 
@@ -123,7 +123,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         acc_A = (double) acc_A / static_cast<double>(2 * N);
         acc_density = (double) acc_density / static_cast<double>(2 * N);
 
-        std::cout << "Acc = " << acc_density << std::endl;
+        //std::cout << "Acc = " << acc_density << std::endl;
 
 
         MC.theta_box = MC.theta_box * ((0.5 * acc_theta / acc_rate) + 0.5);

@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
     std::cout<<"theta_box= "<<MC.theta_box<<std::endl;
     std::cout<<"theta_box_A= "<<MC.theta_box_A<<std::endl;
     std::cout<<"theta_box_density= "<<MC.theta_box_density<<std::endl;
-    std::cout<<"b1= "<< Hp.a <<std::endl;
+    std::cout<<"a = "<< Hp.a <<std::endl;
     std::cout<< directory_write << std::endl;
 
     //initialization of the random number generator
