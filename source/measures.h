@@ -17,6 +17,7 @@ struct Measures {
     int antivortices[2] = {0};
     long double dual_stiff_Z =0.; //dual stiffness along Z
     int my_rank=0;
+    double density[2]={0};
 
     void reset(){
         *this = Measures();
@@ -32,6 +33,8 @@ void dual_stiffness (struct Measures &mis, const std::vector<Node> &Site);
 void save_lattice(const std::vector<Node> &Site, const fs::path &directory_write, const std::string &configuration, struct H_parameters &Hp);
 double wrapToPi(double angle);
 size_t nn (size_t i, size_t coord, int dir );
+void density (std::vector<Node> &Site, struct Measures &mis, double N) ;
+
 
 
 #endif //XY_MODEL_MEASURES_H

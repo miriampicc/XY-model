@@ -14,7 +14,11 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
     std::array<O2, 2> OldPsi{};
     double OldA, NewA;
     double newE, oldE, deltaE;
+    double target_acc_rate = 0.3;
     size_t N = Lx * Ly;
+
+    double min_theta_box_density = 0.1; // Adjust this value as needed
+
 
     for (size_t iy = 0; iy < Ly; iy++) {
         for (size_t ix = 0; ix < Lx; ix++) {
@@ -32,32 +36,49 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 //In this way we have the square
 
                 X = Site[i].Psi[alpha].r * Site[i].Psi[alpha].r;
-                d_X = rn::uniform_real_box(-0.25 * X, 0.25 * X);
-                //d_X = rn::uniform_real_box(-0.25 * X, 0.25  * X);
+                //d_X = rn::uniform_real_box(-0.25 * X, 0.25 * X);
+                d_X = rn::uniform_real_box(-MC.theta_box_density * X, MC.theta_box_density * X);
+                //std::cout << "  d X  = " << d_X << std::endl;
+
+                //d_X = rn::uniform_real_box(-MC.theta_box_density * X, MC.theta_box_density * X);
+                //NewPsi[alpha].r = sqrt(fabs(X + d_X)); // Ensure positive densities
+
+                //std::cout << "  d X  = " << d_X << std::endl;
+
+                //std::cout << "  Theta box density   = " << MC.theta_box_density  << std::endl;
+
+
                 NewPsi[alpha].r = sqrt(X + d_X);
 
-                //std::cout << "Update Psi = " << NewPsi[alpha].r << std::endl;
-                //std::cout << "Theta box = " << MC.theta_box_density << std::endl;
+                //std::cout << "alpha =  " << alpha << "  Update Psi = " << NewPsi[alpha].r << "  Old Psi = "<< OldPsi[alpha].r << std::endl;
+
 
                 oldE = local_energy(OldPsi, i, Hp, Site);
                 newE = local_energy(NewPsi, i, Hp, Site);
+
+                //std::cout << "  Old E  = " << oldE  << "   New E = " << newE  << std::endl;
+
                 deltaE = (newE - oldE);
+                //std::cout << "Delta E = " << deltaE << std::endl;
                 if (deltaE < 0) {
                     Site[i].Psi[alpha] = NewPsi[alpha];
                     acc_density++;
+                    //std::cout << "YES  " << std::endl;
                 } else {
                     rand = rn::uniform_real_box(0, 1);
                     if (rand < exp(-my_beta * deltaE)) {
                         Site[i].Psi[alpha] = NewPsi[alpha];
                         acc_density++;
+                        //std::cout << "YES  " << std::endl;
                     }
                 }
+            }
 
                 //And, remember, you are interested in the total density fluctuations, thus  NewPsi[0].r^2+ NewPsi[1].r^2
 
                 /*************PSI UPDATE: phase update **********/
 
-                for ( alpha = 0; alpha < 2; alpha++) {
+                for ( int alpha = 0; alpha < 2; alpha++) {
                     OldPsi[0] = Site[i].Psi[0];
                     OldPsi[1] = Site[i].Psi[1];
                     NewPsi[0] = Site[i].Psi[0];
@@ -83,7 +104,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 }
             }
         }
-    }
+
 
         /***********VECTOR POTENTIAL*******/
         if (Hp.e != 0) {   //then we also have to update the vector potential
@@ -129,6 +150,10 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         MC.theta_box = MC.theta_box * ((0.5 * acc_theta / acc_rate) + 0.5);
         MC.theta_box_A = MC.theta_box_A * ((0.5 * acc_A / acc_rate) + 0.5);
         MC.theta_box_density = MC.theta_box_density * ((0.5 * acc_density / acc_rate) + 0.5);
+
+        // Ensure the step sizes do not become too small
+        //MC.theta_box_density = std::max(MC.theta_box_density, min_theta_box_density);
+
     }
 
     double local_energy(std::array<O2, 2> &Psi, size_t i, H_parameters &Hp, const std::vector<Node> &Site) {
@@ -161,17 +186,24 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 //NB: vec is useful to consider the potential vector in both the components
                 gauge_phase1 = Site[nn_ip].Psi[alpha].t - Psi[alpha].t + Hp.e * Site[i].A[vec];
                 gauge_phase2 = Psi[alpha].t - Site[nn_im].Psi[alpha].t + Hp.e * Site[nn_im].A[vec];
-                h_Kinetic -= (Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase1);
-                h_Kinetic -= (Psi[alpha].r * Site[nn_im].Psi[alpha].r) * cos(gauge_phase2);
+                h_Kinetic += 0.5 * (Psi[alpha].r * Psi[alpha].r + Site[nn_ip].Psi[alpha].r * Site[nn_ip].Psi[alpha].r - 2 * (Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase1));
+                h_Kinetic += 0.5 * (Psi[alpha].r * Psi[alpha].r + Site[nn_im].Psi[alpha].r * Site[nn_im].Psi[alpha].r - 2 * (Psi[alpha].r * Site[nn_im].Psi[alpha].r) * cos(gauge_phase2));
             }
         }
 
         //h_Josephson +=  2 * Hp.b2 * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2*(Psi[0].t -Psi[1].t)) - 1. );
         //dens_fluct -=  ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) ) ;
 
-        h_Josephson += 2 * Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2 * (Psi[0].t - Psi[1].t)) - 1.);
-        dens_fluct += Hp.a * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) *
-                      (-1 + 0.5 * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)));
+        //h_Josephson += 2 * Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2 * (Psi[0].t - Psi[1].t)) - 1.);
+        //dens_fluct += Hp.a * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * (-1 + 0.5 * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)));
+
+        h_Josephson += Hp.a * Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2 * (Psi[0].t - Psi[1].t)) - 1.);
+        dens_fluct += Hp.a * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * (-1 + 0.5 * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)));
+
+        //double diff = (Psi[0].t - Psi[1].t);
+        //std::cout << "difference phase = " << diff  << std::endl;
+
+        //std::cout << "Dens fluct = " << dens_fluct << "  Josephson = " << h_Josephson << std::endl;
 
         tot_energy = h_Kinetic + h_Josephson + dens_fluct;
 
@@ -203,7 +235,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
         for (int vec = 0; vec < 2; vec++) {
             gauge_phase1 = Site[nn_ip].Psi[vec].t - Site[i].Psi[vec].t + Hp.e * A;
-            h_Kinetic -= (Site[i].Psi[vec].r * Site[nn_ip].Psi[vec].r) * cos(gauge_phase1);
+            h_Kinetic -= 0.5 * (Site[i].Psi[vec].r * Site[i].Psi[vec].r + Site[nn_ip].Psi[vec].r * Site[nn_ip].Psi[vec].r - 2 * (Site[i].Psi[vec].r * Site[nn_ip].Psi[vec].r) * cos(gauge_phase1));
         }
 
         //considering now all the plaquettes that involve the vectors

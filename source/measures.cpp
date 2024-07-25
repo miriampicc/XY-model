@@ -28,14 +28,16 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
                         nn_ip = ix + Lx * ip;
                     }
                     gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i].Psi[alpha].t + Hp.e * Site[i].A[vec2];
-                    h_Kinetic -= (Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase);
+                    h_Kinetic += 0.5 * ( (Site[i].Psi[alpha].r * Site[i].Psi[alpha].r) + (Site[nn_ip].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) - 2*(Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r) * cos(gauge_phase) );
                 }
             }
 
-            //interaction +=  2 * Hp.b2 *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
-            //dens_fluct -=  ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) * ( 1 - (Hp.b1 + Hp.b2) * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) ) ;
-            interaction +=  2 * Hp.K *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
-            dens_fluct +=  Hp.a * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) * ( - 1 + 0.5 * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) ) ;
+
+            //interaction +=  2 * Hp.K *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
+            //dens_fluct +=  Hp.a * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) * ( - 1 + 0.5 * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) ) ;
+
+            interaction +=  Hp.a * Hp.K *(Site[i].Psi[1].r * Site[i].Psi[0].r) * (Site[i].Psi[1].r * Site[i].Psi[0].r) *(cos(2*(Site[i].Psi[0].t- Site[i].Psi[1].t))-1.);
+            dens_fluct +=   Hp.a * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) *( - 1 + 0.5 * ((Site[i].Psi[0].r * Site[i].Psi[0].r) + (Site[i].Psi[1].r * Site[i].Psi[1].r)) ) ;
 
 
             if (Hp.e != 0) {
@@ -58,8 +60,39 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
     mis.E_B = A_2;
     mis.density_fluct = dens_fluct;
 
+    //std::cout << "Density fluct = " << mis.density_fluct << std::endl;
+    //std::cout << "Kinetic =" << mis.E_kinetic << std::endl;
+    //std::cout << "Interaction =" << mis.E_josephson << std::endl;
+
+
+
+
     mis.E =(mis.E_kinetic  + mis.E_josephson + mis.E_B + mis.density_fluct );
 }
+
+//Function density
+
+void density (std::vector<Node> &Site, struct Measures &mis, double N) {
+
+    double r1=0.0, r2=0.0;
+
+    for(auto & s : Site) {
+
+        r1 += (s.Psi[0].r) * (s.Psi[0].r) ;
+        r2 += (s.Psi[1].r) * (s.Psi[1].r) ;
+    }
+
+    r1 = (double) r1/ N ;
+    r2 = (double) r2/ N  ;
+
+    mis.density[0] = r1 ;
+    mis.density[1] = r2 ;
+
+    //std::cout << "Density 1 =" << r1 << std::endl;
+    //std::cout << "Density 2 =" << r2 << std::endl;
+
+}
+
 
 // Function to calculate the total magnetization of the lattice
 
@@ -127,7 +160,7 @@ void helicity_modulus (struct H_parameters &Hp, const std::vector<Node> &Site, s
             size_t ip = (ix == Lx-1 ? 0: ix+1);
             size_t nn_ip = ip + Lx * (iy);
 
-            for (int alpha = 0; alpha < 2; ++alpha) {
+            for (int alpha = 0; alpha < 2; alpha++) {
 
                 //gauge_phase = Site[nn_ip].Psi[alpha].t - Site[i].Psi[alpha].t + Hp.e * Site[i].A[vec];
                 //sum_sines[alpha] += Site[i].Psi[alpha].r * Site[nn_ip].Psi[alpha].r * sin(gauge_phase);
