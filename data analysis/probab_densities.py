@@ -105,13 +105,33 @@ for l in L:
         Psi2_r = []
 
 
-        file_path1 = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{n}" + '/Lattice_fin.txt'
+        #file_path1 = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{n}" + '/Lattice_fin.txt'
+        file_path1 = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{n}" + '/Density1.txt'
+
         with open(file_path1, "r") as file:
+            Psi1_r = []
             for line in file:
-                columns = line.strip().split()
-                if len(columns) == 4:
-                    Psi1_r.append(float(columns[0]))
-                    Psi2_r.append(float(columns[2]))
+                line = line.strip()
+                if line:
+                    try:
+                        Psi1_r.append(float(line))
+                    except ValueError:
+                        print(f"Warning: Could not convert line to float: '{line}'")
+                        continue
+
+        file_path2 = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{n}" + '/Density2.txt'
+
+        with open(file_path1, "r") as file:
+            Psi2_r = []
+            for line in file:
+                line = line.strip()
+                if line:
+                    try:
+                        Psi2_r.append(float(line))
+                    except ValueError:
+                        print(f"Warning: Could not convert line to float: '{line}'")
+                        continue
+
 
         squared_Psi1 = [x**2 for x in Psi1_r]
         squared_Psi2 = [x**2 for x in Psi2_r]
