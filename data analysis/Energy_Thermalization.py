@@ -14,6 +14,8 @@ parser.add_argument('--b_low', type=float, help='beta low')
 parser.add_argument('--rank', type=int, help='rank')
 parser.add_argument('--beta', type=int, help='beta')
 parser.add_argument('--num_bins', type=int, help='num_bins')
+parser.add_argument('--a', type=float, help='rank')
+
 
 
 # Parse the command-line arguments
@@ -29,6 +31,8 @@ rank = args.rank
 beta = args.beta
 beta = args.beta
 num_bins = args.num_bins
+a = args.a
+
 
 # Now you can use these values in your script
 print("L=", L)
@@ -39,6 +43,8 @@ print("beta low=", beta_low)
 print("rank=", rank)
 print("beta=", beta)
 print("number of bins=", num_bins)
+print("a=", a)
+
 
 
 def calculate_std(data): 
@@ -79,7 +85,7 @@ for l in L:
 
     N = l * l
 
-    file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{beta}" + '/Energy.txt'
+    file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{beta}" + '/Energy.txt'
 
     with open(file_path, 'r') as file:
         energies = [float(line.strip()) for line in file.readlines()]
