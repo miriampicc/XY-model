@@ -97,7 +97,7 @@ for l in L:
         file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{n}/trsb_magnetization.txt"
 
 
-    try:
+        try:
             with open(file_path, 'r') as file:
                 numbers = []
                 for line in file:
@@ -121,10 +121,10 @@ for l in L:
                 else:
                     cumulant.append(np.nan)
                     pseudo_magn.append(np.nan)
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
-        cumulant.append(np.nan)
-        pseudo_magn.append(np.nan)
+        except FileNotFoundError:
+            print(f"File not found: {file_path}")
+            cumulant.append(np.nan)
+            pseudo_magn.append(np.nan)
 
     beta_array = np.array(betas)
 
