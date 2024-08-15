@@ -12,6 +12,8 @@ parser.add_argument('--e', type=float, help='e')
 parser.add_argument('--b_high', type=float, help='beta high')
 parser.add_argument('--b_low', type=float, help='beta low')
 parser.add_argument('--rank', type=int, help='rank')
+parser.add_argument('--a', type=float, help='rank')
+
 
 # Parse the command-line arguments
 args = parser.parse_args()
@@ -23,6 +25,7 @@ e = args.e
 beta_high = args.b_high
 beta_low = args.b_low
 rank = args.rank
+a = args.a
 
 # Now you can use these values in your script
 print("L=", L)
@@ -31,6 +34,7 @@ print("e=", e)
 print("beta high=", beta_high)
 print("beta low=", beta_low)
 print("rank=", rank)
+print("a=", a)
 
 def calculate_mean(data):
     mean = sum(data) / len(data)
@@ -75,7 +79,9 @@ for l in L:
         temperatures.append(t)
         betas.append(bb)
 
-        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}/Energy.txt"
+        #file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}/beta_{n}/Energy.txt"
+        file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{l}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{n}" + '/Energy.txt'
+
 
         try:
             with open(file_path, 'r') as file:
