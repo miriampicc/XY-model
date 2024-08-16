@@ -60,6 +60,6 @@ plt.xticks(range(0, 65, 5))
 plt.title(f'Histogram of Number Occurrences, replica {beta} ')
 #plt.xticks(numbers)  # Ensure all numbers 0-63 are labeled
 plt.grid(True)
-plt.savefig(f'Rank_e={e}_replica={beta}.jpg')
+plt.savefig(f'Rank_L={L}_replica={beta}.jpg')
 
 plt.show()
