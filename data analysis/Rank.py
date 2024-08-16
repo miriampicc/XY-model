@@ -6,7 +6,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Description of the script')
 
 # Add arguments
-parser.add_argument('--L', nargs='+', type=int, help='L')
+parser.add_argument('--L', type=int, help='L')
 parser.add_argument('--K', type=float, help='K')
 parser.add_argument('--e', type=float, help='e')
 parser.add_argument('--b_high', type=float, help='beta high')
