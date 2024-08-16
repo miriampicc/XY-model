@@ -41,8 +41,9 @@ print("beta=", beta)
 delta = (1 / beta_low - 1 / beta_high) / rank
 T_high = 1 / beta_low
 T_low = 1 / beta_high
+file_path = f'/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{beta}/Rank.txt'
 
-data = np.loadtxt('home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{beta}/Rank.txt', dtype=int)
+data = np.loadtxt(file_path, dtype=int)
 
 # Step 2: Count the occurrences
 counter = Counter(data)
