@@ -17,8 +17,6 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
     double target_acc_rate = 0.3;
     size_t N = Lx * Ly;
 
-    double min_theta_box_density = 0.1; // Adjust this value as needed
-
 
     for (size_t iy = 0; iy < Ly; iy++) {
         for (size_t ix = 0; ix < Lx; ix++) {
@@ -50,7 +48,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
                 NewPsi[alpha].r = sqrt(X + d_X);
 
-                //std::cout << "alpha =  " << alpha << "  Update Psi = " << NewPsi[alpha].r << "  Old Psi = "<< OldPsi[alpha].r << std::endl;
+                // std::cout << "alpha =  " << alpha << "  Update Psi = " << NewPsi[alpha].r << "  Old Psi = "<< OldPsi[alpha].r << std::endl;
 
 
                 oldE = local_energy(OldPsi, i, Hp, Site);
@@ -144,7 +142,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         acc_A = (double) acc_A / static_cast<double>(2 * N);
         acc_density = (double) acc_density / static_cast<double>(2 * N);
 
-        //std::cout << "Acc = " << acc_density << std::endl;
+        std::cout << "Acc = " << acc_theta << std::endl;
 
 
         MC.theta_box = MC.theta_box * ((0.5 * acc_theta / acc_rate) + 0.5);
@@ -199,6 +197,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
         h_Josephson += Hp.a * Hp.K * (Psi[0].r * Psi[1].r) * (Psi[0].r * Psi[1].r) * (cos(2 * (Psi[0].t - Psi[1].t)) - 1.);
         dens_fluct += Hp.a * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)) * (-1 + 0.5 * ((Psi[0].r * Psi[0].r) + (Psi[1].r * Psi[1].r)));
+
 
         //double diff = (Psi[0].t - Psi[1].t);
         //std::cout << "difference phase = " << diff  << std::endl;
