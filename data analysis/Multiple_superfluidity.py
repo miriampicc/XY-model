@@ -225,7 +225,7 @@ plt.grid(True)
 plt.suptitle(f'Total density fluctuations K={K}, a={a}, L={l}')
 
 plt.tight_layout()  # Adjust layout for better appearance
-plt.savefig(f'Multiple_superflidity_bla_bla_K{K}_a{a}.jpg')
+plt.savefig(f'Multiple_superflidity_bla_bla_K{K}_a{a}_L={l}.jpg')
 
 
 
