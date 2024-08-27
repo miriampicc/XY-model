@@ -48,7 +48,13 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
                 NewPsi[alpha].r = sqrt(X + d_X);
 
-                // std::cout << "alpha =  " << alpha << "  Update Psi = " << NewPsi[alpha].r << "  Old Psi = "<< OldPsi[alpha].r << std::endl;
+                if (std::isnan(NewPsi[alpha].r )) {
+
+                    std::cout << "  Errore, NewPsi[alpha].r   = " << NewPsi[alpha].r  << std::endl;
+                    exit(1);
+                }
+
+                 //std::cout << "  Update Psi = " << NewPsi[alpha].r << "  Old Psi = "<< OldPsi[alpha].r << std::endl;
 
 
                 oldE = local_energy(OldPsi, i, Hp, Site);
@@ -61,13 +67,13 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                 if (deltaE < 0) {
                     Site[i].Psi[alpha] = NewPsi[alpha];
                     acc_density++;
-                    //std::cout << "YES  " << std::endl;
+                    //std::cout << "YES  " << "Delta E = " << deltaE  << std::endl;
                 } else {
                     rand = rn::uniform_real_box(0, 1);
                     if (rand < exp(-my_beta * deltaE)) {
                         Site[i].Psi[alpha] = NewPsi[alpha];
                         acc_density++;
-                        //std::cout << "YES  " << std::endl;
+                        //std::cout << "YES  " << "Delta E = " << deltaE << std::endl;
                     }
                 }
             }
@@ -83,7 +89,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
                     NewPsi[1] = Site[i].Psi[1];
                     d_theta = rn::uniform_real_box(-MC.theta_box, MC.theta_box);
                     NewPsi[alpha].t = fmod(OldPsi[alpha].t + d_theta, 2 * M_PI);
-                    NewPsi[alpha].r = OldPsi[alpha].r;  ////da togliere
+                    //NewPsi[alpha].r = OldPsi[alpha].r;  ////da togliere
 
                     oldE = local_energy(OldPsi, i, Hp, Site);
                     newE = local_energy(NewPsi, i, Hp, Site);
@@ -142,12 +148,14 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
         acc_A = (double) acc_A / static_cast<double>(2 * N);
         acc_density = (double) acc_density / static_cast<double>(2 * N);
 
-        std::cout << "Acc = " << acc_theta << std::endl;
+        //std::cout << "Acc = " << acc_theta << std::endl;
 
 
         MC.theta_box = MC.theta_box * ((0.5 * acc_theta / acc_rate) + 0.5);
         MC.theta_box_A = MC.theta_box_A * ((0.5 * acc_A / acc_rate) + 0.5);
-        MC.theta_box_density = MC.theta_box_density * ((0.5 * acc_density / acc_rate) + 0.5);
+        //MC.theta_box_density = MC.theta_box_density * ((0.5 * acc_density / acc_rate) + 0.5);
+
+        //std::cout<<" Update theta_box_desity  "<< MC.theta_box_density << std::endl;
 
         // Ensure the step sizes do not become too small
         //MC.theta_box_density = std::max(MC.theta_box_density, min_theta_box_density);

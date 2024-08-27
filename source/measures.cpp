@@ -13,7 +13,7 @@ void energy(struct Measures &mis, struct H_parameters &Hp, const std::vector<Nod
     size_t ip, nn_ip;
 
     for (size_t iy = 0; iy < Ly; iy++) {
-        for (size_t ix = 0; ix < Ly; ix++) {
+        for (size_t ix = 0; ix < Lx; ix++) {
 
             size_t i=ix + Lx * ( iy );
 

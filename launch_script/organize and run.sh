@@ -9,7 +9,7 @@ SCRIPT_DIR=${BASEDIR}/launch_script
 
 time_limit="5-0:00:00"
 
-LLIST="8 12 16 20 24 32"
+LLIST="8 10 12 16 20 24 32"
 #32 40 48 64 96
 
 ################ Input Parameters for the Monte Carlo simulation #################
@@ -17,15 +17,15 @@ LLIST="8 12 16 20 24 32"
 #Hamiltonian input parameters
 
 #Monte Carlo parameters
-nsteps=5000000
+nsteps=500000
 transient=100000
 tau=32
 T=0.3
 restart=0
 K=0.5
 e=0.0
-beta_high=50.0         #1.8    #1.754   #1.818  #T=0.57 #0.55
-beta_low=30.0   #T=0.59
+beta_high=200.0         #1.8    #1.754   #1.818  #T=0.57 #0.55
+beta_low=10.0   #T=0.59
 theta_box=0.78539816339
 theta_box_A=0.1
 theta_box_density=0.25
@@ -39,12 +39,12 @@ for L in $LLIST; do
     cd ${BASEDIR}/Output_TBG_tdf || exit
 
 
-    if [ ! -d ./SK_${K}_tdf3 ]; then
+    if [ ! -d ./SK_${K}_tdf2 ]; then
 
-    mkdir -p K_${K}_tdf3
+    mkdir -p K_${K}_tdf2
     fi
 
-    cd K_${K}_tdf3 || exit
+    cd K_${K}_tdf2 || exit
 
     if [ ! -d ./Se_${e} ]; then
     mkdir -p e_${e}
@@ -56,7 +56,7 @@ for L in $LLIST; do
     mkdir -p L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_a${a}
     fi
 
-    DIR_OUT=${BASEDIR}/Output_TBG_tdf/K_${K}_tdf3/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_a${a}
+    DIR_OUT=${BASEDIR}/Output_TBG_tdf/K_${K}_tdf2/e_${e}/L${L}_K${K}_e${e}_bmin${beta_low}_bmax${beta_high}_a${a}
 
     #################Creation of the submit_runs script#########################
 
