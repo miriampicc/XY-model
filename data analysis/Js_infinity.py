@@ -13,6 +13,7 @@ parser.add_argument('--b_high', type=float, help='beta high')
 parser.add_argument('--b_low', type=float, help='beta low')
 parser.add_argument('--rank', type=int, help='rank')
 parser.add_argument('--L0', type=float, help='L0' )
+parser.add_argument('--a', type=float, help='a')
 
 # Parse the command-line arguments
 args = parser.parse_args()
@@ -25,6 +26,8 @@ beta_high = args.b_high
 beta_low = args.b_low
 rank = args.rank
 L0 = args.L0
+a = args.a
+
 
 # Now you can use these values in your script
 print("L=", L)
@@ -34,6 +37,8 @@ print("beta high=", beta_high)
 print("beta low=", beta_low)
 print("rank=", rank)
 print("L0=", L0)
+print("a=", a)
+
 
 def calculate_std(data): 
     try:
@@ -196,9 +201,9 @@ plt.plot(temperatures , y, linestyle='--', label = r'$\frac{2T}{\pi}$', color = 
 
 plt.xlabel('T (K)')
 plt.ylabel(r'$J_s$')
-plt.title(f' $K={K}$ e = {e} $L_0 = {L0}$')
+plt.title(f' $K={K}$ e = {e} $L_0 = {L0} a={a}$')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'Js_inf_K{K}_e{e}_L0{L0}.jpg')
+plt.savefig(f'Js_inf_K{K}_e{e}_a{a}.jpg')
 
 plt.show()
