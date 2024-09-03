@@ -118,9 +118,9 @@ for l in L:
 
 plt.xlabel(r'$\beta$')
 plt.ylabel('$C_V$')
-plt.title(f'Specific Heat $K = {K}$, $e={e}$ ')
+plt.title(f'Specific Heat $K = {K}$, $a={a}$ ')
 plt.legend()
 plt.grid(True)
-plt.savefig(f'Specific_heat_e={e}_K={K}.jpg')
+plt.savefig(f'Specific_heat_a={a}_K={K}.jpg')
 
 plt.show()
