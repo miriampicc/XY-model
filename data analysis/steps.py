@@ -38,7 +38,7 @@ delta = (1/beta_low - 1/beta_high)/(rank)
 T_high = 1/beta_low
 T_low = 1/beta_high
 
-plt.figure(figsize=(10, 6))
+#plt.figure(figsize=(10, 6))
 
 for n in range(rank): 
 
@@ -47,7 +47,7 @@ for n in range(rank):
     with open(file_path, 'r') as file:
         data = [float(line.strip()) for line in file.readlines()]
 
-    data = data[:50]
+    data = data[:20]
 
     # Generate the Monte Carlo step numbers (from 1 to 500000)
     monte_carlo_steps = np.arange(1, len(data) + 1)
