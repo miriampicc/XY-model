@@ -146,7 +146,7 @@ void metropolis(std::vector<Node> &Site, struct MC_parameters &MC, struct H_para
 
         acc_theta = (double) acc_theta / static_cast<double>(2 * N);
         acc_A = (double) acc_A / static_cast<double>(2 * N);
-        acc_density = (double) acc_density / static_cast<double>(2 * N);
+        //acc_density = (double) acc_density / static_cast<double>(2 * N);
 
         //std::cout << "Acc = " << acc_theta << std::endl;
 
