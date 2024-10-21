@@ -40,6 +40,10 @@ print("a=", a)
 print("start=", start)
 print("end=", end)
 
+# Define the range of steps you want to plot
+start_step = 120000
+end_step = 120020
+
 temperatures = []
 delta = (1/beta_low - 1/beta_high)/(rank)
 T_high = 1/beta_low
@@ -59,7 +63,7 @@ for n in range(start, end+1):
     data = data[120000:120021]
 
     # Generate the Monte Carlo step numbers (from 1 to 500000)
-    monte_carlo_steps = np.arange(1, len(data) + 1)
+    monte_carlo_steps = np.arange(start_step, end_step + 1)  # Use steps between 120000 and 120020
 
     # Plot the step function
 
