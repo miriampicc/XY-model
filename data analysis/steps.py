@@ -38,9 +38,11 @@ delta = (1/beta_low - 1/beta_high)/(rank)
 T_high = 1/beta_low
 T_low = 1/beta_high
 
-#plt.figure(figsize=(10, 6))
+plt.figure(figsize=(10, 6))
 
-for n in range(rank): 
+beta_subset = 5
+
+for n in range(beta_subset): 
 
     file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{n}" + '/Rank.txt'
 
