@@ -63,7 +63,7 @@ for n in range(start, end+1):
     data = data[start_step:end_step]
 
     # Generate the Monte Carlo step numbers (from 1 to 500000)
-    monte_carlo_steps = np.arange(start_step, end_step + 1)  # Use steps between 120000 and 120020
+    monte_carlo_steps = np.arange(start_step, end_step)  # Use steps between 120000 and 120020
 
     # Plot the step function
 
