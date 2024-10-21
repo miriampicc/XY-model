@@ -42,7 +42,7 @@ print("end=", end)
 
 # Define the range of steps you want to plot
 start_step = 120000
-end_step = 120100
+end_step = 120300
 
 temperatures = []
 delta = (1/beta_low - 1/beta_high)/(rank)
