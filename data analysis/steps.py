@@ -75,5 +75,5 @@ plt.title('Monte Carlo Simulation Step Function')
 plt.legend()
 
 # Save the image to show as output
-plt.savefig(f'Steps_a={a}.jpg')
+plt.savefig(f'Steps_a={a}_start={start}_end={end}.jpg')
 #plt.show()
