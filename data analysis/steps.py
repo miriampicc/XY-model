@@ -41,7 +41,7 @@ delta = (1/beta_low - 1/beta_high)/(rank)
 T_high = 1/beta_low
 T_low = 1/beta_high
 
-file_path = f"/home/x_mirpi/Output_TBG/K_{K}/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{beta}" + '/Rank.txt'
+file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{L}_K{K}_e{e}_bmin{beta_low}_bmax{beta_high}_a{a}/beta_{beta}" + '/Rank.txt'
 
 with open(file_path, 'r') as file:
     data = [float(line.strip()) for line in file.readlines()]
