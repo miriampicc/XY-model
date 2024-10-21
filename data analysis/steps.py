@@ -46,6 +46,8 @@ file_path = f"/home/x_mirpi/Output_TBG/K_{K}_tdf2/e_{e}/L{L}_K{K}_e{e}_bmin{beta
 with open(file_path, 'r') as file:
     data = [float(line.strip()) for line in file.readlines()]
 
+data = data[:100]
+
 # Generate the Monte Carlo step numbers (from 1 to 500000)
 monte_carlo_steps = np.arange(1, len(data) + 1)
 
