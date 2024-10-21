@@ -56,7 +56,7 @@ for n in range(start, end+1):
     with open(file_path, 'r') as file:
         data = [float(line.strip()) for line in file.readlines()]
 
-    data = data[120000, 120020]
+    data = data[120000:120021]
 
     # Generate the Monte Carlo step numbers (from 1 to 500000)
     monte_carlo_steps = np.arange(1, len(data) + 1)
